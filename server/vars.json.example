@@ -1,0 +1,7 @@
+{
+  "MODE": "debug",
+  "PORT": "5000",
+  "SITE": "localhost",
+  "SSOClientID": "123",
+  "SSOSecretKey": "321"
+}
