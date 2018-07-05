@@ -4,4 +4,6 @@
   "SITE": "localhost",
   "SSOClientID": "123",
   "SSOSecretKey": "321"
+  "DBC": "user:password@/database",
+  "SESSION_KEY": "secret session key"
 }

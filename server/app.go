@@ -1,13 +1,16 @@
 package main
 
-import(
-	"github.com/gin-gonic/gin"
+import (
 	"ForumPublica/server/config"
-	"ForumPublica/server/middleware"
 	"ForumPublica/server/ctrl"
+	"ForumPublica/server/db"
+	"ForumPublica/server/middleware"
 	"fmt"
-)
 
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
 
@@ -17,17 +20,32 @@ func main() {
 		return
 	}
 
+	errMgr := db.Migrate()
+	if errMgr != nil {
+		fmt.Println("Migration problems: ", errMgr)
+		return
+	}
+
+	db.Connect()
+	if db.DB == nil {
+		fmt.Println("No database connection")
+		return
+	}
+
+	store := cookie.NewStore([]byte(config.Vars.SESSION_KEY))
+
 	r := gin.Default()
+	r.Use(sessions.Sessions("mysession", store))
 
-  r.GET("/login", ctrl.Login)
-
+	r.GET("/", ctrl.Index)
+	r.GET("/login", ctrl.Login)
 
 	authorized := r.Group("/app")
 	authorized.Use(middleware.Auth())
 	{
-		authorized.GET("/index", ctrl.Index)
+		authorized.GET("/index", ctrl.AppIndex)
 	}
 
-  gin.SetMode(config.Vars.MODE)
-	r.Run(":"+config.Vars.PORT)
+	gin.SetMode(config.Vars.MODE)
+	r.Run(":" + config.Vars.PORT)
 }
