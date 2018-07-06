@@ -36,12 +36,13 @@ func main() {
 
 	r := gin.Default()
 	r.Use(sessions.Sessions("mysession", store))
+	r.Use(middleware.SetUser)
 
 	r.GET("/", ctrl.Index)
-	r.GET("/login", ctrl.Login)
+	r.GET("/login", middleware.SkipIfAuth, ctrl.Login)
 
 	authorized := r.Group("/app")
-	authorized.Use(middleware.Auth())
+	authorized.Use(middleware.Auth)
 	{
 		authorized.GET("/index", ctrl.AppIndex)
 	}

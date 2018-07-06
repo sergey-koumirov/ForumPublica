@@ -34,6 +34,7 @@ func Migrate() error {
 func Connect() {
 	var err error
 	DB, err = xorm.NewEngine("mysql", config.Vars.DBC)
+	DB.ShowSQL(true)
 
 	if err != nil {
 		fmt.Println("Failed to connect database:", err)

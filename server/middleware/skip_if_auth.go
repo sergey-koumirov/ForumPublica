@@ -6,13 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Auth(c *gin.Context) {
+func SkipIfAuth(c *gin.Context) {
 
 	value, _ := c.Get("user")
 
-	if value == nil {
-		c.Redirect(http.StatusMovedPermanently, "/login")
-		c.Abort()
+	if value != nil {
+		c.Redirect(http.StatusMovedPermanently, "/")
 		return
 	}
 
