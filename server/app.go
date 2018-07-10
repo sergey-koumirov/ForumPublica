@@ -35,6 +35,7 @@ func main() {
 	store := cookie.NewStore([]byte(config.Vars.SESSION_KEY))
 
 	r := gin.Default()
+	r.LoadHTMLGlob("server/templates/*")
 	r.Use(sessions.Sessions("mysession", store))
 	r.Use(middleware.SetUser)
 
