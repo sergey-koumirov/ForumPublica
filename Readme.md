@@ -1,5 +1,5 @@
 # run dev
-`vgo run ./server/app.go`
+`go run ./server/app.go`
 
 
 # db & migrations

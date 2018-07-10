@@ -6,6 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AppIndex(c *gin.Context) {
+func RootIndex(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", nil)
 }

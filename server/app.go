@@ -35,11 +35,16 @@ func main() {
 	store := cookie.NewStore([]byte(config.Vars.SESSION_KEY))
 
 	r := gin.Default()
+
+	r.Static("/assets", "./server/assets")
+	r.StaticFile("/favicon.ico", "./server/assets/favicon.ico")
+
 	r.LoadHTMLGlob("server/templates/*")
+
 	r.Use(sessions.Sessions("mysession", store))
 	r.Use(middleware.SetUser)
 
-	r.GET("/", ctrl.Index)
+	r.GET("/", ctrl.RootIndex)
 	r.GET("/login", middleware.SkipIfAuth, ctrl.Login)
 
 	authorized := r.Group("/app")
