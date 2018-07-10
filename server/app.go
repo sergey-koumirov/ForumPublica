@@ -39,13 +39,13 @@ func main() {
 	r.Static("/assets", "./server/assets")
 	r.StaticFile("/favicon.ico", "./server/assets/favicon.ico")
 
-	r.LoadHTMLGlob("server/templates/*")
+	r.LoadHTMLGlob("server/templates/**/*.html")
 
 	r.Use(sessions.Sessions("mysession", store))
 	r.Use(middleware.SetUser)
 
 	r.GET("/", ctrl.RootIndex)
-	r.GET("/login", middleware.SkipIfAuth, ctrl.Login)
+	r.GET("/probleme_callback", middleware.AuthCallback)
 
 	authorized := r.Group("/app")
 	authorized.Use(middleware.Auth)

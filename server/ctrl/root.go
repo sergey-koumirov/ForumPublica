@@ -7,5 +7,5 @@ import (
 )
 
 func RootIndex(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html", nil)
+	c.HTML(http.StatusOK, "root/index.html", nil)
 }
