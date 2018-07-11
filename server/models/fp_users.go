@@ -1,7 +1,7 @@
 package models
 
 type User struct {
-	Id   int64  `xorm:"id"`
+	Id   int64  `xorm:"autoincr pk"`
 	Role string `xorm:"role"`
 }
 

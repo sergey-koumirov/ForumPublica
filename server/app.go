@@ -51,6 +51,7 @@ func main() {
 	authorized.Use(middleware.Auth)
 	{
 		authorized.GET("/index", ctrl.AppIndex)
+		authorized.GET("/chars", ctrl.AppChars)
 	}
 
 	gin.SetMode(config.Vars.MODE)

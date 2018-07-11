@@ -61,15 +61,13 @@ func CallbackURL() (string, string) {
 		state,
 	)
 
-	// OAUTH_AUTHORIZE_URL + "?response_type=code&redirect_uri=http%3A%2F%2F" +
-	// 	config.Vars.SITE + "%3A" + config.Vars.PORT + "%2Fprobleme_callback&realm=ESI&client_id=" +
-	// 	config.Vars.SSOClientID + "&scope=" + strings.Join(SCOPES, "%20") + "&state=1000"
-
 	return url, state
 }
 
 func OAuthToken(data u.Values) (OAuthTokenJson, error) {
-	ssoString := b64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", config.Vars.SSOClientID, config.Vars.SSOSecretKey)))
+	ssoString := b64.StdEncoding.EncodeToString(
+		[]byte(fmt.Sprintf("%s:%s", config.Vars.SSOClientID, config.Vars.SSOSecretKey)),
+	)
 	auth := fmt.Sprintf("Basic %s", ssoString)
 	postData := []byte(data.Encode())
 

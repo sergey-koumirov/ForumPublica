@@ -1,9 +1,12 @@
 package middleware
 
 import (
+	"ForumPublica/server/db"
 	"ForumPublica/server/esi"
+	"ForumPublica/server/models"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -33,9 +36,58 @@ func AuthCallback(c *gin.Context) {
 	if value == nil {
 		return
 	}
-	saved := value.(string)
 
-	fmt.Println(saved)
-	fmt.Printf("%+v\n", c)
+	saved := value.(string)
+	state := c.Query("state")
+	if saved != state {
+		return
+	}
+
+	code := c.Query("code")
+	token, _ := esi.OAuthToken(url.Values{"grant_type": {"authorization_code"}, "code": {code}})
+	info, _ := esi.OAuthVerify(token.AccessToken)
+	fmt.Printf("%+v\n", info)
+
+	char := models.Character{Id: info.CharacterID}
+	charEx, _ := db.DB.Get(&char)
+
+	var user models.User
+	setUser, _ := c.Get("user")
+
+	if !charEx && setUser == nil {
+		user = models.User{Role: "U"}
+		db.DB.Insert(&user)
+	} else if charEx && setUser == nil {
+		user.Id = char.UserId
+		db.DB.Get(&user)
+	} else {
+		user = setUser.(models.User)
+	}
+
+	if !charEx {
+		newChar := models.Character{
+			Id:                    info.CharacterID,
+			Name:                  info.CharacterName,
+			UserId:                user.Id,
+			VerExpiresOn:          info.ExpiresOn,
+			VerScopes:             info.Scopes,
+			VerTokenType:          info.TokenType,
+			VerCharacterOwnerHash: info.CharacterOwnerHash,
+			TokAccessToken:        token.AccessToken,
+			TokTokenType:          token.TokenType,
+			TokExpiresIn:          token.ExpiresIn,
+			TokRefreshToken:       token.RefreshToken,
+		}
+		db.DB.Insert(&newChar)
+	}
+
+	session.Set("userId", user.Id)
+	session.Save()
+
+	if setUser == nil {
+		c.Redirect(http.StatusTemporaryRedirect, "/app/index")
+	} else {
+		c.Redirect(http.StatusTemporaryRedirect, "/app/chars")
+	}
 
 }
