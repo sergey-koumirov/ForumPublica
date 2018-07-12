@@ -4,13 +4,33 @@ import (
 	"ForumPublica/server/db"
 	"ForumPublica/server/esi"
 	"ForumPublica/server/models"
-	"fmt"
 	"net/http"
 	"net/url"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
+
+func SetUser(c *gin.Context) {
+
+	session := sessions.Default(c)
+	value := session.Get("userId")
+	if value == nil {
+		return
+	}
+
+	var (
+		userId int64 = value.(int64)
+		user         = models.User{Id: userId}
+	)
+	ex, errDb := db.DB.Get(&user)
+	if !ex || errDb != nil {
+		return
+	}
+
+	c.Set("user", user)
+
+}
 
 func Auth(c *gin.Context) {
 
@@ -46,7 +66,6 @@ func AuthCallback(c *gin.Context) {
 	code := c.Query("code")
 	token, _ := esi.OAuthToken(url.Values{"grant_type": {"authorization_code"}, "code": {code}})
 	info, _ := esi.OAuthVerify(token.AccessToken)
-	fmt.Printf("%+v\n", info)
 
 	char := models.Character{Id: info.CharacterID}
 	charEx, _ := db.DB.Get(&char)

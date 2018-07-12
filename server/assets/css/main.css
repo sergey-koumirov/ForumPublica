@@ -1,0 +1,24 @@
+body{
+  font-size: 12px;
+}
+
+table td, table th{
+  font-size: 12px;
+}
+
+/*  ICONS */
+.oi{
+  color: #ffc107;
+}
+.oi.admin{
+  color: #ff0707;
+}
+
+/* MENU */
+
+.menu-bar{
+  float: right;
+  position: absolute;
+  top: 0px;
+  right: 8px;
+}

@@ -1,7 +1,25 @@
 {{ define "root/index.html" }}
+{{ template "base_head" .}}
 
-{{ template "base_head"}}
-ROOT
+<h3 class="text-center">
+  <span class="oi oi-aperture"></span>
+  Forum Publica
+</h1>
+
+<div class="container">
+  <div class="row">
+    <div class="col-6 offset-md-3 text-center">
+      <hr/>
+      <p>
+        This is my collection of tools mostly for manufacturing planning and market analysis.
+      </p>
+
+      <p>
+        Sources: <a target="_blank" href="https://github.com/sergey-koumirov/ForumPublica">GitHub</a>
+      </p>
+    </div>
+  </div>
+</div>
+
 {{ template "base_foot" }}
-
 {{ end }}

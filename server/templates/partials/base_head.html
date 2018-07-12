@@ -4,6 +4,24 @@
   <head>
     <title></title>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="/assets/css/open-iconic-bootstrap.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
   </head>
   <body>
+
+    <div class="container">
+      <div class="menu-bar">
+        {{ if not .User }}
+        <a href="/login">Login</a> |
+        {{else}}
+        <a href="/sso_logins">SSO Logins</a> |
+        <a href="/log_out">Log Out ({{.User.Id}})</a> |
+          {{ if eq .User.Role "A" }}
+          <a href="/admin/users"><span class="oi admin oi-aperture"></span></a>
+          {{end}}
+        {{end}}
+      </div>
+    </div>
+
 {{end}}

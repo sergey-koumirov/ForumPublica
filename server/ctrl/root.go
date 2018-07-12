@@ -7,5 +7,7 @@ import (
 )
 
 func RootIndex(c *gin.Context) {
-	c.HTML(http.StatusOK, "root/index.html", nil)
+	user, _ := c.Get("user")
+
+	c.HTML(http.StatusOK, "root/index.html", gin.H{"User": user})
 }

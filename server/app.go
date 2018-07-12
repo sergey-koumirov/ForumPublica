@@ -45,6 +45,7 @@ func main() {
 	r.Use(middleware.SetUser)
 
 	r.GET("/", ctrl.RootIndex)
+	r.GET("/login", middleware.Auth)
 	r.GET("/probleme_callback", middleware.AuthCallback)
 
 	authorized := r.Group("/app")
