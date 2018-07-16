@@ -11,10 +11,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var (
+	USER_ID = "userId"
+	STATE   = "state"
+	USER    = "user"
+)
+
 func SetUser(c *gin.Context) {
 
 	session := sessions.Default(c)
-	value := session.Get("userId")
+	value := session.Get(USER_ID)
 	if value == nil {
 		return
 	}
@@ -28,19 +34,19 @@ func SetUser(c *gin.Context) {
 		return
 	}
 
-	c.Set("user", user)
+	c.Set(USER, user)
 
 }
 
 func Auth(c *gin.Context) {
 
-	value, _ := c.Get("user")
+	value, _ := c.Get(USER)
 
 	if value == nil {
 		url, state := esi.CallbackURL()
 
 		session := sessions.Default(c)
-		session.Set("state", state)
+		session.Set(STATE, state)
 		session.Save()
 
 		c.Redirect(http.StatusTemporaryRedirect, url)
@@ -52,13 +58,13 @@ func Auth(c *gin.Context) {
 
 func AuthCallback(c *gin.Context) {
 	session := sessions.Default(c)
-	value := session.Get("state")
+	value := session.Get(STATE)
 	if value == nil {
 		return
 	}
 
 	saved := value.(string)
-	state := c.Query("state")
+	state := c.Query(STATE)
 	if saved != state {
 		return
 	}
@@ -71,7 +77,7 @@ func AuthCallback(c *gin.Context) {
 	charEx, _ := db.DB.Get(&char)
 
 	var user models.User
-	setUser, _ := c.Get("user")
+	setUser, _ := c.Get(USER)
 
 	if !charEx && setUser == nil {
 		user = models.User{Role: "U"}
@@ -79,6 +85,13 @@ func AuthCallback(c *gin.Context) {
 	} else if charEx && setUser == nil {
 		user.Id = char.UserId
 		db.DB.Get(&user)
+	} else if charEx && setUser != nil {
+		user = setUser.(models.User)
+		if user.Id != char.UserId {
+			char.UserId = user.Id
+			db.DB.Update(&char)
+		}
+
 	} else {
 		user = setUser.(models.User)
 	}
@@ -100,7 +113,7 @@ func AuthCallback(c *gin.Context) {
 		db.DB.Insert(&newChar)
 	}
 
-	session.Set("userId", user.Id)
+	session.Set(USER_ID, user.Id)
 	session.Save()
 
 	if setUser == nil {
@@ -109,4 +122,13 @@ func AuthCallback(c *gin.Context) {
 		c.Redirect(http.StatusTemporaryRedirect, "/app/chars")
 	}
 
+}
+
+func Logout(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Set(STATE, nil)
+	session.Set(USER_ID, nil)
+	session.Save()
+	c.Set(USER, nil)
+	c.Redirect(http.StatusTemporaryRedirect, "/")
 }
