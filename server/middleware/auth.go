@@ -56,6 +56,17 @@ func Auth(c *gin.Context) {
 
 }
 
+func Add(c *gin.Context) {
+	url, state := esi.CallbackURL()
+
+	session := sessions.Default(c)
+	session.Set(STATE, state)
+	session.Save()
+
+	c.Redirect(http.StatusTemporaryRedirect, url)
+	c.Abort()
+}
+
 func AuthCallback(c *gin.Context) {
 	session := sessions.Default(c)
 	value := session.Get(STATE)
@@ -87,9 +98,10 @@ func AuthCallback(c *gin.Context) {
 		db.DB.Get(&user)
 	} else if charEx && setUser != nil {
 		user = setUser.(models.User)
+
 		if user.Id != char.UserId {
 			char.UserId = user.Id
-			db.DB.Update(&char)
+			db.DB.ID(char.Id).Cols("user_id").Update(&char)
 		}
 
 	} else {

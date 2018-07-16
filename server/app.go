@@ -46,6 +46,7 @@ func main() {
 
 	r.GET("/", ctrl.RootIndex)
 	r.GET("/login", middleware.Auth)
+	r.GET("/add_char", middleware.Add)
 	r.GET("/logout", middleware.Auth, middleware.Logout)
 	r.GET("/probleme_callback", middleware.AuthCallback)
 

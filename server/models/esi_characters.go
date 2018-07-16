@@ -1,7 +1,7 @@
 package models
 
 type Character struct {
-	Id   int64  `xorm:"id"`
+	Id   int64  `xorm:"pk"`
 	Name string `xorm:"name"`
 
 	UserId int64 `xorm:"user_id"`
