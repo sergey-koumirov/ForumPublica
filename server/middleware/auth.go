@@ -4,6 +4,7 @@ import (
 	"ForumPublica/server/db"
 	"ForumPublica/server/esi"
 	"ForumPublica/server/models"
+	"fmt"
 	"net/http"
 	"net/url"
 
@@ -108,7 +109,20 @@ func AuthCallback(c *gin.Context) {
 		user = setUser.(models.User)
 	}
 
-	if !charEx {
+	if charEx {
+		char.VerExpiresOn = info.ExpiresOn
+		char.VerScopes = info.Scopes
+		char.VerTokenType = info.TokenType
+		char.VerCharacterOwnerHash = info.CharacterOwnerHash
+		char.TokAccessToken = token.AccessToken
+		char.TokTokenType = token.TokenType
+		char.TokExpiresIn = token.ExpiresIn
+		char.TokRefreshToken = token.RefreshToken
+		_, errUpd := db.DB.ID(char.Id).Update(&char)
+		if errUpd != nil {
+			fmt.Println("errUpd", errUpd)
+		}
+	} else {
 		newChar := models.Character{
 			Id:                    info.CharacterID,
 			Name:                  info.CharacterName,

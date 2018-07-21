@@ -24,6 +24,7 @@ var SCOPES = []string{
 	"esi-universe.read_structures.v1",
 	"esi-markets.structure_markets.v1",
 	"esi-assets.read_assets.v1",
+	"esi-industry.read_character_jobs.v1",
 }
 
 type OAuthTokenJson struct {

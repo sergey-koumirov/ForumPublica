@@ -1,5 +1,10 @@
 package models
 
+import (
+	"ForumPublica/server/db"
+	"ForumPublica/server/esi"
+)
+
 type Character struct {
 	Id   int64  `xorm:"pk"`
 	Name string `xorm:"name"`
@@ -19,4 +24,23 @@ type Character struct {
 
 func (c *Character) TableName() string {
 	return "esi_characters"
+}
+
+func (char *Character) GetESI() esi.ESI {
+	db.DB.Get(char)
+
+	result := esi.ESI{
+		AccessToken:  char.TokAccessToken,
+		ExpiresOn:    char.VerExpiresOn,
+		RefreshToken: char.TokRefreshToken,
+	}
+
+	if result.IsAccessTokenExpired() {
+		result.RefreshAccessToken()
+		char.TokAccessToken = result.AccessToken
+		char.VerExpiresOn = result.ExpiresOn
+		db.DB.Update(char)
+	}
+
+	return result
 }

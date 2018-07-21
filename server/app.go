@@ -55,6 +55,8 @@ func main() {
 	{
 		authorized.GET("/index", ctrl.AppIndex)
 		authorized.GET("/chars", ctrl.AppChars)
+		authorized.GET("/sap", ctrl.AppSAP)
+		authorized.GET("/sap/refresh", ctrl.AppSAPRefresh)
 	}
 
 	gin.SetMode(config.Vars.MODE)
