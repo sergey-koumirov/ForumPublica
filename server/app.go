@@ -46,7 +46,6 @@ func main() {
 
 	r.GET("/", ctrl.RootIndex)
 	r.GET("/login", middleware.Auth)
-	r.GET("/add_char", middleware.Add)
 	r.GET("/logout", middleware.Auth, middleware.Logout)
 	r.GET("/probleme_callback", middleware.AuthCallback)
 
@@ -55,6 +54,7 @@ func main() {
 	{
 		authorized.GET("/index", ctrl.AppIndex)
 		authorized.GET("/chars", ctrl.AppChars)
+		authorized.GET("/chars/add", middleware.Add)
 		authorized.GET("/sap", ctrl.AppSAP)
 		authorized.GET("/sap/refresh", ctrl.AppSAPRefresh)
 	}
