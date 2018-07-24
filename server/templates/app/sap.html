@@ -3,5 +3,32 @@
 
 <h5>Science & Production <a href="/app/sap/refresh"><span class="oi oi-loop-circular"></span></a></h5>
 
+<table class="table table-sm table-striped">
+  <tr>
+    <th>Character</th>
+    <th>Blueprint</th>
+    <th>Time to finish</th>
+    <th>Status</th>
+  </tr>
+
+  {{ range $index, $c := .chars }}
+  <tr>
+    <th>{{$c.Name}}</th>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  {{ range $index, $e := $c.Jobs }}
+  <tr>
+    <td><img class="activity" src="/assets/images/activities/{{$e.ActivityId}}.png"></td>
+    <td>{{$e.BlueprintTypeId}}</td>
+    <td class="text-right">{{$e.Rest}}</td>
+    <td>{{$e.Status}}</td>
+  </tr>
+  {{ end }}
+  {{ end }}
+
+</table>
+
 {{ template "base_foot" }}
 {{ end }}

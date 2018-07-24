@@ -6,20 +6,22 @@ import (
 )
 
 type Character struct {
-	Id   int64  `xorm:"pk"`
-	Name string `xorm:"name"`
+	Id   int64  `gorm:"column:id;primary_key"`
+	Name string `gorm:"column:name"`
 
-	UserId int64 `xorm:"user_id"`
+	UserId int64 `gorm:"column:user_id"`
 
-	VerExpiresOn          string `xorm:"ver_expires_on"`
-	VerScopes             string `xorm:"ver_scopes"`
-	VerTokenType          string `xorm:"ver_token_type"`
-	VerCharacterOwnerHash string `xorm:"ver_character_owner_hash"`
+	VerExpiresOn          string `gorm:"column:ver_expires_on"`
+	VerScopes             string `gorm:"column:ver_scopes"`
+	VerTokenType          string `gorm:"column:ver_token_type"`
+	VerCharacterOwnerHash string `gorm:"column:ver_character_owner_hash"`
 
-	TokAccessToken  string `xorm:"tok_access_token"`
-	TokTokenType    string `xorm:"tok_token_type"`
-	TokExpiresIn    int64  `xorm:"tok_expires_in"`
-	TokRefreshToken string `xorm:"tok_refresh_token"`
+	TokAccessToken  string `gorm:"column:tok_access_token"`
+	TokTokenType    string `gorm:"column:tok_token_type"`
+	TokExpiresIn    int64  `gorm:"column:tok_expires_in"`
+	TokRefreshToken string `gorm:"column:tok_refresh_token"`
+
+	Jobs []Job `gorm:"foreignkey:EsiCharacterId"`
 }
 
 func (c *Character) TableName() string {
@@ -27,7 +29,7 @@ func (c *Character) TableName() string {
 }
 
 func (char *Character) GetESI() esi.ESI {
-	db.DB.Get(char)
+	db.DB.First(char, char.Id)
 
 	result := esi.ESI{
 		AccessToken:  char.TokAccessToken,

@@ -10,6 +10,7 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 )
 
 var (
@@ -30,8 +31,8 @@ func SetUser(c *gin.Context) {
 		userId int64 = value.(int64)
 		user         = models.User{Id: userId}
 	)
-	ex, errDb := db.DB.Get(&user)
-	if !ex || errDb != nil {
+	errDb := db.DB.First(&user, user.Id).Error
+	if errDb != nil {
 		return
 	}
 
@@ -86,23 +87,24 @@ func AuthCallback(c *gin.Context) {
 	info, _ := esi.OAuthVerify(token.AccessToken)
 
 	char := models.Character{Id: info.CharacterID}
-	charEx, _ := db.DB.Get(&char)
+	errChar := db.DB.First(&char, char.Id).Error
+	charEx := errChar == gorm.ErrRecordNotFound
 
 	var user models.User
 	setUser, _ := c.Get(USER)
 
-	if !charEx && setUser == nil {
+	if charEx && setUser == nil {
 		user = models.User{Role: "U"}
-		db.DB.Insert(&user)
+		db.DB.Create(&user)
 	} else if charEx && setUser == nil {
 		user.Id = char.UserId
-		db.DB.Get(&user)
+		db.DB.First(&user, user.Id)
 	} else if charEx && setUser != nil {
 		user = setUser.(models.User)
 
 		if user.Id != char.UserId {
 			char.UserId = user.Id
-			db.DB.ID(char.Id).Cols("user_id").Update(&char)
+			db.DB.Model(&char).Update("user_id", "user.Id")
 		}
 
 	} else {
@@ -118,7 +120,7 @@ func AuthCallback(c *gin.Context) {
 		char.TokTokenType = token.TokenType
 		char.TokExpiresIn = token.ExpiresIn
 		char.TokRefreshToken = token.RefreshToken
-		_, errUpd := db.DB.ID(char.Id).Update(&char)
+		errUpd := db.DB.Model(&char).Updates(char).Error
 		if errUpd != nil {
 			fmt.Println("errUpd", errUpd)
 		}
@@ -136,7 +138,7 @@ func AuthCallback(c *gin.Context) {
 			TokExpiresIn:          token.ExpiresIn,
 			TokRefreshToken:       token.RefreshToken,
 		}
-		db.DB.Insert(&newChar)
+		db.DB.Create(&newChar)
 	}
 
 	session.Set(USER_ID, user.Id)

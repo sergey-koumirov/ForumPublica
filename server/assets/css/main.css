@@ -23,3 +23,7 @@ table td, table th{
   top: 0px;
   right: 8px;
 }
+
+img.activity{
+  background: #888888;
+}

@@ -4,8 +4,8 @@ import (
 	"ForumPublica/server/config"
 	"fmt"
 
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/go-xorm/xorm"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	"github.com/golang-migrate/migrate"
 	_ "github.com/golang-migrate/migrate/database/mysql"
@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	DB *xorm.Engine = nil
+	DB *gorm.DB = nil
 )
 
 func Migrate() error {
@@ -32,9 +32,10 @@ func Migrate() error {
 }
 
 func Connect() {
+
 	var err error
-	DB, err = xorm.NewEngine("mysql", config.Vars.DBC)
-	DB.ShowSQL(true)
+	DB, err = gorm.Open("mysql", config.Vars.DBC)
+	DB.LogMode(true)
 
 	if err != nil {
 		fmt.Println("Failed to connect database:", err)

@@ -31,6 +31,7 @@ func main() {
 		fmt.Println("No database connection")
 		return
 	}
+	defer db.DB.Close()
 
 	store := cookie.NewStore([]byte(config.Vars.SESSION_KEY))
 

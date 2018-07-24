@@ -15,7 +15,7 @@ type ESIIndustryJob struct {
 	EndDate             string  `json:"end_date"`
 	FacilityId          int64   `json:"facility_id"`
 	InstallerId         int64   `json:"installer_id"`
-	jobId               int64   `json:"job_id"`
+	JobId               int64   `json:"job_id"`
 	LicensedRuns        int32   `json:"licensed_runs"`
 	OutputLocationId    int64   `json:"output_location_id"`
 	ProductTypeId       int32   `json:"product_type_id"`
