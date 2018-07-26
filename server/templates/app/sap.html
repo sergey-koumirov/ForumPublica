@@ -5,25 +5,24 @@
 
 <table class="table table-sm table-striped">
   <tr>
-    <th>Character</th>
-    <th>Blueprint</th>
-    <th>Time to finish</th>
-    <th>Status</th>
+    <th class="text-center w80"></th>
+    <th class="text-center w80"></th>
+    <th class="text-center w24"></th>
+    <th class="text-center">Blueprint</th>
   </tr>
 
   {{ range $index, $c := .chars }}
   <tr>
-    <th>{{$c.Name}}</th>
-    <td></td>
-    <td></td>
-    <td></td>
+    <th colspan="4">{{$c.Name}}</th>
   </tr>
   {{ range $index, $e := $c.Jobs }}
   <tr>
-    <td><img class="activity" src="/assets/images/activities/{{$e.ActivityId}}.png"></td>
-    <td>{{$e.BlueprintTypeId}}</td>
     <td class="text-right">{{$e.Rest}}</td>
-    <td>{{$e.Status}}</td>
+    <td class="text-right"><span class="gray">x</span>{{$e.Runs}}</td>
+    <td class="text-right"><img class="w24" src="/assets/images/activities/{{$e.ActivityId}}.png"></td>
+    <td class="text-left">
+      <img class="w24" src="https://imageserver.eveonline.com/Type/{{$e.BlueprintTypeId}}_32.png">
+    </td>
   </tr>
   {{ end }}
   {{ end }}

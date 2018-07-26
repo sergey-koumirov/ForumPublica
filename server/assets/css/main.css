@@ -24,6 +24,25 @@ table td, table th{
   right: 8px;
 }
 
-img.activity{
-  background: #888888;
+img.w24{
+  width: 24px;
+  height: 24px;
+  background: #cccccc;
+}
+
+.table.table-sm td{
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.gray{
+  color: #aaaaaa;
+}
+
+.w80{
+  width: 80px;
+}
+
+.w24{
+  width: 24px;
 }

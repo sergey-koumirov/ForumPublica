@@ -30,7 +30,7 @@ func AppSAP(c *gin.Context) {
 }
 
 func jobsOrder(db *gorm.DB) *gorm.DB {
-	return db.Order("esi_jobs.end_date desc")
+	return db.Order("esi_jobs.end_date asc")
 }
 
 func AppSAPRefresh(c *gin.Context) {
