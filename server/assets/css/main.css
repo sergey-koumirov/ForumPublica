@@ -27,7 +27,14 @@ table td, table th{
 img.w24{
   width: 24px;
   height: 24px;
-  background: #cccccc;
+}
+
+img.w24.a1{
+  background: #eeaa00;
+}
+
+img.w24.a4, img.w24.a8{
+  background: #4080dc;
 }
 
 .table.table-sm td{

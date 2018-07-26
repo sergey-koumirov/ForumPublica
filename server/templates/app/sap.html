@@ -19,9 +19,10 @@
   <tr>
     <td class="text-right">{{$e.Rest}}</td>
     <td class="text-right"><span class="gray">x</span>{{$e.Runs}}</td>
-    <td class="text-right"><img class="w24" src="/assets/images/activities/{{$e.ActivityId}}.png"></td>
+    <td class="text-right"><img class="w24 a{{$e.ActivityId}}" src="/assets/images/activities/{{$e.ActivityId}}.png"></td>
     <td class="text-left">
       <img class="w24" src="https://imageserver.eveonline.com/Type/{{$e.BlueprintTypeId}}_32.png">
+      {{$e.BlueprintName}}
     </td>
   </tr>
   {{ end }}

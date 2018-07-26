@@ -1,10 +1,9 @@
 package main
 
 import (
-	"ForumPublica/sde/service"
+	"ForumPublica/sde/static"
 	"ForumPublica/server/config"
 	"ForumPublica/server/db"
-	"archive/zip"
 	"flag"
 	"fmt"
 )
@@ -30,17 +29,9 @@ func main() {
 		return
 	}
 
-	r, zipErr := zip.OpenReader(*fileName)
-	if zipErr != nil {
-		fmt.Println("zip.OpenReader:", zipErr)
-		return
-	}
-	defer r.Close()
+	static.LoadJSONs(*fileName)
 
-	for _, f := range r.File {
-		// fmt.Printf("%+v\n", f.FileHeader.Name)
-		service.ImportTypes(f)
-		service.ImportBlueprints(f)
-	}
+	fmt.Printf("%+v\n", static.Types[17325])
+	fmt.Printf("%+v\n", static.Blueprints[17325])
 
 }

@@ -14,6 +14,7 @@ type VarsValues struct {
 	SSOSecretKey string
 	DBC          string
 	SESSION_KEY  string
+	SDE          string
 }
 
 var Vars *VarsValues = nil

@@ -3,6 +3,7 @@ package models
 import (
 	"ForumPublica/server/db"
 	"ForumPublica/server/esi"
+	"fmt"
 )
 
 type Character struct {
@@ -29,7 +30,10 @@ func (c *Character) TableName() string {
 }
 
 func (char *Character) GetESI() esi.ESI {
-	db.DB.First(char, char.Id)
+	errGet := db.DB.First(&char, char.Id).Error
+	if errGet != nil {
+		fmt.Println("errGet:", errGet, char, char.Id)
+	}
 
 	result := esi.ESI{
 		AccessToken:  char.TokAccessToken,
@@ -41,7 +45,10 @@ func (char *Character) GetESI() esi.ESI {
 		result.RefreshAccessToken()
 		char.TokAccessToken = result.AccessToken
 		char.VerExpiresOn = result.ExpiresOn
-		db.DB.Update(char)
+		errUpd := db.DB.Model(&char).Updates(&char).Error
+		if errUpd != nil {
+			fmt.Println("errUpd:", errUpd)
+		}
 	}
 
 	return result

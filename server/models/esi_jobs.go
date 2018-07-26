@@ -1,6 +1,7 @@
 package models
 
 import (
+	"ForumPublica/sde/static"
 	"ForumPublica/server/utils"
 	"fmt"
 	"strings"
@@ -43,4 +44,8 @@ func (j *Job) EndDateH() string {
 
 func (j *Job) Rest() string {
 	return utils.FormatToHM(j.EndDate)
+}
+
+func (j *Job) BlueprintName() string {
+	return static.Types[j.BlueprintTypeId].Name
 }

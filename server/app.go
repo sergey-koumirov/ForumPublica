@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ForumPublica/sde/static"
 	"ForumPublica/server/config"
 	"ForumPublica/server/ctrl"
 	"ForumPublica/server/db"
@@ -19,6 +20,8 @@ func main() {
 		fmt.Println("Vars load problem")
 		return
 	}
+
+	static.LoadJSONs(config.Vars.SDE)
 
 	errMgr := db.Migrate()
 	if errMgr != nil {
