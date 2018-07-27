@@ -7,16 +7,20 @@ import (
 )
 
 func StrToMinut(str string) int64 {
-	now_str := time.Now().UTC().Format("2006-01-02 15:04:05")
+	nowStr := time.Now().UTC().Format("2006-01-02 15:04:05")
 	last, _ := time.Parse("2006-01-02T15:04:05Z", str)
-	now, _ := time.Parse("2006-01-02 15:04:05", now_str)
+	now, _ := time.Parse("2006-01-02 15:04:05", nowStr)
 
 	return int64(math.Floor(now.Sub(last).Minutes()))
 }
 
 func FormatToHM(str string) string {
+	return FormatToHMPlus(str, 0)
+}
 
-	minutes := float64(StrToMinut(str))
+func FormatToHMPlus(str string, plus int64) string {
+	minutes := float64(StrToMinut(str) - plus)
+
 	if minutes > 0 {
 		minutes = 0
 	} else {
@@ -30,5 +34,4 @@ func FormatToHM(str string) string {
 	} else {
 		return fmt.Sprintf("%02.0f:%02.0f", math.Floor(minutes/60), math.Mod(minutes, 60))
 	}
-
 }

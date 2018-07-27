@@ -6,7 +6,9 @@ import (
 	"ForumPublica/server/ctrl"
 	"ForumPublica/server/db"
 	"ForumPublica/server/middleware"
+	"ForumPublica/server/utils"
 	"fmt"
+	"html/template"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -39,6 +41,9 @@ func main() {
 	store := cookie.NewStore([]byte(config.Vars.SESSION_KEY))
 
 	r := gin.Default()
+	r.SetFuncMap(template.FuncMap{
+		"TimeoutClass": utils.TimeoutClass,
+	})
 
 	r.Static("/assets", "./server/assets")
 	r.StaticFile("/favicon.ico", "./server/assets/favicon.ico")

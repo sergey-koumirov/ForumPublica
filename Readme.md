@@ -1,3 +1,9 @@
+# todo
+skills on S&P
+refresh timeout on S&P
+
+
+
 # run dev
 server
 `go run ./server/app.go`
