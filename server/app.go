@@ -64,6 +64,7 @@ func main() {
 		authorized.GET("/index", ctrl.AppIndex)
 		authorized.GET("/chars", ctrl.AppChars)
 		authorized.GET("/chars/add", middleware.Add)
+		authorized.GET("/char/:cid/refresh_skills", ctrl.CharRefreshSkills)
 		authorized.GET("/sap", ctrl.AppSAP)
 		authorized.GET("/sap/refresh", ctrl.AppSAPRefresh)
 	}

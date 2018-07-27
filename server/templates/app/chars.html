@@ -3,19 +3,31 @@
 
 <h5>Chars <a href="/app/chars/add"><span class="oi oi-plus"></span></a></h5>
 
-<table class="table">
+<table class="table table-sm">
   <tr>
     <th class="text-center">Id</th>
     <th class="text-center">Name</th>
     <th class="text-center">Scope</th>
+    <th></th>
   </tr>
 
   {{ range $index, $e := .chars }}
   <tr>
     <td class="text-right">{{ $e.Id }}</td>
-    <td>{{ $e.Name }}</td>
+    <td class="w80">{{ $e.Name }}</td>
     <td>{{ $e.VerScopes }}</td>
   </tr>
+  <tr>
+    <td colspan="2"><a href="/app/char/{{$e.Id}}/refresh_skills">Refresh Skills</a></td>
+    <td>
+    {{ range $si, $s := $e.Skills }}
+    <span class="badge badge-info">
+      {{$s.Name}} {{$s.Level}}
+    </span>
+    {{ end }}
+    </td>
+  </tr>
+
   {{ end }}
 </table>
 

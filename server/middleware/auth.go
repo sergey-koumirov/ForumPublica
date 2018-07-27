@@ -104,7 +104,7 @@ func AuthCallback(c *gin.Context) {
 
 		if user.Id != char.UserId {
 			char.UserId = user.Id
-			db.DB.Model(&char).Update("user_id", "user.Id")
+			db.DB.Model(&char).Update("user_id", user.Id)
 		}
 
 	} else {
