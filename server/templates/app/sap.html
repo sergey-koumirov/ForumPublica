@@ -19,9 +19,16 @@
 
   {{ range $index, $c := .chars }}
   <tr>
-    <th colspan="4">{{$c.Name}}</th>
+    <td colspan="4">
+      <b>{{$c.Char.Name}}</b>:
+      <span class="gray">manufacturing</span>
+      <span class="orange"><b>{{$c.MnfJobs}} / {{$c.MaxMnfJobs}}</b></span>
+
+      <span class="gray">science</span>
+      <span class="blue"><b>{{$c.ScnJobs}} / {{$c.MaxScnJobs}}</b></span>
+    </td>
   </tr>
-  {{ range $index, $e := $c.Jobs }}
+  {{ range $index, $e := $c.Char.Jobs }}
   <tr>
     <td class="text-right">{{$e.Rest}}</td>
     <td class="text-right"><span class="gray">x</span>{{$e.Runs}}</td>

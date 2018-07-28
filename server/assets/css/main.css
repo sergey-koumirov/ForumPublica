@@ -33,7 +33,7 @@ img.w24.a1{
   background: #eeaa00;
 }
 
-img.w24.a3, img.w24.a4, img.w24.a8{
+img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
   background: #4080dc;
 }
 
@@ -48,6 +48,10 @@ img.w24.a3, img.w24.a4, img.w24.a8{
 
 .orange{
   color: #eeaa00;
+}
+
+.blue{
+  color: #4080dc;
 }
 
 .w80{
