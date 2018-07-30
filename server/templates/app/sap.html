@@ -9,39 +9,37 @@
   <sup class="{{.timeout | TimeoutClass}}">{{.timeout}}</sup>
 </h5>
 
-<table class="table table-sm table-striped">
-  <tr>
-    <th class="text-center w80"></th>
-    <th class="text-center w80"></th>
-    <th class="text-center w24"></th>
-    <th class="text-center">Blueprint</th>
-  </tr>
-
+<div class="row">
   {{ range $index, $c := .chars }}
-  <tr>
-    <td colspan="4">
-      <b>{{$c.Char.Name}}</b>:
-      <span class="gray">manufacturing</span>
-      <span class="orange"><b>{{$c.MnfJobs}} / {{$c.MaxMnfJobs}}</b></span>
+  <div class="col-sm-4">
+    <table class="table table-sm table-striped">
+      <tr>
+        <td class="text-left" colspan="4">
+          <img width="32" height="32" src="https://image.eveonline.com/Character/{{$c.Char.Id}}_32.jpg">
+          <b>{{$c.Char.Name}}</b>:
+          <span class="gray">manufacturing</span>
+          <span class="orange"><b>{{$c.MnfJobs}} / {{$c.MaxMnfJobs}}</b></span>
 
-      <span class="gray">science</span>
-      <span class="blue"><b>{{$c.ScnJobs}} / {{$c.MaxScnJobs}}</b></span>
-    </td>
-  </tr>
-  {{ range $index, $e := $c.Char.Jobs }}
-  <tr>
-    <td class="text-right">{{$e.Rest}}</td>
-    <td class="text-right"><span class="gray">x</span>{{$e.Runs}}</td>
-    <td class="text-right"><img class="w24 a{{$e.ActivityId}}" src="/assets/images/activities/{{$e.ActivityId}}.png"></td>
-    <td class="text-left">
-      <img class="w24" src="https://imageserver.eveonline.com/Type/{{$e.BlueprintTypeId}}_32.png">
-      {{$e.BlueprintName}}
-    </td>
-  </tr>
+          <span class="gray">science</span>
+          <span class="blue"><b>{{$c.ScnJobs}} / {{$c.MaxScnJobs}}</b></span>
+        </td>
+      </tr>
+      {{ range $index, $e := $c.Char.Jobs }}
+      <tr>
+        <td class="text-right w80">{{$e.Rest}}</td>
+        <td class="text-right w80"><span class="gray">x</span>{{$e.Runs}}</td>
+        <td class="text-right w24"><img class="w24 a{{$e.ActivityId}}" src="/assets/images/activities/{{$e.ActivityId}}.png"></td>
+        <td class="text-left">
+          <img class="w24" src="https://imageserver.eveonline.com/Type/{{$e.BlueprintTypeId}}_32.png">
+          {{$e.BlueprintName}}
+        </td>
+      </tr>
+      {{ end }}
+    </table>
+  </div>
   {{ end }}
-  {{ end }}
+</div>
 
-</table>
 
 {{ template "base_foot" }}
 {{ end }}

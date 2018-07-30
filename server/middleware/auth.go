@@ -10,7 +10,6 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 )
 
 var (
@@ -88,7 +87,9 @@ func AuthCallback(c *gin.Context) {
 
 	char := models.Character{Id: info.CharacterID}
 	errChar := db.DB.First(&char, char.Id).Error
-	charEx := errChar == gorm.ErrRecordNotFound
+	charEx := errChar == nil
+
+	fmt.Println(char, errChar, charEx)
 
 	var user models.User
 	setUser, _ := c.Get(USER)
