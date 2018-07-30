@@ -2,34 +2,42 @@
 {{ template "base_head" .}}
 
 <h5>Chars <a href="/app/chars/add"><span class="oi oi-plus"></span></a></h5>
-
-<table class="table table-sm">
-  <tr>
-    <th class="text-center">Id</th>
-    <th class="text-center">Name</th>
-    <th class="text-center">Scope</th>
-    <th></th>
-  </tr>
-
+<div class="container">
   {{ range $index, $e := .chars }}
+  <table class="table table-sm table-striped">
   <tr>
-    <td class="text-right">{{ $e.Id }}</td>
-    <td class="w80">{{ $e.Name }}</td>
+    <td class="text-left">
+      <img width="32" height="32" src="https://image.eveonline.com/Character/{{$e.Id}}_32.jpg">
+      {{ $e.Name }}
+      ({{ $e.Id }})
+    </td>
+  </tr>
+  <tr>
     <td>{{ $e.VerScopes }}</td>
   </tr>
   <tr>
-    <td colspan="2"><a href="/app/char/{{$e.Id}}/refresh_skills">Refresh Skills</a></td>
     <td>
-    {{ range $si, $s := $e.Skills }}
-    <span class="badge badge-info">
-      {{$s.Name}} {{$s.Level}}
-    </span>
-    {{ end }}
+      <a href="/app/char/{{$e.Id}}/refresh_skills">Refresh Skills</a>
+      <button class="btn btn-info btn-sm"
+              type="button"
+              data-toggle="collapse"
+              data-target="#cs{{$e.Id}}"
+              aria-expanded="false"
+              aria-controls="cs{{$e.Id}}">
+        Skills ({{len $e.Skills}})
+      </button>
+      <div class="collapse" id="cs{{$e.Id}}">
+        {{ range $si, $s := $e.Skills }}
+        <span class="badge badge-info">
+          {{$s.Name}} {{$s.Level}}
+        </span>
+        {{ end }}
+      </div>
     </td>
   </tr>
-
+  </table>
   {{ end }}
-</table>
+</div>
 
 {{ template "base_foot" }}
 {{ end }}
