@@ -62,3 +62,7 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
 .w24{
   width: 24px;
 }
+
+.container{
+  max-width: 100%;
+}
