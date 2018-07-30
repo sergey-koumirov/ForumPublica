@@ -9,6 +9,7 @@
   <sup class="{{.timeout | TimeoutClass}}">{{.timeout}}</sup>
 </h5>
 
+<div class="container">
 <div class="row">
   {{ range $index, $c := .chars }}
   <div class="col-sm-4">
@@ -39,7 +40,7 @@
   </div>
   {{ end }}
 </div>
-
+</div>
 
 {{ template "base_foot" }}
 {{ end }}
