@@ -25,14 +25,17 @@ func RefreshSkills(cid int64) {
 	}
 
 	for _, skill := range skills.R.Skills {
+
 		temp := models.Skill{
 			EsiCharacterId: cid,
 			SkillId:        skill.SkillId,
-			Level:          skill.ActiveSkillLevel,
 			Name:           static.Types[skill.SkillId].Name,
 		}
 
 		errSk := db.DB.Where("esi_character_id = ? and skill_id = ?", cid, temp.SkillId).First(&temp).Error
+
+		temp.Level = skill.ActiveSkillLevel
+
 		if errSk == nil {
 			db.DB.Model(&temp).Update("level", temp.Level)
 		} else if errSk == gorm.ErrRecordNotFound {
