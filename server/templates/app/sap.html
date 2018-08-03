@@ -13,9 +13,9 @@
 <div class="row">
   {{ range $index, $c := .chars }}
   <div class="col-sm-4">
-    <table class="table table-sm table-striped">
+    <table class="table table-sm table-striped table-cut">
       <tr>
-        <td class="text-left" colspan="4">
+        <td class="text-left" colspan="5">
           <img width="32" height="32" src="https://image.eveonline.com/Character/{{$c.Char.Id}}_32.jpg">
           <b>{{$c.Char.Name}}</b>:
           <span class="gray">manufacturing</span>
@@ -27,13 +27,18 @@
       </tr>
       {{ range $index, $e := $c.Char.Jobs }}
       <tr>
-        <td class="text-right w80">{{$e.Rest}}</td>
-        <td class="text-right w80"><span class="gray">x</span>{{$e.Runs}}</td>
+        <td class="text-right w60">{{$e.Rest}}</td>
+        <td class="text-right w60"><span class="gray">x</span>{{$e.Runs}}</td>
         <td class="text-right w24"><img class="w24 a{{$e.ActivityId}}" src="/assets/images/activities/{{$e.ActivityId}}.png"></td>
         <td class="text-left">
           <img class="w24" src="https://imageserver.eveonline.com/Type/{{$e.BlueprintTypeId}}_32.png">
           {{$e.BlueprintName}}
         </td>
+        <td class="text-left shy">
+          <img class="w24" src="https://imageserver.eveonline.com/Type/{{$e.ProductTypeId}}_32.png">
+          {{$e.ProductName}}
+        </td>
+
       </tr>
       {{ end }}
     </table>

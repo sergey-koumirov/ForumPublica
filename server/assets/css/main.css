@@ -43,6 +43,16 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
   padding-left: 0;
 }
 
+.table-cut td{
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100px;
+}
+
+.table-cut td.shy{
+  opacity: 0.35;
+}
+
 .gray{
   color: #aaaaaa;
 }
@@ -57,6 +67,10 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
 
 .w80{
   width: 80px;
+}
+
+.w60{
+  width: 60px;
 }
 
 .w24{

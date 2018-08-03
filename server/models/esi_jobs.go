@@ -49,3 +49,7 @@ func (j *Job) Rest() string {
 func (j *Job) BlueprintName() string {
 	return static.Types[j.BlueprintTypeId].Name
 }
+
+func (j *Job) ProductName() string {
+	return static.Types[j.ProductTypeId].Name
+}
