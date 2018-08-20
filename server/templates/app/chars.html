@@ -1,43 +1,46 @@
-{{ define "app/chars.html" }}
-{{ template "base_head" .}}
+<% define "app/chars.html" %>
+<% template "base_head" .%>
 
 <h5>Chars <a href="/app/chars/add"><span class="oi oi-plus"></span></a></h5>
 <div class="container">
-  {{ range $index, $e := .chars }}
+  <% range $index, $e := .chars %>
   <table class="table table-sm table-striped">
   <tr>
     <td class="text-left">
-      <img width="32" height="32" src="https://image.eveonline.com/Character/{{$e.Id}}_32.jpg">
-      {{ $e.Name }}
-      ({{ $e.Id }})
+      <img width="32" height="32" src="https://image.eveonline.com/Character/<%$e.Id%>_32.jpg">
+      <% $e.Name %>
+      (<% $e.Id %>)
     </td>
   </tr>
   <tr>
-    <td>{{ $e.VerScopes }}</td>
+    <td><% $e.VerScopes %></td>
   </tr>
   <tr>
     <td>
-      <a href="/app/char/{{$e.Id}}/refresh_skills">Refresh Skills</a>
+      <a href="/app/char/<%$e.Id%>/refresh_skills">
+        <span class="oi oi-loop-circular"></span>
+        Refresh Skills
+      </a>
       <button class="btn btn-info btn-sm"
               type="button"
               data-toggle="collapse"
-              data-target="#cs{{$e.Id}}"
+              data-target="#cs<%$e.Id%>"
               aria-expanded="false"
-              aria-controls="cs{{$e.Id}}">
-        Skills ({{len $e.Skills}})
+              aria-controls="cs<%$e.Id%>">
+        Skills (<%len $e.Skills%>)
       </button>
-      <div class="collapse" id="cs{{$e.Id}}">
-        {{ range $si, $s := $e.Skills }}
+      <div class="collapse" id="cs<%$e.Id%>">
+        <% range $si, $s := $e.Skills %>
         <span class="badge badge-info">
-          {{$s.Name}} {{$s.Level}}
+          <%$s.Name%> <%$s.Level%>
         </span>
-        {{ end }}
+        <% end %>
       </div>
     </td>
   </tr>
   </table>
-  {{ end }}
+  <% end %>
 </div>
 
-{{ template "base_foot" }}
-{{ end }}
+<% template "base_foot" %>
+<% end %>

@@ -1,4 +1,4 @@
-{{define "base_head"}}
+<%define "base_head"%>
 <!doctype html>
 <html>
   <head>
@@ -11,18 +11,7 @@
   <body>
 
     <div class="container">
-      <div class="menu-bar">
-        {{ if not .user }}
-        <a href="/login">Login</a> |
-        {{else}}
-        <a href="/app/sap">Science & Production</a> |
-        <a href="/app/chars">SSO Logins</a> |
-        <a href="/logout">Log Out ({{.user.Id}})</a> |
-          {{ if eq .user.Role "A" }}
-          <a href="/admin/users"><span class="oi admin oi-aperture"></span></a>
-          {{end}}
-        {{end}}
-      </div>
+      <% template "menu" .%>
     </div>
 
-{{end}}
+<%end%>

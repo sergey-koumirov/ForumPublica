@@ -89,15 +89,17 @@ func AuthCallback(c *gin.Context) {
 	errChar := db.DB.First(&char, char.Id).Error
 	charEx := errChar == nil
 
-	fmt.Println(char, errChar, charEx)
+	// fmt.Println(char, errChar, charEx)
 
 	var user models.User
 	setUser, _ := c.Get(USER)
 
-	if charEx && setUser == nil {
+	if !charEx && setUser == nil {
 		user = models.User{Role: "U"}
 		db.DB.Create(&user)
-	} else if charEx && setUser == nil {
+	}
+
+	if charEx && setUser == nil {
 		user.Id = char.UserId
 		db.DB.First(&user, user.Id)
 	} else if charEx && setUser != nil {
@@ -107,7 +109,6 @@ func AuthCallback(c *gin.Context) {
 			char.UserId = user.Id
 			db.DB.Model(&char).Update("user_id", user.Id)
 		}
-
 	} else {
 		user = setUser.(models.User)
 	}

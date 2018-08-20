@@ -48,6 +48,7 @@ func main() {
 	r.Static("/assets", "./server/assets")
 	r.StaticFile("/favicon.ico", "./server/assets/favicon.ico")
 
+	r.Delims("<%", "%>")
 	r.LoadHTMLGlob("server/templates/**/*.html")
 
 	r.Use(sessions.Sessions("mysession", store))
@@ -62,11 +63,15 @@ func main() {
 	authorized.Use(middleware.Auth)
 	{
 		authorized.GET("/index", ctrl.AppIndex)
+
 		authorized.GET("/chars", ctrl.AppChars)
 		authorized.GET("/chars/add", middleware.Add)
 		authorized.GET("/char/:cid/refresh_skills", ctrl.CharRefreshSkills)
+
 		authorized.GET("/sap", ctrl.AppSAP)
 		authorized.GET("/sap/refresh", ctrl.AppSAPRefresh)
+
+		authorized.GET("/constructions", ctrl.AppConstructions)
 	}
 
 	gin.SetMode(config.Vars.MODE)

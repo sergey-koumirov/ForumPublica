@@ -1,44 +1,44 @@
-{{ define "app/sap.html" }}
-{{ template "base_head" .}}
+<% define "app/sap.html" %>
+<% template "base_head" .%>
 
 <h5>
   Science & Production
   <a href="/app/sap/refresh">
-    <span class="oi oi-loop-circular {{.timeout | TimeoutClass}}"></span>
+    <span class="oi oi-loop-circular <%.timeout | TimeoutClass%>"></span>
   </a>
-  <sup class="{{.timeout | TimeoutClass}}">{{.timeout}}</sup>
+  <sup class="<%.timeout | TimeoutClass%>"><%.timeout%></sup>
 </h5>
 
 <div class="container">
 <div class="row">
-  {{ range $index, $c := .chars }}
+  <% range $index, $c := .chars %>
   <div class="col-sm-4">
     <table class="table table-sm table-striped table-cut">
       <tr>
         <td class="text-left" colspan="5">
-          <img width="32" height="32" src="https://image.eveonline.com/Character/{{$c.Char.Id}}_32.jpg">
-          <b>{{$c.Char.Name}}</b>:
+          <img width="32" height="32" src="https://image.eveonline.com/Character/<%$c.Char.Id%>_32.jpg">
+          <b><%$c.Char.Name%></b>:
           <span class="gray">manufacturing</span>
-          <span class="orange"><b>{{$c.MnfJobs}} / {{$c.MaxMnfJobs}}</b></span>
+          <span class="orange"><b><%$c.MnfJobs%> / <%$c.MaxMnfJobs%></b></span>
 
           <span class="gray">science</span>
-          <span class="blue"><b>{{$c.ScnJobs}} / {{$c.MaxScnJobs}}</b></span>
+          <span class="blue"><b><%$c.ScnJobs%> / <%$c.MaxScnJobs%></b></span>
         </td>
       </tr>
-      {{ range $index, $e := $c.Char.Jobs }}
+      <% range $index, $e := $c.Char.Jobs %>
 
-      {{if eq $e.ActivityId 1 }} {{template "app/sap_a1.html" $e}} {{ end }}
-      {{if eq $e.ActivityId 3 }} {{template "app/sap_a3.html" $e}} {{ end }}
-      {{if eq $e.ActivityId 4 }} {{template "app/sap_a4.html" $e}} {{ end }}
-      {{if eq $e.ActivityId 5 }} {{template "app/sap_a5.html" $e}} {{ end }}
-      {{if eq $e.ActivityId 8 }} {{template "app/sap_a8.html" $e}} {{ end }}
+      <%if eq $e.ActivityId 1 %> <%template "app/sap_a1.html" $e%> <% end %>
+      <%if eq $e.ActivityId 3 %> <%template "app/sap_a3.html" $e%> <% end %>
+      <%if eq $e.ActivityId 4 %> <%template "app/sap_a4.html" $e%> <% end %>
+      <%if eq $e.ActivityId 5 %> <%template "app/sap_a5.html" $e%> <% end %>
+      <%if eq $e.ActivityId 8 %> <%template "app/sap_a8.html" $e%> <% end %>
 
-      {{ end }}
+      <% end %>
     </table>
   </div>
-  {{ end }}
+  <% end %>
 </div>
 </div>
 
-{{ template "base_foot" }}
-{{ end }}
+<% template "base_foot" %>
+<% end %>
