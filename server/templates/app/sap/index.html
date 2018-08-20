@@ -1,4 +1,4 @@
-<% define "app/sap.html" %>
+<% define "app/sap/index.html" %>
 <% template "base_head" .%>
 
 <h5>
@@ -27,11 +27,11 @@
       </tr>
       <% range $index, $e := $c.Char.Jobs %>
 
-      <%if eq $e.ActivityId 1 %> <%template "app/sap_a1.html" $e%> <% end %>
-      <%if eq $e.ActivityId 3 %> <%template "app/sap_a3.html" $e%> <% end %>
-      <%if eq $e.ActivityId 4 %> <%template "app/sap_a4.html" $e%> <% end %>
-      <%if eq $e.ActivityId 5 %> <%template "app/sap_a5.html" $e%> <% end %>
-      <%if eq $e.ActivityId 8 %> <%template "app/sap_a8.html" $e%> <% end %>
+      <%if eq $e.ActivityId 1 %> <%template "app/sap/a1.html" $e%> <% end %>
+      <%if eq $e.ActivityId 3 %> <%template "app/sap/a3.html" $e%> <% end %>
+      <%if eq $e.ActivityId 4 %> <%template "app/sap/a4.html" $e%> <% end %>
+      <%if eq $e.ActivityId 5 %> <%template "app/sap/a5.html" $e%> <% end %>
+      <%if eq $e.ActivityId 8 %> <%template "app/sap/a8.html" $e%> <% end %>
 
       <% end %>
     </table>

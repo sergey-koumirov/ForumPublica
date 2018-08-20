@@ -17,7 +17,7 @@ func AppSAP(c *gin.Context) {
 
 	c.Keys["chars"] = chars
 	c.Keys["timeout"] = services.GetTimeout(services.JOBS, 5)
-	c.HTML(http.StatusOK, "app/sap.html", c.Keys)
+	c.HTML(http.StatusOK, "app/sap/index.html", c.Keys)
 }
 
 func AppSAPRefresh(c *gin.Context) {

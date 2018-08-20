@@ -1,19 +1,14 @@
-<% define "app/sap_a8.html" %>
+<% define "app/sap/a4.html" %>
 
 <tr>
   <td class="text-right w60"><%.Rest%></td>
   <td class="text-right w60">
-    <span class="gray">x</span>
-    <%.Runs%>
+    <span class="gray">+<%.Runs%></span>
   </td>
   <td class="text-right w24"><img class="w24 a<%.ActivityId%>" src="/assets/images/activities/<%.ActivityId%>.png"></td>
-  <td class="text-left">
+  <td class="text-left" colspan="2">
     <img class="w24" src="https://imageserver.eveonline.com/Type/<%.BlueprintTypeId%>_32.png">
     <%.BlueprintName%>
-  </td>
-  <td class="text-left <%if ne .Rest "00:00" %>shy<%end%>">
-    <img class="w24" src="https://imageserver.eveonline.com/Type/<%.ProductTypeId%>_32.png">
-    <%.ProductName%>
   </td>
 </tr>
 

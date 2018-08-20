@@ -9,6 +9,9 @@ import (
 	"ForumPublica/server/utils"
 	"fmt"
 	"html/template"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -49,7 +52,15 @@ func main() {
 	r.StaticFile("/favicon.ico", "./server/assets/favicon.ico")
 
 	r.Delims("<%", "%>")
-	r.LoadHTMLGlob("server/templates/**/*.html")
+
+	templates := make([]string, 0)
+	filepath.Walk("./server/templates", func(path string, info os.FileInfo, err error) error {
+		if strings.HasSuffix(path, ".html") {
+			templates = append(templates, path)
+		}
+		return nil
+	})
+	r.LoadHTMLFiles(templates...)
 
 	r.Use(sessions.Sessions("mysession", store))
 	r.Use(middleware.SetUser)
