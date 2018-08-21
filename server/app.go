@@ -83,6 +83,8 @@ func main() {
 		authorized.GET("/sap/refresh", ctrl.AppSAPRefresh)
 
 		authorized.GET("/constructions", ctrl.AppConstructions)
+		authorized.GET("/constructions/add", ctrl.AppConstructionsAdd)
+		authorized.GET("/construction/:id", ctrl.AppConstructionsShow)
 	}
 
 	gin.SetMode(config.Vars.MODE)

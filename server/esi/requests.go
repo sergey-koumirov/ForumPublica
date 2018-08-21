@@ -111,6 +111,9 @@ func auth(method string, accessToken string, url string, result interface{}) (ti
 		i++
 
 		resp, errDo = client.Do(req)
+		if errDo != nil {
+			fmt.Println("errDo", errDo)
+		}
 		defer resp.Body.Close()
 
 		if errDo != nil {
