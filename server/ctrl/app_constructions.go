@@ -12,6 +12,16 @@ import (
 )
 
 func AppConstructions(c *gin.Context) {
+	raw, _ := c.Get(middleware.USER)
+	user := raw.(models.User)
+
+	page, _ := strconv.ParseInt(c.Query("page"), 10, 64)
+
+	fmt.Println("page", page)
+
+	list := services.ConstructionsList(user.Id, page)
+	c.Keys["constructions"] = list
+
 	c.HTML(http.StatusOK, "app/constructions/index.html", c.Keys)
 }
 

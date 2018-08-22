@@ -4,12 +4,22 @@
 
 <h5>Constructions <a href="/app/constructions/add"><span class="oi oi-plus"></span></a></h5>
 
-<div id="app">
-{{test}}
-</div>
+<table class="table table-striped table-sm">
+  <tr>
+    <th>ID</th>
+    <th>Title</th>
+    <th></th>
+  </tr>
+  <% range $index, $cn := .constructions.Records %>
+  <tr>
+    <td><% $cn.Model.Id %></td>
+    <td><% $cn.Title %></td>
+    <td></td>
+  </tr>
+  <% end %>
 
+</table>
 
-<script src="/assets/js/controller.constructions.js"></script>
 
 <% template "base_foot" %>
 <% end %>
