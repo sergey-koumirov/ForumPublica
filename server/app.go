@@ -46,6 +46,7 @@ func main() {
 	r := gin.Default()
 	r.SetFuncMap(template.FuncMap{
 		"TimeoutClass": utils.TimeoutClass,
+		"Marshal":      utils.Marshal,
 	})
 
 	r.Static("/assets", "./server/assets")

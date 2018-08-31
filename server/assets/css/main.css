@@ -80,3 +80,85 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
 .container{
   max-width: 100%;
 }
+
+.construction{
+    display: inline-block;
+    width: 100%;
+}
+
+.construction .loading{
+    height: 48px;
+}
+
+.construction .columns{
+    display: flex;
+    width: calc(100% - 20px);
+}
+
+.construction .bordered{
+    border: 1px solid #A0C0ff;
+    border-radius: 16px;
+    padding-right: 4px;
+    padding-left: 4px;
+    padding-bottom: 4px;
+    margin-left: 8px;
+    min-width: 324px;
+}
+
+.construction .bordered.wide{
+    min-width: 450px;
+}
+
+.construction .bpo{
+    position:relative;
+    border: 1px solid #A0C0ff;
+    border-radius: 8px;
+
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+
+    padding-left: 4px;
+    padding-right: 16px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+
+    overflow:auto;
+
+    font-size: 12px;
+}
+
+.construction .bpo .right-top{
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    cursor: pointer;
+    color: #A0C0ff;
+}
+
+.construction .bpo .name{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.construction .bpo .controls{
+    float: left;
+}
+
+.construction .bpo .qty{
+    float: right;
+}
+
+.form-control.sm{
+    text-align: right;
+    height: auto;
+    padding: 0;
+}
+
+.form-control.sm-text{
+    text-align: left;
+    height: auto;
+    padding: 0;
+}

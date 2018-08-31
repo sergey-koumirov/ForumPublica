@@ -1,0 +1,85 @@
+<% define "app/constructions/_bpos.html" %>
+
+<h5>BPOs</h5>
+<input type="text" size=40 class="form-control sm-text" placeholder="Type Name" ng-model="newText" autocomplete result-id="newId" only="blueprints">
+<div class="bpo">
+    Full Manufacturing Time
+    <div class="time">
+        {{ construction.MnfTime | seconds }}
+    </div>
+</div>
+<div class="bpo">
+    Default Bonuses:
+    <br>
+    <select class="form-control form-control-sm" ng-model="construction.CitadelType" ng-change="SaveBonus()">
+        <option value="">Citadel Type</option>
+        <option value="Raitaru">Raitaru TE 15% ME 1%</option>
+        <option value="Azbel">Azbel TE 20% ME 1%</option>
+        <option value="Sotiyo">Sotiyo TE 30% ME 1%</option>
+    </select>
+    <select class="form-control form-control-sm" ng-model="construction.RigFactor" ng-change="SaveBonus()">
+        <option value="">Rig</option>
+        <option value="T1">T1 Rig TE 20% ME 2%</option>
+        <option value="T2">T2 Rig TE 24% ME 2.4%</option>
+    </select>
+    <select class="form-control form-control-sm" ng-model="construction.SpaceType" ng-change="SaveBonus()">
+        <option value="">Hi x 1.0</option>
+        <option value="L">Low x 1.9</option>
+        <option value="Z">Zero x 2.1</option>
+    </select>
+</div>
+
+<hr>
+
+<!--
+<div class="bpo" ng-repeat="bpo in construction.Bpos">
+    <img ngclipboard data-clipboard-text="{{bpo.BpoType.name}}" class="pointer" align="left" width="32" height="32" ng-src="https://imageserver.eveonline.com/Type/{{bpo.BpoType.id}}_32.png">
+    <div class="name">
+        <span ngclipboard data-clipboard-text="{{bpo.TypeName}}" class="glyphicon glyphicon-copy edit"></span>
+        {{bpo.BpoType.name}}
+    </div>
+    <div class="controls">
+        <span ng-click="ChangeBpoQtyAskNumber(bpo.ConstructionBpoId, bpo.Qty)" class="glyphicon glyphicon-edit edit" data-toggle="modal" data-target="#askNumberModal"></span>
+        <span ng-click="AddBpoQtyAskNumber(bpo.ConstructionBpoId)" class="glyphicon glyphicon-plus-sign edit" data-toggle="modal" data-target="#askNumberModal"></span>
+    </div>
+    <div class="me edit" ng-click="ChangeME(bpo.ConstructionBpoId, bpo.ME)" data-toggle="modal" data-target="#askMEModal">
+        ME {{bpo.ME}}
+    </div>
+    <div class="qty">
+        <span class="grayed">x</span> {{bpo.Qty | number}}
+    </div>
+
+    <span ng-click="DeleteBpo(bpo.ConstructionBpoId)" class="glyphicon glyphicon-remove right-top"></span>
+
+    <div class="invent" ng-show="bpo.IsT2">
+        <span class="grayed">Copy:</span>
+        <span class="time">{{ FormatSeconds(bpo.CopyTime)}}</span>
+        <span class="grayed">x</span>
+        {{bpo.InventCnt | number}} =
+        <span class="time">{{ FormatSeconds(bpo.CopyCnt * bpo.CopyTime)}}</span>
+    </div>
+
+    <div class="copy" ng-show="bpo.IsT2">
+        <span class="grayed">Invent:</span>
+        <span class="time">{{ FormatSeconds(bpo.InventTime)}}</span>
+        <span class="grayed">x</span>
+        {{bpo.InventCnt | number}} =
+        <span class="time">{{ FormatSeconds(bpo.InventCnt * bpo.InventTime)}}</span>
+    </div>
+
+    <div class="copy" ng-show="bpo.IsT2">
+        <span class="grayed">T1 BPO:</span>
+        <span ngclipboard data-clipboard-text="{{bpo.BlueprintT1.BlueprintItem.name}}" class="glyphicon glyphicon-copy edit"></span>
+        {{bpo.BlueprintT1.BlueprintItem.name}}
+        <br>
+        <span class="grayed">Decryptors:</span>
+        <div ng-repeat="d in bpo.BlueprintT1.Materials">
+            <span ng-click="OpenCharPopup($event, d.Type.id)" class="glyphicon glyphicon-stats edit"></span>&nbsp;
+            <span ngclipboard data-clipboard-text="{{d.Type.name}}" class="glyphicon glyphicon-copy edit"></span>&nbsp;
+            {{d.Type.name}} <span class="grayed">x</span> {{d.Quantity}}
+        </div>
+
+    </div>
+
+</div> -->
+<% end %>

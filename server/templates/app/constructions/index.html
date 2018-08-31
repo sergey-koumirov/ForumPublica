@@ -2,22 +2,29 @@
 
 <% template "base_head" .%>
 
-<h5>Constructions <a href="/app/constructions/add"><span class="oi oi-plus"></span></a></h5>
+<h5>
+  Constructions
+  <a href="/app/constructions/add"><span class="oi oi-plus"></span></a>
+</h5>
 
 <table class="table table-striped table-sm">
   <tr>
+    <th></th>
     <th>ID</th>
     <th>Title</th>
-    <th></th>
   </tr>
   <% range $index, $cn := .constructions.Records %>
   <tr>
+    <td>
+      <a href="/app/construction/<% $cn.Model.Id %>">
+        <span class="oi oi-pencil"></span>
+        edit
+      </a>
+    </td>
     <td><% $cn.Model.Id %></td>
     <td><% $cn.Title %></td>
-    <td></td>
   </tr>
   <% end %>
-
 </table>
 
 

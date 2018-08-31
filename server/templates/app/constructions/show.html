@@ -2,11 +2,63 @@
 
 <% template "base_head" .%>
 
-<h5>Construction [<% .construction.Id %> ] </h5>
+<h5>
+  <a href="/app/constructions">Constructions</a>
+  &gt; [<% .construction.Id %>]
+</h5>
 
-<div id="app">
-{{test}}
+<div id="construction" class="construction" cid="<% .construction.Id %>" construction="<% .construction | Marshal %>">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-10">
+            </div>
+            <div class="col-sm-2 loading">
+                <img width="48" height="48" ng-show="isLoading" src="/assets/images/loading.gif">
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="columns">
+        <div class="bordered">
+            <% template "app/constructions/_bpos.html" . %>
+        </div>
+
+        <div class="bordered">
+            [% template "constructions/_components.html" . %]
+        </div>
+
+        <div class="w100p">
+            <div class="bordered w100p">
+                [% template "constructions/_store.html" . %]
+            </div>
+            <div class="bordered w100p">
+                [% template "constructions/_materials.html" . %]
+            </div>
+            <div class="bordered w100p">
+                [% template "constructions/_expenses.html" . %]
+            </div>
+        </div>
+    </div>
+
+    [% template "constructions/_store_modal.html" . %]
+    [% template "constructions/_ask_number_modal.html" . %]
+    [% template "constructions/_ask_bpo_runs_modal.html" . %]
+    [% template "constructions/_ask_me_modal.html" . %]
+    [% template "constructions/_ask_expense_modal.html" . %]
+
+    <div class="popup">
+        <div class="close">x&nbsp;</div>
+        <div class="content">
+            [% range $i, $c := .sso_chars %]
+            <a href="#" ng-click="OpenMarket([% $c.Id %])">[% $c.Label %]</a><br/>
+            [% end %]
+        </div>
+    </div>
+
 </div>
+
 
 
 <script src="/assets/js/controller.constructions.js"></script>

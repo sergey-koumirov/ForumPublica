@@ -4,9 +4,7 @@
   <% if not .user %>
   <a href="/login">Login</a> |
   <%else%>
-  <a href="/app/constructions">Constructions</a> |
-  <a href="/app/sap">Science & Production</a> |
-  <a href="/app/chars">SSO Logins</a> |
+  <a href="/app/index">Index</a> |
   <a href="/logout">Log Out (<%.user.Id%>)</a> |
     <% if eq .user.Role "A" %>
     <a href="/admin/users"><span class="oi admin oi-aperture"></span></a>

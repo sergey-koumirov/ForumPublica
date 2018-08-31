@@ -1,7 +1,24 @@
 <% define "app/index.html" %>
 
 <% template "base_head" .%>
-APP INDEX
+
+<h3 class="text-center">
+  Index
+</h3>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4 offset-sm-4">
+
+          <ul>
+            <li><a href="/app/constructions">Constructions</a></li>
+            <li><a href="/app/sap">Science & Production</a></li>
+            <li><a href="/app/chars">SSO Logins</a></li>
+          </ul>
+
+        </div>
+    </div>
+</div>
 <% template "base_foot" %>
 
 <% end %>
