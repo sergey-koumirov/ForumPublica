@@ -66,3 +66,15 @@ func ConstructionGet(userId int64, cnId int64) (models.Construction, error) {
 
 	return cn, nil
 }
+
+func ConstructionSaveBonus(userId int64, cnId int64, params map[string]string) {
+	construction := models.Construction{Id: cnId}
+	errDb := db.DB.Where("user_id=?", userId).Find(&construction).Error
+
+	if errDb == nil {
+		construction.CitadelType = params["CitadelType"]
+		construction.RigFactor = params["RigFactor"]
+		construction.SpaceType = params["SpaceType"]
+		db.DB.Save(construction)
+	}
+}

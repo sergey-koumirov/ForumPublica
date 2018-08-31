@@ -1,25 +1,46 @@
 var constructions = new Vue({
     el: '#construction',
+
     data: {
-      cid: null,
       construction: {},
+      isLoading: false,
     },
+
     beforeMount: function () {
-        this.cid = this.$el.attributes['cid'].value;
-        this.construction = this.$el.attributes['construction'].value;
-        console.log(this.cid);
+        this.construction = JSON.parse(this.$el.attributes['construction'].value);
         console.log(this.construction);
     },
+
     methods: {
-        AddStation: function(){},
+
+        SaveBonus: function(){
+            var isLoading = true,
+                vm=this;
+
+            axios.post(
+                '/app/construction/'+this.construction.Id+'/save_bonus',
+                {
+                    CitadelType: this.construction.CitadelType,
+                    RigFactor: this.construction.RigFactor,
+                    SpaceType: this.construction.SpaceType,
+                }
+            ).then(function(response){
+                vm.isLoading = false;
+            }).catch(function(error){
+                console.log(error);
+            });
+
+        },
+
     },
 
     filters: {
         seconds: function(seconds){
-            var ss = seconds % 60,
-                mm = Math.trunc(seconds/60) % 60,
-                hh = Math.trunc(seconds/(60*60)) % 24,
-                dd = Math.trunc(seconds/(60*60*24));
+            var s = seconds||0,
+                ss = s % 60,
+                mm = Math.trunc(s/60) % 60,
+                hh = Math.trunc(s/(60*60)) % 24,
+                dd = Math.trunc(s/(60*60*24));
 
             var result = ("0" + hh).slice(-2) + ":" + ("0" + mm).slice(-2) + ":" +("0" + ss).slice(-2);
             if( dd > 0){ result = dd + "d " + result; }
@@ -355,20 +376,7 @@ var constructions = new Vue({
 //         $($event.currentTarget).closest("tr").addClass("highlighted");
 //     };
 //
-//     $scope.SaveBonus = function(){
-//         $scope.isLoading = true;
-//         $http.post(
-//             '/construction/'+$scope.constructionId+'/save_bonus.json',
-//             {
-//                 citadel_type: $scope.construction.CitadelType,
-//                 rig_factor: $scope.construction.RigFactor,
-//                 space_type: $scope.construction.SpaceType
-//             }
-//         ).success(function(data){
-//             $scope.construction = data;
-//             $scope.isLoading = false;
-//         });
-//     };
+
 //
 //     $scope.MaterialsText = function(){
 //         if (!$scope.construction.Materials){

@@ -11,18 +11,18 @@
 <div class="bpo">
     Default Bonuses:
     <br>
-    <select class="form-control form-control-sm" ng-model="construction.CitadelType" ng-change="SaveBonus()">
+    <select class="form-control form-control-sm" v-model="construction.CitadelType" v-on:change="SaveBonus()">
         <option value="">Citadel Type</option>
         <option value="Raitaru">Raitaru TE 15% ME 1%</option>
         <option value="Azbel">Azbel TE 20% ME 1%</option>
         <option value="Sotiyo">Sotiyo TE 30% ME 1%</option>
     </select>
-    <select class="form-control form-control-sm" ng-model="construction.RigFactor" ng-change="SaveBonus()">
+    <select class="form-control form-control-sm" v-model="construction.RigFactor" v-on:change="SaveBonus()">
         <option value="">Rig</option>
         <option value="T1">T1 Rig TE 20% ME 2%</option>
         <option value="T2">T2 Rig TE 24% ME 2.4%</option>
     </select>
-    <select class="form-control form-control-sm" ng-model="construction.SpaceType" ng-change="SaveBonus()">
+    <select class="form-control form-control-sm" v-model="construction.SpaceType" v-on:change="SaveBonus()">
         <option value="">Hi x 1.0</option>
         <option value="L">Low x 1.9</option>
         <option value="Z">Zero x 2.1</option>

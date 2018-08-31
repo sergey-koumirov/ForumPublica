@@ -50,3 +50,15 @@ func AppConstructionsShow(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "app/constructions/show.html", c.Keys)
 }
+
+func AppConstructionsSaveBonus(c *gin.Context) {
+	raw, _ := c.Get(middleware.USER)
+	user := raw.(models.User)
+
+	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	params := make(map[string]string)
+	c.BindJSON(&params)
+
+	services.ConstructionSaveBonus(user.Id, id, params)
+	c.JSON(http.StatusOK, gin.H{})
+}

@@ -86,6 +86,7 @@ func main() {
 		authorized.GET("/constructions", ctrl.AppConstructions)
 		authorized.GET("/constructions/add", ctrl.AppConstructionsAdd)
 		authorized.GET("/construction/:id", ctrl.AppConstructionsShow)
+		authorized.POST("/construction/:id/save_bonus", ctrl.AppConstructionsSaveBonus)
 	}
 
 	gin.SetMode(config.Vars.MODE)
