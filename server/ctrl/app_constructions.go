@@ -17,8 +17,6 @@ func AppConstructions(c *gin.Context) {
 
 	page, _ := strconv.ParseInt(c.Query("page"), 10, 64)
 
-	fmt.Println("page", page)
-
 	list := services.ConstructionsList(user.Id, page)
 	c.Keys["constructions"] = list
 
