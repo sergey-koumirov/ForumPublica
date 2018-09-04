@@ -14,9 +14,8 @@ var constructions = new Vue({
     methods: {
 
         SaveBonus: function(){
-            var isLoading = true,
-                vm=this;
-
+            var vm=this;
+            vm.isLoading = true,
             axios.post(
                 '/app/construction/'+this.construction.Id+'/save_bonus',
                 {

@@ -86,8 +86,8 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
     width: 100%;
 }
 
-.construction .loading{
-    height: 48px;
+.construction select.form-control-sm{
+  height: calc(1.2rem + 2px) !important;
 }
 
 .construction .columns{
@@ -161,4 +161,10 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
     text-align: left;
     height: auto;
     padding: 0;
+}
+
+img.loading{
+  position: absolute;
+  top: 0;
+  left: 0;
 }

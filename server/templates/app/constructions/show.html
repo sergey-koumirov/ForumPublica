@@ -8,17 +8,8 @@
 </h5>
 
 <div id="construction" class="construction" construction="<% .construction | Marshal %>">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-10">
-            </div>
-            <div class="col-sm-2 loading">
-                <img width="48" height="48" ng-show="isLoading" src="/assets/images/loading.gif">
-            </div>
-        </div>
-    </div>
 
-
+    <img v-if="isLoading" class="loading" width="48" height="48" src="/assets/images/loading.gif">
 
     <div class="columns">
         <div class="bordered">
@@ -59,8 +50,8 @@
 
 </div>
 
-
-
+<script src="/assets/js/vue.js"></script>
+<script src="/assets/js/component.type-select.js"></script>
 <script src="/assets/js/controller.constructions.js"></script>
 
 <% template "base_foot" %>

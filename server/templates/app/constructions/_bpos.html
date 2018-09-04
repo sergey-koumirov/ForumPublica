@@ -1,7 +1,8 @@
 <% define "app/constructions/_bpos.html" %>
 
 <h5>BPOs</h5>
-<input type="text" size=40 class="form-control sm-text" placeholder="Type Name" ng-model="newText" autocomplete result-id="newId" only="blueprints">
+
+
 <div class="bpo">
     Full Manufacturing Time
     <div class="time">
@@ -28,6 +29,10 @@
         <option value="Z">Zero x 2.1</option>
     </select>
 </div>
+<div class="bpo">
+    <type-select label="Type" v-on:type-selected="TypeSelected(entry,$event)" mode="compact"></type-select>
+</div>
+
 
 <hr>
 
