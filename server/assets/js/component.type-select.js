@@ -6,10 +6,11 @@ Vue.component('type-select', {
         '</div>',
 
 
-    props: ['label','initial','mode'],
+    props: ['label','initial','mode','filter'],
 
     mounted: function () {
-        var vm = this;
+        var vm = this,
+            filter = vm.filter||'item_type';
 
         var my_autoComplete = new autoComplete({
             selector: this.$refs.selector,
@@ -17,7 +18,7 @@ Vue.component('type-select', {
             delay: 500,
             cache: false,
             source: function(term, suggest){
-                axios.get('/app/search/item_type?term='+encodeURIComponent(term))
+                axios.get('/app/search/'+filter+'?term='+encodeURIComponent(term))
                     .then(function (r) {
                         if(!!r.data){
                             suggest(r.data);
