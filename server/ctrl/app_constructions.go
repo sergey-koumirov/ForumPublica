@@ -4,6 +4,7 @@ import (
 	"ForumPublica/server/middleware"
 	"ForumPublica/server/models"
 	"ForumPublica/server/services"
+	"ForumPublica/server/utils"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -15,10 +16,14 @@ func AppConstructions(c *gin.Context) {
 	raw, _ := c.Get(middleware.USER)
 	user := raw.(models.User)
 
-	page, _ := strconv.ParseInt(c.Query("page"), 10, 64)
-
+	page, errParse := strconv.ParseInt(c.Query("page"), 10, 64)
+	if errParse != nil {
+		page = 1
+	}
 	list := services.ConstructionsList(user.Id, page)
+
 	c.Keys["constructions"] = list
+	c.Keys["p"] = utils.NewPagination(list.Total, services.PER_PAGE, page, "/app/constructions")
 
 	c.HTML(http.StatusOK, "app/constructions/index.html", c.Keys)
 }
