@@ -4,6 +4,10 @@ body{
   font-size: 12px;
 }
 
+.pointer{
+    cursor: pointer;
+}
+
 table td, table th{
   font-size: 12px;
 }

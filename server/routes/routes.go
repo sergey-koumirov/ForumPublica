@@ -29,8 +29,8 @@ func AddAppRoutes(r *gin.Engine) {
 		authorized.GET("/constructions/add", ctrl.AppConstructionsAdd)
 		authorized.GET("/construction/:id", ctrl.AppConstructionsShow)
 		authorized.POST("/construction/:id/save_bonus", ctrl.AppConstructionsSaveBonus)
+		authorized.POST("/construction/:id/add_blueprint", ctrl.AppConstructionsAddBlueprint)
 
-		authorized.GET("/search/item_type", ctrl.AppSearchItemType)
-		authorized.GET("/search/blueprint", ctrl.AppSearchBlueprint)
+		authorized.GET("/search/:filter", ctrl.AppSearchItemType)
 	}
 }

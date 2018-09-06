@@ -29,7 +29,7 @@ func (s SearchSorter) Less(i, j int) bool {
 	return ni < nj || (ni == nj && s.Array[i].Name < s.Array[j].Name)
 }
 
-func SearchBlueprint(term string) SearchResult {
+func SearchItemType(term string, filter string) SearchResult {
 
 	result := SearchSorter{Term: strings.ToLower(term), Array: make(SearchResult, 0)}
 
@@ -37,34 +37,13 @@ func SearchBlueprint(term string) SearchResult {
 	hasTerm = regexp.MustCompile("(?i)" + term)
 
 	for _, v := range static.Types {
-		_, bpoEx := static.Blueprints[v.Id]
-		isMatch := bpoEx && hasTerm.MatchString(v.Name)
-		if isMatch {
-			result.Array = append(result.Array, v)
-		}
-	}
 
-	rlen := len(result.Array)
-	if rlen > 0 {
-		sort.Sort(result)
-		if rlen > SEARCH_ITEMS {
-			rlen = SEARCH_ITEMS
-		}
-	}
-
-	return result.Array[:rlen]
-
-}
-
-func SearchItemType(term string) SearchResult {
-
-	result := SearchSorter{Term: term, Array: make(SearchResult, 0)}
-
-	var hasTerm *regexp.Regexp
-	hasTerm = regexp.MustCompile("(?i)" + term)
-
-	for _, v := range static.Types {
 		isMatch := hasTerm.MatchString(v.Name)
+		if filter == "blueprint" {
+			_, bpoEx := static.Blueprints[v.Id]
+			isMatch = bpoEx && isMatch
+		}
+
 		if isMatch {
 			result.Array = append(result.Array, v)
 		}
@@ -79,5 +58,4 @@ func SearchItemType(term string) SearchResult {
 	}
 
 	return result.Array[:rlen]
-
 }

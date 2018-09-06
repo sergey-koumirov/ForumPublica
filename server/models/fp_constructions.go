@@ -1,5 +1,10 @@
 package models
 
+import (
+	"ForumPublica/sde/static"
+	"encoding/json"
+)
+
 type Construction struct {
 	Id     int64 `gorm:"column:id;primary_key"`
 	UserId int64 `gorm:"column:user_id"`
@@ -8,6 +13,8 @@ type Construction struct {
 	CitadelType string `gorm:"column:citadel_type"`
 	RigFactor   string `gorm:"column:rig_factor"`
 	SpaceType   string `gorm:"column:space_type"`
+
+	Bpos ConstructionBpos `gorm:"foreignkey:ConstructionId"`
 }
 
 func (u *Construction) TableName() string {
@@ -25,9 +32,24 @@ type ConstructionBpo struct {
 	Qty            int64  `gorm:"column:qty"`
 }
 
-func (u *ConstructionBpo) TableName() string {
+func (m *ConstructionBpo) TableName() string {
 	return "fp_construction_bpos"
 }
+func (m *ConstructionBpo) TypeName() string {
+	return static.Types[m.TypeId].Name
+}
+func (u *ConstructionBpo) MarshalJSON() ([]byte, error) {
+	type Alias ConstructionBpo
+	return json.Marshal(&struct {
+		TypeName string `json:"TypeName"`
+		*Alias
+	}{
+		TypeName: u.TypeName(),
+		Alias:    (*Alias)(u),
+	})
+}
+
+type ConstructionBpos []ConstructionBpo
 
 type ConstructionBpoRun struct {
 	Id                int64  `gorm:"column:id;primary_key"`

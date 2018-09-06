@@ -11,38 +11,36 @@
 <div class="bpo">
     Default Bonuses:
     <br>
-    <select class="form-control form-control-sm" v-model="construction.CitadelType" v-on:change="SaveBonus()">
+    <select class="form-control form-control-sm" v-model="construction.Model.CitadelType" v-on:change="SaveBonus()">
         <option value="">Citadel Type</option>
         <option value="Raitaru">Raitaru TE 15% ME 1%</option>
         <option value="Azbel">Azbel TE 20% ME 1%</option>
         <option value="Sotiyo">Sotiyo TE 30% ME 1%</option>
     </select>
-    <select class="form-control form-control-sm" v-model="construction.RigFactor" v-on:change="SaveBonus()">
+    <select class="form-control form-control-sm" v-model="construction.Model.RigFactor" v-on:change="SaveBonus()">
         <option value="">Rig</option>
         <option value="T1">T1 Rig TE 20% ME 2%</option>
         <option value="T2">T2 Rig TE 24% ME 2.4%</option>
     </select>
-    <select class="form-control form-control-sm" v-model="construction.SpaceType" v-on:change="SaveBonus()">
+    <select class="form-control form-control-sm" v-model="construction.Model.SpaceType" v-on:change="SaveBonus()">
         <option value="">Hi x 1.0</option>
         <option value="L">Low x 1.9</option>
         <option value="Z">Zero x 2.1</option>
     </select>
 </div>
-<div class="bpo">
-    <type-select label="Type" v-on:type-selected="TypeSelected(entry,$event)" mode="compact" filter="blueprint"></type-select>
-</div>
 
+<type-select label="Type" v-on:type-selected="TypeSelected($event)" mode="compact" filter="blueprint"></type-select>
 
-<hr>
-
-<!--
-<div class="bpo" ng-repeat="bpo in construction.Bpos">
-    <img ngclipboard data-clipboard-text="{{bpo.BpoType.name}}" class="pointer" align="left" width="32" height="32" ng-src="https://imageserver.eveonline.com/Type/{{bpo.BpoType.id}}_32.png">
+<div class="bpo" v-for="bpo in construction.Blueprints">
+    <img class="pointer copy-item"
+      align="left"
+      width="32" height="32"
+      :data-clipboard-text="bpo.Model.TypeName"
+      :src="'https://imageserver.eveonline.com/Type/'+bpo.Model.TypeId+'_32.png'">
     <div class="name">
-        <span ngclipboard data-clipboard-text="{{bpo.TypeName}}" class="glyphicon glyphicon-copy edit"></span>
-        {{bpo.BpoType.name}}
+        {{bpo.Model.TypeName}}
     </div>
-    <div class="controls">
+    <!-- <div class="controls">
         <span ng-click="ChangeBpoQtyAskNumber(bpo.ConstructionBpoId, bpo.Qty)" class="glyphicon glyphicon-edit edit" data-toggle="modal" data-target="#askNumberModal"></span>
         <span ng-click="AddBpoQtyAskNumber(bpo.ConstructionBpoId)" class="glyphicon glyphicon-plus-sign edit" data-toggle="modal" data-target="#askNumberModal"></span>
     </div>
@@ -83,7 +81,8 @@
             {{d.Type.name}} <span class="grayed">x</span> {{d.Quantity}}
         </div>
 
-    </div>
+    </div> -->
 
-</div> -->
+</div>
+
 <% end %>

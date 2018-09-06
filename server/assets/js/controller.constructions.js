@@ -1,9 +1,27 @@
+function post(vm, url, payload){
+  vm.isLoading = true,
+  axios.post(
+      url,
+      payload
+  ).then(function(response){
+      console.log(response.data);
+      vm.construction = response.data;
+      vm.isLoading = false;
+  }).catch(function(error){
+      console.log(error);
+  });
+}
+
 var constructions = new Vue({
     el: '#construction',
 
     data: {
       construction: {},
       isLoading: false,
+    },
+
+    created: function () {
+      new Clipboard('.copy-item');
     },
 
     beforeMount: function () {
@@ -14,22 +32,20 @@ var constructions = new Vue({
     methods: {
 
         SaveBonus: function(){
-            var vm=this;
-            vm.isLoading = true,
-            axios.post(
-                '/app/construction/'+this.construction.Id+'/save_bonus',
+            post(
+                this,
+                '/app/construction/'+this.construction.Model.Id+'/save_bonus',
                 {
-                    CitadelType: this.construction.CitadelType,
-                    RigFactor: this.construction.RigFactor,
-                    SpaceType: this.construction.SpaceType,
+                    CitadelType: this.construction.Model.CitadelType,
+                    RigFactor: this.construction.Model.RigFactor,
+                    SpaceType: this.construction.Model.SpaceType,
                 }
-            ).then(function(response){
-                vm.isLoading = false;
-            }).catch(function(error){
-                console.log(error);
-            });
-
+            )
         },
+
+        TypeSelected: function(typeId){
+          post(this, '/app/construction/'+this.construction.Model.Id+'/add_blueprint',{BlueprintId: typeId})
+        }
 
     },
 

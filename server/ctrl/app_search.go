@@ -8,11 +8,6 @@ import (
 )
 
 func AppSearchItemType(c *gin.Context) {
-	temp := services.SearchItemType(c.Query("term"))
-	c.JSON(http.StatusOK, temp)
-}
-
-func AppSearchBlueprint(c *gin.Context) {
-	temp := services.SearchBlueprint(c.Query("term"))
+	temp := services.SearchItemType(c.Query("term"), c.Param("filter"))
 	c.JSON(http.StatusOK, temp)
 }
