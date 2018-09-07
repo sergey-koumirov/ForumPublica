@@ -36,4 +36,11 @@ func AddAppRoutes(r *gin.Engine) {
 
 		authorized.GET("/search/:filter", ctrl.AppSearchItemType)
 	}
+
+	admin := r.Group("/admin")
+	admin.Use(middleware.Auth, middleware.Admin)
+	{
+		admin.GET("/index", ctrl.AdminIndex)
+	}
+
 }
