@@ -1,11 +1,26 @@
-function post(vm, url, payload){
+function post(vm, url, payload, ignore){
   vm.isLoading = true,
   axios.post(
       url,
       payload
   ).then(function(response){
-      console.log(response.data);
-      vm.construction = response.data;
+      if(!ignore){
+          vm.construction = response.data;
+      }
+      vm.isLoading = false;
+  }).catch(function(error){
+      console.log(error);
+  });
+}
+
+function del(vm, url, ignore){
+  vm.isLoading = true,
+  axios.delete(
+    url
+  ).then(function(response){
+      if(!ignore){
+          vm.construction = response.data;
+      }
       vm.isLoading = false;
   }).catch(function(error){
       console.log(error);
@@ -26,7 +41,6 @@ var constructions = new Vue({
 
     beforeMount: function () {
         this.construction = JSON.parse(this.$el.attributes['construction'].value);
-        console.log(this.construction);
     },
 
     methods: {
@@ -39,13 +53,20 @@ var constructions = new Vue({
                     CitadelType: this.construction.Model.CitadelType,
                     RigFactor: this.construction.Model.RigFactor,
                     SpaceType: this.construction.Model.SpaceType,
-                }
+                },
+                true
             )
         },
 
         TypeSelected: function(typeId){
-          post(this, '/app/construction/'+this.construction.Model.Id+'/add_blueprint',{BlueprintId: typeId})
-        }
+          post(this, '/app/construction/'+this.construction.Model.Id+'/add_blueprint', {BlueprintId: typeId})
+        },
+
+        DeleteBpo: function(cnBpoId){
+          if (confirm("Sure?")) {
+            del(this, '/app/construction/'+this.construction.Model.Id+'/blueprint/'+cnBpoId)
+          }
+        },
 
     },
 
@@ -135,17 +156,6 @@ var constructions = new Vue({
 //         });
 //     };
 //
-//     $scope.DeleteBpo = function(cnBpoId){
-//         if (confirm("Sure?")) {
-//             $scope.isLoading = true;
-//             $http.get(
-//                 '/construction/'+$scope.constructionId+'/delete_bpo.json?cn_bpo_id='+cnBpoId
-//             ).success(function(data) {
-//                 $scope.construction = data;
-//                 $scope.isLoading = false;
-//             });
-//         }
-//     };
 //
 //     $scope.CreateStore = function(){
 //         if (!!$scope.storeName && confirm("Sure? Store can't be unlinked.")) {

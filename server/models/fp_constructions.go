@@ -2,6 +2,7 @@ package models
 
 import (
 	"ForumPublica/sde/static"
+	"ForumPublica/server/db"
 	"encoding/json"
 )
 
@@ -35,9 +36,11 @@ type ConstructionBpo struct {
 func (m *ConstructionBpo) TableName() string {
 	return "fp_construction_bpos"
 }
+
 func (m *ConstructionBpo) TypeName() string {
 	return static.Types[m.TypeId].Name
 }
+
 func (u *ConstructionBpo) MarshalJSON() ([]byte, error) {
 	type Alias ConstructionBpo
 	return json.Marshal(&struct {
@@ -47,6 +50,10 @@ func (u *ConstructionBpo) MarshalJSON() ([]byte, error) {
 		TypeName: u.TypeName(),
 		Alias:    (*Alias)(u),
 	})
+}
+
+func (m *ConstructionBpo) Delete() {
+	db.DB.Delete(&m)
 }
 
 type ConstructionBpos []ConstructionBpo

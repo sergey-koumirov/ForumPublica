@@ -40,6 +40,9 @@
     <div class="name">
         {{bpo.Model.TypeName}}
     </div>
+
+    <span v-on:click="DeleteBpo(bpo.Model.Id)" class="oi oi-delete right-top"></span>
+
     <!-- <div class="controls">
         <span ng-click="ChangeBpoQtyAskNumber(bpo.ConstructionBpoId, bpo.Qty)" class="glyphicon glyphicon-edit edit" data-toggle="modal" data-target="#askNumberModal"></span>
         <span ng-click="AddBpoQtyAskNumber(bpo.ConstructionBpoId)" class="glyphicon glyphicon-plus-sign edit" data-toggle="modal" data-target="#askNumberModal"></span>
@@ -51,7 +54,6 @@
         <span class="grayed">x</span> {{bpo.Qty | number}}
     </div>
 
-    <span ng-click="DeleteBpo(bpo.ConstructionBpoId)" class="glyphicon glyphicon-remove right-top"></span>
 
     <div class="invent" ng-show="bpo.IsT2">
         <span class="grayed">Copy:</span>
