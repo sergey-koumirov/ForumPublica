@@ -22,6 +22,13 @@ func (u *Construction) TableName() string {
 	return "fp_constructions"
 }
 
+func (m *Construction) Delete() {
+	for _, bp := range m.Bpos {
+		bp.Delete()
+	}
+	db.DB.Delete(&m)
+}
+
 type ConstructionBpo struct {
 	Id             int64  `gorm:"column:id;primary_key"`
 	ConstructionId int64  `gorm:"column:construction_id"`

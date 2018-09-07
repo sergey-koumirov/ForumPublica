@@ -54,6 +54,16 @@ func AppConstructionsShow(c *gin.Context) {
 	c.HTML(http.StatusOK, "app/constructions/show.html", c.Keys)
 }
 
+func AppConstructionsDelete(c *gin.Context) {
+	raw, _ := c.Get(middleware.USER)
+	user := raw.(models.User)
+
+	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	services.ConstructionDelete(user.Id, id)
+
+	c.Redirect(http.StatusTemporaryRedirect, "/app/constructions")
+}
+
 func AppConstructionsSaveBonus(c *gin.Context) {
 	raw, _ := c.Get(middleware.USER)
 	user := raw.(models.User)

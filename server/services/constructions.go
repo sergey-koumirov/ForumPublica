@@ -61,6 +61,15 @@ func ConstructionCreate(userId int64) models.Construction {
 	return new
 }
 
+func ConstructionDelete(userId int64, cnId int64) {
+	cn := models.Construction{}
+	errSel := db.DB.Where("id = ? and user_id = ?", cnId, userId).First(&cn).Error
+	if errSel != nil {
+		return
+	}
+	cn.Delete()
+}
+
 func bposOrder(db *gorm.DB) *gorm.DB {
 	return db.Order("fp_construction_bpos.id asc")
 }
