@@ -10,17 +10,19 @@
   <tr>
     <th>ID</th>
     <th>Chars</th>
-    <th></th>
+    <th>Role</th>
   </tr>
   <% range $index, $u := .users %>
   <tr>
     <td><% $u.Id %></td>
     <td>
       <% range $index, $c := $u.Characters %>
-        <span class="badge badge-info"><%$c.Name%></span>
+        <span class="badge badge-light <% $u.Role %>"><%$c.Name%></span>
       <% end %>
     </td>
-    <td></td>
+    <td>
+      <span class="badge badge-light <% $u.Role %>"><% $u.Role %></span>
+    </td>
   </tr>
   <% end %>
 </table>

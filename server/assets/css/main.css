@@ -197,3 +197,11 @@ img.loading{
 .type-select input:focus{
   background: #fffff0;
 }
+
+.badge.badge-light.A{
+  color: red;
+}
+
+.badge.badge-light.U{
+  color: dark-gray;
+}
