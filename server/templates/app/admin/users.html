@@ -1,0 +1,29 @@
+<% define "admin/users.html" %>
+<% template "base_head" .%>
+
+<h3 class="text-center">
+  <a href="/admin/index">Admin Index</a>
+  &gt; Users
+</h3>
+
+<table class="table table-striped table-sm">
+  <tr>
+    <th>ID</th>
+    <th>Chars</th>
+    <th></th>
+  </tr>
+  <% range $index, $u := .users %>
+  <tr>
+    <td><% $u.Id %></td>
+    <td>
+      <% range $index, $c := $u.Characters %>
+        <span class="badge badge-info"><%$c.Name%></span>
+      <% end %>
+    </td>
+    <td></td>
+  </tr>
+  <% end %>
+</table>
+
+<% template "base_foot" %>
+<% end %>

@@ -41,6 +41,7 @@ func AddAppRoutes(r *gin.Engine) {
 	admin.Use(middleware.Auth, middleware.Admin)
 	{
 		admin.GET("/index", ctrl.AdminIndex)
+		admin.GET("/users", ctrl.AdminUsers)
 	}
 
 }
