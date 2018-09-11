@@ -7,12 +7,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type CnBlueprint struct {
-	Model models.ConstructionBpo
-}
-
-type CnBlueprints []CnBlueprint
-
 type CnRecord struct {
 	Model      models.Construction
 	Title      string
@@ -101,27 +95,6 @@ func ConstructionSaveBonus(userId int64, cnId int64, params map[string]string) {
 	construction.RigFactor = params["RigFactor"]
 	construction.SpaceType = params["SpaceType"]
 	db.DB.Save(construction)
-}
-
-func ConstructionAddBluprint(userId int64, cnId int64, params map[string]int32) {
-	construction := models.Construction{Id: cnId}
-	errDb := db.DB.Where("user_id=?", userId).Find(&construction).Error
-
-	if errDb != nil {
-		return
-	}
-
-	new := models.ConstructionBpo{
-		ConstructionId: construction.Id,
-		Kind:           "goal",
-		TypeId:         params["BlueprintId"],
-		ME:             10,
-		TE:             20,
-		Qty:            1,
-	}
-
-	db.DB.Create(&new)
-
 }
 
 func loadCn(result *CnRecord, cn models.Construction) {

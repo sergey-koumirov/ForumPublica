@@ -48,10 +48,16 @@
         </div>
     </div>
 
+    <modal v-if="showMEModal" @close="showMEModal = false">
+        <h3 slot="header">custom header</h3>
+    </modal>
+
 </div>
 
 <script src="/assets/js/vue.js"></script>
 <script src="/assets/js/component.type-select.js"></script>
+<script src="/assets/js/component.modal.js"></script>
+<script src="/assets/js/vue.filters.js"></script>
 <script src="/assets/js/controller.constructions.js"></script>
 
 <% template "base_foot" %>

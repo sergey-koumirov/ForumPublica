@@ -75,17 +75,3 @@ func AppConstructionsSaveBonus(c *gin.Context) {
 	services.ConstructionSaveBonus(user.Id, id, params)
 	c.JSON(http.StatusOK, gin.H{})
 }
-
-func AppConstructionsAddBlueprint(c *gin.Context) {
-	raw, _ := c.Get(middleware.USER)
-	user := raw.(models.User)
-
-	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
-	params := make(map[string]int32)
-	c.BindJSON(&params)
-
-	services.ConstructionAddBluprint(user.Id, id, params)
-	cn, _ := services.ConstructionGet(user.Id, id)
-
-	c.JSON(http.StatusOK, cn)
-}
