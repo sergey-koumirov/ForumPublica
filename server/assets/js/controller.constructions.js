@@ -1,3 +1,18 @@
+function patch(vm, url, payload, ignore){
+  vm.isLoading = true,
+  axios.patch(
+      url,
+      payload
+  ).then(function(response){
+      if(!ignore){
+          vm.construction = response.data;
+      }
+      vm.isLoading = false;
+  }).catch(function(error){
+      console.log(error);
+  });
+}
+
 function post(vm, url, payload, ignore){
   vm.isLoading = true,
   axios.post(
@@ -34,6 +49,11 @@ var constructions = new Vue({
       construction: {},
       isLoading: false,
       showMEModal: false,
+      showQtyModal: false,
+      ask: {
+        me: null,
+        bpId: null,
+      }
     },
 
     created: function () {
@@ -70,8 +90,26 @@ var constructions = new Vue({
         },
 
         ChangeME: function(bpId, me){
-            this.showMEModal = true;
-        }
+          this.ask.me = me;
+          this.ask.bpId = bpId;
+          this.showMEModal = true;
+        },
+
+        SaveME: function(){
+          console.log(this.ask.me, this.ask.bpId);
+
+          patch(
+            this,
+            '/app/construction/'+this.construction.Model.Id+'/blueprint/'+this.ask.bpId,
+            {me: this.ask.me}
+          )
+
+          this.showMEModal = false;
+        },
+
+        ChangeQty: function(bpId, qty){
+            this.showQtyModal = true;
+        },
 
     },
 });

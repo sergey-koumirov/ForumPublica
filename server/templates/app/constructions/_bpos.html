@@ -43,18 +43,16 @@
 
     <span v-on:click="DeleteBpo(bpo.Model.Id)" class="oi oi-delete right-top"></span>
 
-    <div class="controls pointer oi-btn" ng-click="ChangeBpoQtyAskNumber(bpo.ConstructionBpoId, bpo.Qty)" data-toggle="modal" data-target="#askNumberModal">
-        <span class="oi oi-ellipses"></span>
-    </div>
-
-    <div class="me pointer oi-btn" v-on:click="ChangeME(bpo.Model.Id, bpo.ME)">
+    <div class="me pointer oi-btn" v-on:click="ChangeME(bpo.Model.Id, bpo.Model.ME)">
         ME<b>{{bpo.Model.ME}}</b>
     </div>
 
     <div class="qty">
         <span class="grayed">x</span> {{bpo.Model.Qty | number}}
     </div>
-
+    <div class="controls pointer oi-btn" v-on:click="ChangeQty(bpo.Model.Id, bpo.Model.Qty)">
+        <span class="oi oi-ellipses"></span>
+    </div>
 <!--
     <div class="invent" ng-show="bpo.IsT2">
         <span class="grayed">Copy:</span>

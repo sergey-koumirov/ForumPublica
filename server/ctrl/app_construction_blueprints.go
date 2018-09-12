@@ -36,3 +36,19 @@ func AppConstructionBlueprintsDelete(c *gin.Context) {
 
 	c.JSON(http.StatusOK, cn)
 }
+
+func AppConstructionBlueprintsUpdate(c *gin.Context) {
+	raw, _ := c.Get(middleware.USER)
+	user := raw.(models.User)
+
+	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	cid, _ := strconv.ParseInt(c.Param("cid"), 10, 64)
+
+	params := make(map[string]int32)
+	c.BindJSON(&params)
+
+	services.ConstructionBlueprintUpdate(user.Id, cid, id, params)
+	cn, _ := services.ConstructionGet(user.Id, cid)
+
+	c.JSON(http.StatusOK, cn)
+}

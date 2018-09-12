@@ -33,6 +33,7 @@ func AddAppRoutes(r *gin.Engine) {
 		authorized.POST("/construction/:id/add_blueprint", ctrl.AppConstructionsAddBlueprint)
 
 		authorized.DELETE("/construction/:cid/blueprint/:id", ctrl.AppConstructionBlueprintsDelete)
+		authorized.PATCH("/construction/:cid/blueprint/:id", ctrl.AppConstructionBlueprintsUpdate)
 
 		authorized.GET("/search/:filter", ctrl.AppSearchItemType)
 	}
