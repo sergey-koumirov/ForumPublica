@@ -64,8 +64,15 @@
       </div>
     </modal>
 
-    <modal v-if="showQtyModal" @close="showQtyModal = false">
-        <h3 slot="body">Qty</h3>
+    <modal v-if="showQtyModal" @close="showQtyModal = false" @qty-save="SaveQty()">
+        <div slot="body">
+          <input class="form-control qty" type="number" v-model.number="ask.qty">
+        </div>
+        <div slot="footer">
+          <button class="btn btn-default btn-sm modal-default-button" @click="SaveQty()">Save</button>
+
+          <button class="btn btn-primary btn-sm modal-default-button" @click="CloseQty()">Close</button>
+        </div>
     </modal>
 
 </div>

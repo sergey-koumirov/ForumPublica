@@ -53,6 +53,7 @@ var constructions = new Vue({
       ask: {
         me: null,
         bpId: null,
+        qty: null,
       }
     },
 
@@ -96,8 +97,6 @@ var constructions = new Vue({
         },
 
         SaveME: function(){
-          console.log(this.ask.me, this.ask.bpId);
-
           patch(
             this,
             '/app/construction/'+this.construction.Model.Id+'/blueprint/'+this.ask.bpId,
@@ -108,7 +107,24 @@ var constructions = new Vue({
         },
 
         ChangeQty: function(bpId, qty){
-            this.showQtyModal = true;
+          this.ask.qty = qty;
+          this.ask.bpId = bpId;
+          this.showQtyModal = true;
+          $('input.qty').focus();
+        },
+
+        SaveQty: function(){
+          patch(
+            this,
+            '/app/construction/'+this.construction.Model.Id+'/blueprint/'+this.ask.bpId,
+            {qty: this.ask.qty}
+          );
+
+          this.showQtyModal = false;
+        },
+
+        CloseQty: function(eventName){
+          this.showQtyModal = false;
         },
 
     },

@@ -62,6 +62,6 @@ func ConstructionBlueprintUpdate(userId int64, cnId int64, bpId int64, params ma
 		return
 	}
 
-	db.DB.Model(&blueprint).Updates(map[string]interface{}{"me": params["me"]})
+	db.DB.Model(&blueprint).Updates(params)
 
 }
