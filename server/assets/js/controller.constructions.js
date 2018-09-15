@@ -47,6 +47,7 @@ var constructions = new Vue({
 
     data: {
       construction: {},
+      chars: [],
       isLoading: false,
       showMEModal: false,
       showQtyModal: false,
@@ -63,6 +64,7 @@ var constructions = new Vue({
 
     beforeMount: function () {
         this.construction = JSON.parse(this.$el.attributes['construction'].value);
+        this.chars = JSON.parse(this.$el.attributes['chars'].value);
     },
 
     methods: {
@@ -125,6 +127,10 @@ var constructions = new Vue({
 
         CloseQty: function(eventName){
           this.showQtyModal = false;
+        },
+
+        OpenCharPopup: function($event, typeId){
+          this.$root.$emit('open-market', typeId, $event.pageX, $event.pageY)
         },
 
     },

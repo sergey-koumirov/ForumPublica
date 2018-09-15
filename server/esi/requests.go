@@ -85,11 +85,15 @@ func request(method string, url string, payload string, result interface{}) erro
 }
 
 func auth(method string, accessToken string, url string, result interface{}) (time.Time, int64, error) {
+	return authRequest(method, accessToken, url, "", result)
+}
+
+func authRequest(method string, accessToken string, url string, payload string, result interface{}) (time.Time, int64, error) {
 	expires := time.Now()
 	pages := int64(1)
 
 	client := &http.Client{}
-	req, errReq := http.NewRequest(method, url, bytes.NewReader([]byte{}))
+	req, errReq := http.NewRequest(method, url, bytes.NewBufferString(payload))
 	if errReq != nil {
 		fmt.Println(errReq)
 		return expires, pages, errReq

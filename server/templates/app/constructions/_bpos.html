@@ -38,7 +38,8 @@
       :data-clipboard-text="bpo.Model.TypeName"
       :src="'https://imageserver.eveonline.com/Type/'+bpo.Model.TypeId+'_32.png'">
     <div class="name">
-        {{bpo.Model.TypeName}}
+      <span class="oi oi-bar-chart pointer" v-on:click="OpenCharPopup($event, bpo.Model.TypeId)"></span>
+      {{bpo.Model.TypeName}}
     </div>
 
     <span v-on:click="DeleteBpo(bpo.Model.Id)" class="oi oi-delete right-top"></span>

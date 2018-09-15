@@ -50,6 +50,7 @@ func AppConstructionsShow(c *gin.Context) {
 	}
 
 	c.Keys["construction"] = cn
+	c.Keys["chars"] = services.CharsByUserId(user.Id)
 
 	c.HTML(http.StatusOK, "app/constructions/show.html", c.Keys)
 }

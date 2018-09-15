@@ -19,12 +19,13 @@ var OAUTH_VERIFY_URL string = "https://login.eveonline.com/oauth/verify"
 var OAUTH_AUTHORIZE_URL string = "https://login.eveonline.com/oauth/authorize"
 var ESI_ROOT_URL string = "https://esi.tech.ccp.is/latest"
 var SCOPES = []string{
-	"esi-skills.read_skills.v1",
-	"esi-search.search_structures.v1",
-	"esi-universe.read_structures.v1",
-	"esi-markets.structure_markets.v1",
 	"esi-assets.read_assets.v1",
 	"esi-industry.read_character_jobs.v1",
+	"esi-markets.structure_markets.v1",
+	"esi-search.search_structures.v1",
+	"esi-skills.read_skills.v1",
+	"esi-ui.open_window.v1",
+	"esi-universe.read_structures.v1",
 }
 
 type OAuthTokenJson struct {

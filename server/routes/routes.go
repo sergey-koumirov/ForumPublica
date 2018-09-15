@@ -36,6 +36,9 @@ func AddAppRoutes(r *gin.Engine) {
 		authorized.PATCH("/construction/:cid/blueprint/:id", ctrl.AppConstructionBlueprintsUpdate)
 
 		authorized.GET("/search/:filter", ctrl.AppSearchItemType)
+
+		authorized.POST("/ui/open_market", ctrl.AppUIOpenMarket)
+
 	}
 
 	admin := r.Group("/admin")

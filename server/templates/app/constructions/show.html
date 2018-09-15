@@ -7,7 +7,10 @@
   &gt; [<% .construction.Model.Id %>]
 </h5>
 
-<div id="construction" class="construction" construction="<% .construction | Marshal %>" v-cloak>
+<div id="construction" class="construction"
+  construction="<% .construction | Marshal %>"
+  chars="<% .chars | Marshal %>"
+  v-cloak>
 
     <img v-if="isLoading" class="loading" width="48" height="48" src="/assets/images/loading.gif">
 
@@ -17,36 +20,27 @@
         </div>
 
         <div class="bordered">
-            [% template "constructions/_components.html" . %]
+            <!-- [% template "constructions/_components.html" . %] -->
         </div>
 
         <div class="w100p">
             <div class="bordered w100p">
-                [% template "constructions/_store.html" . %]
+                <!-- [% template "constructions/_store.html" . %] -->
             </div>
             <div class="bordered w100p">
-                [% template "constructions/_materials.html" . %]
+                <!-- [% template "constructions/_materials.html" . %] -->
             </div>
             <div class="bordered w100p">
-                [% template "constructions/_expenses.html" . %]
+                <!-- [% template "constructions/_expenses.html" . %] -->
             </div>
         </div>
     </div>
 
-    [% template "constructions/_store_modal.html" . %]
-    [% template "constructions/_ask_number_modal.html" . %]
+    <!-- [% template "constructions/_store_modal.html" . %]
     [% template "constructions/_ask_bpo_runs_modal.html" . %]
-    [% template "constructions/_ask_me_modal.html" . %]
-    [% template "constructions/_ask_expense_modal.html" . %]
+    [% template "constructions/_ask_expense_modal.html" . %] -->
 
-    <div class="popup">
-        <div class="close">x&nbsp;</div>
-        <div class="content">
-            [% range $i, $c := .sso_chars %]
-            <a href="#" ng-click="OpenMarket([% $c.Id %])">[% $c.Label %]</a><br/>
-            [% end %]
-        </div>
-    </div>
+    <open-market v-bind:chars="chars"></open-market>
 
     <modal v-if="showMEModal" @close="showMEModal = false">
       <div class="me-list" slot="body">
@@ -78,6 +72,7 @@
 </div>
 
 <script src="/assets/js/vue.js"></script>
+<script src="/assets/js/component.open-market.js"></script>
 <script src="/assets/js/component.type-select.js"></script>
 <script src="/assets/js/component.modal.js"></script>
 <script src="/assets/js/vue.filters.js"></script>

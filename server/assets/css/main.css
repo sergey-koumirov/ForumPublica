@@ -332,3 +332,23 @@ img.loading{
 .me-list input{
     vertical-align: top;
 }
+
+.popup{
+    padding-left: 4px;
+    display: none;
+    width: 200px;
+    position: absolute;
+    background: #EEEEEE;
+    border: 1px solid #000000;
+    font-size: 12px;
+    z-index: 100;
+}
+
+.popup .close{
+    font-size: 14px;
+}
+
+.popup ul{
+  margin: 0;
+  padding: 2px;
+}
