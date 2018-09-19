@@ -1,6 +1,7 @@
 package services
 
 import (
+	"ForumPublica/sde/static"
 	"ForumPublica/server/db"
 	"ForumPublica/server/models"
 
@@ -11,6 +12,7 @@ type CnRecord struct {
 	Model      models.Construction
 	Title      string
 	Blueprints CnBlueprints
+	Components CnBlueprints
 }
 
 type CnList struct {
@@ -104,7 +106,11 @@ func loadCn(result *CnRecord, cn models.Construction) {
 		result.Blueprints = append(
 			result.Blueprints,
 			CnBlueprint{
-				Model: r,
+				Model:         r,
+				IsT2:          static.IsT2BPO(r.TypeId), //todo
+				CopyTime:      0,                        //todo
+				InventCnt:     0,                        //todo
+				WholeCopyTime: 0,                        //todo
 			},
 		)
 	}

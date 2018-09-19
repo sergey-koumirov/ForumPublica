@@ -156,7 +156,7 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
 }
 
 .construction .bpo-item{
-    height: 44px;
+    height: 64px;
 }
 
 
@@ -213,6 +213,13 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
     position: absolute;
     top: 23px;
     left: 40px;
+}
+
+.construction .bpo .invent{
+    clear: both;
+    position: absolute;
+    top: 43px;
+    left: 4px;
 }
 
 .form-control.sm{

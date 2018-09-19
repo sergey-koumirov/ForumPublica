@@ -67,6 +67,8 @@ type ConstructionBpos []ConstructionBpo
 
 type ConstructionBpoRun struct {
 	Id                int64  `gorm:"column:id;primary_key"`
+	ConstructionId    int64  `gorm:"column:construction_id"`
+	TypeId            int32  `gorm:"column:type_id"`
 	ConstructionBpoId int64  `gorm:"column:construction_bpo_id"`
 	Repeats           int32  `gorm:"column:repeats"`
 	ME                int32  `gorm:"column:me"`

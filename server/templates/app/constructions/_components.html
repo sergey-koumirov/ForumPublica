@@ -1,0 +1,36 @@
+<% define "app/constructions/_components.html" %>
+
+<h5>Build BPOs</h5>
+<div class="bpo" ng-class="bpo.ReadyQty >= bpo.Qty ? 'done' : ''" v-for="bpo in construction.Components">
+
+    <img class="pointer copy-item"
+      align="left"
+      width="32" height="32"
+      :data-clipboard-text="bpo.Model.TypeName"
+      :src="'https://imageserver.eveonline.com/Type/'+bpo.Model.TypeId+'_32.png'">
+
+    <div class="name">
+        {{bpo.BpoType.name}}
+    </div>
+    <div class="controls">
+        <span ng-click="StartMnf(bpo.BpoType.id, bpo.ME, bpo.TE)" class="glyphicon glyphicon-play edit" data-toggle="modal" data-target="#askBpoRunsModal"></span>
+        <span class="grayed" ng-show="bpo.RunQty>1">x {{bpo.RunQty}}</span>
+    </div>
+
+    <div class="me">
+        ME {{bpo.ME}}
+    </div>
+
+    <div class="time">
+        {{ FormatSeconds(bpo.MnfTime) }}
+    </div>
+
+    <div class="qty">
+        {{bpo.ReadyQty | number}} <span class="grayed">/</span> {{bpo.InProdQty | number}} <span class="grayed">/</span> {{bpo.Qty | number}}
+        <span ng-click="DeleteRuns(bpo.Runs)" class="glyphicon glyphicon-erase edit" ng-show="bpo.Runs.length>0"></span>
+    </div>
+
+    <!-- [% template "constructions/_runs.html" . %] -->
+</div>
+
+<% end %>

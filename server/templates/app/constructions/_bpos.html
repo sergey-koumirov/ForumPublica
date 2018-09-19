@@ -54,14 +54,15 @@
     <div class="controls pointer oi-btn" v-on:click="ChangeQty(bpo.Model.Id, bpo.Model.Qty)">
         <span class="oi oi-ellipses"></span>
     </div>
-<!--
-    <div class="invent" ng-show="bpo.IsT2">
+
+    <div class="invent" v-show="bpo.IsT2">
         <span class="grayed">Copy:</span>
-        <span class="time">{{ FormatSeconds(bpo.CopyTime)}}</span>
+        <span class="time">{{ bpo.CopyTime | seconds}}</span>
         <span class="grayed">x</span>
         {{bpo.InventCnt | number}} =
-        <span class="time">{{ FormatSeconds(bpo.CopyCnt * bpo.CopyTime)}}</span>
+        <span class="time">{{ bpo.WholeCopyTime | seconds }}</span>
     </div>
+<!--
 
     <div class="copy" ng-show="bpo.IsT2">
         <span class="grayed">Invent:</span>

@@ -6,7 +6,11 @@ import (
 )
 
 type CnBlueprint struct {
-	Model models.ConstructionBpo
+	Model         models.ConstructionBpo
+	IsT2          bool
+	CopyTime      int64
+	InventCnt     int64
+	WholeCopyTime int64
 }
 
 type CnBlueprints []CnBlueprint

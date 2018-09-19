@@ -20,7 +20,7 @@
         </div>
 
         <div class="bordered">
-            <!-- [% template "constructions/_components.html" . %] -->
+            <% template "app/constructions/_components.html" . %>
         </div>
 
         <div class="w100p">
@@ -64,7 +64,6 @@
         </div>
         <div slot="footer">
           <button class="btn btn-default btn-sm modal-default-button" @click="SaveQty()">Save</button>
-
           <button class="btn btn-primary btn-sm modal-default-button" @click="CloseQty()">Close</button>
         </div>
     </modal>
