@@ -8,9 +8,10 @@ import (
 )
 
 var (
-	Types      models.ZipTypes
-	Blueprints models.ZipBlueprints
-	T2toT1     map[int32]int32
+	Types         models.ZipTypes
+	Blueprints    models.ZipBlueprints
+	T2toT1        map[int32]int32
+	BpoIdByTypeId map[int32]int32
 )
 
 func LoadJSONs(fileName string) {
@@ -32,12 +33,19 @@ func LoadJSONs(fileName string) {
 	}
 
 	T2toT1 = make(map[int32]int32)
-	for _, bpo := range Blueprints {
+	BpoIdByTypeId = make(map[int32]int32)
+	for bpoId, bpo := range Blueprints {
 		if bpo.Invention != nil {
 			for _, product := range bpo.Invention.Products {
-				// fmt.Println("MATCH", Types[bpo.BlueprintTypeId].Name, Types[product.TypeId].Name)
 				T2toT1[product.TypeId] = bpo.BlueprintTypeId
 			}
+		}
+		if bpo.Manufacturing != nil && len(bpo.Manufacturing.Products) > 0 {
+			// if len(bpo.Manufacturing.Products) == 0 {
+			// 	fmt.Printf("%+v\n", Types[bpoId])
+			// 	fmt.Printf("%+v\n", bpo.Manufacturing)
+			// }
+			BpoIdByTypeId[bpo.Manufacturing.Products[0].TypeId] = bpoId
 		}
 	}
 

@@ -4,26 +4,14 @@ import (
 	"ForumPublica/sde/static"
 	"ForumPublica/server/db"
 	"ForumPublica/server/models"
+	"ForumPublica/server/services/reverse"
 
 	"github.com/jinzhu/gorm"
 )
 
-type CnRecord struct {
-	Model      models.Construction
-	Title      string
-	Blueprints CnBlueprints
-	Components CnBlueprints
-}
-
-type CnList struct {
-	Records []CnRecord
-	Page    int64
-	Total   int64
-}
-
 var PER_PAGE int64 = 20
 
-func ConstructionsList(userId int64, page int64) CnList {
+func ConstructionsList(userId int64, page int64) models.CnList {
 	cns := make([]models.Construction, 0)
 	var total int64
 
@@ -31,10 +19,10 @@ func ConstructionsList(userId int64, page int64) CnList {
 	scope.Model(&models.Construction{}).Count(&total)
 	scope.Order("id desc").Limit(PER_PAGE).Offset((page - 1) * PER_PAGE).Find(&cns)
 
-	result := CnList{Page: page, Total: total}
-	result.Records = make([]CnRecord, 0)
+	result := models.CnList{Page: page, Total: total}
+	result.Records = make([]models.CnRecord, 0)
 	for _, r := range cns {
-		temp := CnRecord{
+		temp := models.CnRecord{
 			Model: r,
 			Title: "N/A",
 		}
@@ -70,11 +58,11 @@ func bposOrder(db *gorm.DB) *gorm.DB {
 	return db.Order("fp_construction_bpos.id asc")
 }
 
-func ConstructionGet(userId int64, cnId int64) (CnRecord, error) {
+func ConstructionGet(userId int64, cnId int64) (models.CnRecord, error) {
 	cn := models.Construction{}
 	errSel := db.DB.Preload("Bpos", bposOrder).Where("id = ? and user_id = ?", cnId, userId).First(&cn).Error
 
-	var result CnRecord
+	var result models.CnRecord
 
 	if errSel != nil {
 		return result, errSel
@@ -99,19 +87,22 @@ func ConstructionSaveBonus(userId int64, cnId int64, params map[string]string) {
 	db.DB.Save(construction)
 }
 
-func loadCn(result *CnRecord, cn models.Construction) {
+func loadCn(result *models.CnRecord, cn models.Construction) {
 	result.Model = cn
-	result.Blueprints = make(CnBlueprints, 0)
+
+	result.Blueprints = make(models.CnBlueprints, 0)
 	for _, r := range cn.Bpos {
 		result.Blueprints = append(
 			result.Blueprints,
-			CnBlueprint{
+			models.CnBlueprint{
 				Model:         r,
-				IsT2:          static.IsT2BPO(r.TypeId), //todo
-				CopyTime:      0,                        //todo
-				InventCnt:     0,                        //todo
-				WholeCopyTime: 0,                        //todo
+				IsT2:          static.IsT2BPO(r.TypeId),
+				CopyTime:      0, //todo
+				InventCnt:     0, //todo
+				WholeCopyTime: 0, //todo
 			},
 		)
 	}
+
+	result.Components = reverse.Assembly(&cn.Bpos, &cn.Runs)
 }

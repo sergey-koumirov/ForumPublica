@@ -1,19 +1,10 @@
 package services
 
 import (
+	"ForumPublica/sde/static"
 	"ForumPublica/server/db"
 	"ForumPublica/server/models"
 )
-
-type CnBlueprint struct {
-	Model         models.ConstructionBpo
-	IsT2          bool
-	CopyTime      int64
-	InventCnt     int64
-	WholeCopyTime int64
-}
-
-type CnBlueprints []CnBlueprint
 
 func ConstructionBluprintAdd(userId int64, cnId int64, params map[string]int32) {
 	construction := models.Construction{Id: cnId}
@@ -23,12 +14,19 @@ func ConstructionBluprintAdd(userId int64, cnId int64, params map[string]int32) 
 		return
 	}
 
+	defaultME := int32(10)
+	defaultTE := int32(20)
+	if static.IsT2BPO(params["BlueprintId"]) {
+		defaultME = int32(2)
+		defaultTE = int32(4)
+	}
+
 	new := models.ConstructionBpo{
 		ConstructionId: construction.Id,
 		Kind:           "goal",
 		TypeId:         params["BlueprintId"],
-		ME:             10,
-		TE:             20,
+		ME:             defaultME,
+		TE:             defaultTE,
 		Qty:            1,
 	}
 

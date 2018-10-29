@@ -15,7 +15,8 @@ type Construction struct {
 	RigFactor   string `gorm:"column:rig_factor"`
 	SpaceType   string `gorm:"column:space_type"`
 
-	Bpos ConstructionBpos `gorm:"foreignkey:ConstructionId"`
+	Bpos ConstructionBpos    `gorm:"foreignkey:ConstructionId"`
+	Runs ConstructionBpoRuns `gorm:"foreignkey:ConstructionId"`
 }
 
 func (u *Construction) TableName() string {
@@ -78,6 +79,8 @@ type ConstructionBpoRun struct {
 	RigFactor         string `gorm:"column:rig_factor"`
 	SpaceType         string `gorm:"column:space_type"`
 }
+
+type ConstructionBpoRuns []ConstructionBpoRun
 
 func (u *ConstructionBpoRun) TableName() string {
 	return "fp_construction_bpo_runs"

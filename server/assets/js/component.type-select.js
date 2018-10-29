@@ -2,11 +2,11 @@ Vue.component('type-select', {
     template:
         '<div class="form-group type-select">'+
         '    <label v-if="mode!=\'compact\'">{{label}}:</label>'+
-        '    <input ref="selector" type="text" class="form-control form-control-sm" :value="initialCopy">'+
+        '    <input ref="selector" type="text" class="form-control form-control-sm" v-model="initialCopy">'+
         '</div>',
 
 
-    props: ['label','initial','mode','filter'],
+    props: ['label','mode','filter'],
 
     data: function () {
       return {
@@ -16,8 +16,7 @@ Vue.component('type-select', {
 
     mounted: function () {
         var vm = this,
-            filter = vm.filter||'item_type'
-            vm.initialCopy = vm.initial;
+            filter = vm.filter||'item_type';
 
         var my_autoComplete = new autoComplete({
             selector: this.$refs.selector,
@@ -41,8 +40,8 @@ Vue.component('type-select', {
                 return '<div class="autocomplete-suggestion" data-id="'+item.Id+'" data-val="'+item.Name+'">'+item.Name.replace(re, "<b>$1</b>")+'</div>';
             },
             onSelect: function(e, term, item){
-                vm.$emit('type-selected', parseInt(item.getAttribute('data-id'))  );
                 vm.initialCopy="";
+                vm.$emit('type-selected', parseInt(item.getAttribute('data-id'))  );
             }
         });
 
