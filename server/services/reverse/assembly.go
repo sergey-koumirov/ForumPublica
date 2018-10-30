@@ -1,7 +1,10 @@
 package reverse
 
 import (
+	"ForumPublica/sde/static"
 	"ForumPublica/server/models"
+	"ForumPublica/server/services/reverse/netsort"
+	"fmt"
 )
 
 func Assembly(
@@ -13,5 +16,12 @@ func Assembly(
 	//
 
 	result := make(models.CnBlueprints, 0)
+
+	sortedIds := netsort.ArrangeBPO(bpos)
+
+	for _, id := range sortedIds {
+		fmt.Println(id, static.Types[id].Name)
+	}
+
 	return result
 }

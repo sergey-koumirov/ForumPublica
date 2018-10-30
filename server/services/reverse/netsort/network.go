@@ -12,12 +12,12 @@ type CalcNode struct {
 
 type CalcNetwork map[int32]CalcNode
 
-func ArrangeBPO(cnBpos models.CnBlueprints) []int32 {
-	bpos := make([]int32, 0)
-	for _, bpo := range cnBpos {
-		bpos = append(bpos, bpo.Model.TypeId)
+func ArrangeBPO(cnBpos *models.ConstructionBpos) []int32 {
+	bpoIds := make([]int32, 0)
+	for _, bpo := range *cnBpos {
+		bpoIds = append(bpoIds, bpo.TypeId)
 	}
-	network := createNetwork(bpos)
+	network := createNetwork(bpoIds)
 	sorted := sortNetwork(network)
 	return sorted
 }
@@ -33,12 +33,7 @@ func createNetwork(bpos []int32) CalcNetwork {
 func deepAddNetworkElements(key int32, result CalcNetwork) {
 	_, exists := result[key]
 	if !exists {
-		bpo := static.Blueprints[key]
-
-		keys := make([]int32, 0)
-		for _, id := range bpo.L1BPOIds() {
-			keys = append(keys, GetTreeKey(id, 10, 20))
-		}
+		keys := static.Level1BPOIds(key)
 
 		result[key] = CalcNode{
 			Color:    "W",
@@ -73,7 +68,7 @@ func deepSortScan(result *[]int32, network CalcNetwork, key int32) {
 		node.Color = "B"
 		network[key] = node
 
-		temp := append([]string{key}, *result...)
+		temp := append([]int32{key}, *result...)
 		*result = temp
 	}
 }
