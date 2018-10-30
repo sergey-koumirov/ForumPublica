@@ -1,0 +1,32 @@
+<% define "app/constructions/_runs.html" %>
+<div class="runs">
+    <div class="run" v-for="run in bpo.Runs">
+        <!-- <span ng-click="StartRunMnf(run.ConstructionBpoRunId)" class="glyphicon glyphicon-play edit" ng-show="run.Status == 'planned'"></span>
+        <span ng-click="FinishMnf(run.ConstructionBpoRunId)" class="glyphicon glyphicon-stop edit" ng-show="run.Status == 'started'"></span>
+
+        <span class="grayed" > {{run.CitadelType}}</span>
+        <span class="grayed" > {{run.RigFactor}}</span>
+        <span class="grayed" > {{run.SpaceType}}</span>
+
+        <span>{{run.Comment}}</span>
+
+        <span ng-click="DeleteRun(run.ConstructionBpoRunId)" class="glyphicon glyphicon-remove edit delete"></span> -->
+
+        <div class="cnt">
+            <span class="grayed">{{run.Repeats}} x {{run.Qty | number}} = {{run.Total }}</span> 
+        </div>
+
+        <!-- <div class="cost">{{run.Cost | number}} isk</div> -->
+
+
+    </div>
+
+    <!-- <div class="run gray" ng-show="bpo.PhantomQty != 0">
+        <div class="cnt">
+            <span class="grayed" ng-show="bpo.RunQty>1">{{bpo.RunQty}}</span>
+            <span class="grayed"> x</span> {{bpo.PhantomQty | number}}
+        </div>
+    </div> -->
+
+</div>
+<% end %>

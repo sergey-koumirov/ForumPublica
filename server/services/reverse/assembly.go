@@ -3,17 +3,20 @@ package reverse
 import (
 	"ForumPublica/sde/static"
 	"ForumPublica/server/models"
+	"ForumPublica/server/services/reverse/jobruns"
 	"ForumPublica/server/services/reverse/netsort"
 	"sort"
 )
 
 // Assembly get full assembly info using goal BPO and runs
-func Assembly(bpos *models.ConstructionBpos, runs *models.ConstructionBpoRuns) models.CnBlueprints {
-	sortedIds := netsort.ArrangeBPO(bpos)
+func Assembly(cn *models.Construction) models.CnBlueprints {
+
+	sortedIds := netsort.ArrangeBPO(&cn.Bpos)
 
 	result := models.CnBlueprints{}
-	fillResult(&result, sortedIds, bpos)
-	sort.Sort(result)
+	fillResult(&result, sortedIds, &cn.Bpos)
+
+	jobruns.SetJobRuns(&result, sortedIds, cn)
 
 	return result
 }
@@ -42,4 +45,6 @@ func fillResult(result *models.CnBlueprints, sortedIds []int32, bpos *models.Con
 			},
 		)
 	}
+
+	sort.Sort(*result)
 }

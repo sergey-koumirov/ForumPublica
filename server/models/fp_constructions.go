@@ -31,14 +31,16 @@ func (m *Construction) Delete() {
 }
 
 type ConstructionBpo struct {
-	Id             int64  `gorm:"column:id;primary_key"`
-	ConstructionId int64  `gorm:"column:construction_id"`
-	TransactionId  int64  `gorm:"column:transaction_id"`
-	Kind           string `gorm:"column:kind"`
-	TypeId         int32  `gorm:"column:type_id"`
-	ME             int32  `gorm:"column:me"`
-	TE             int32  `gorm:"column:te"`
-	Qty            int64  `gorm:"column:qty"`
+	Id            int64  `gorm:"column:id;primary_key"`
+	TransactionId int64  `gorm:"column:transaction_id"`
+	Kind          string `gorm:"column:kind"`
+	TypeId        int32  `gorm:"column:type_id"`
+	ME            int32  `gorm:"column:me"`
+	TE            int32  `gorm:"column:te"`
+	Qty           int64  `gorm:"column:qty"`
+
+	ConstructionId int64 `gorm:"column:construction_id"`
+	Construction   *Construction
 }
 
 func (m *ConstructionBpo) TableName() string {
@@ -84,6 +86,10 @@ type ConstructionBpoRuns []ConstructionBpoRun
 
 func (u *ConstructionBpoRun) TableName() string {
 	return "fp_construction_bpo_runs"
+}
+
+func (u *ConstructionBpoRun) Total() int64 {
+	return int64(u.Repeats) * u.Qty
 }
 
 type ConstructionExpense struct {

@@ -171,6 +171,10 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
     min-height: 48px;
 }
 
+.construction .component-item .runs{
+  margin-top: 50px;
+}
+
 .construction .component-item.l{
     width: 324px;
     float: left;

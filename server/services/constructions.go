@@ -104,5 +104,5 @@ func loadCn(result *models.CnRecord, cn models.Construction) {
 		)
 	}
 
-	result.Components = reverse.Assembly(&cn.Bpos, &cn.Runs)
+	result.Components = reverse.Assembly(&cn)
 }

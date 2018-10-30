@@ -4,15 +4,20 @@ import (
 	"ForumPublica/sde/static"
 )
 
+//CnBlueprint model and calculated info about BPO
 type CnBlueprint struct {
 	Model         ConstructionBpo
+	Runs          *[]ConstructionBpoRun
 	IsGoal        bool
 	IsT2          bool
 	CopyTime      int64
 	InventCnt     int64
 	WholeCopyTime int64
+	ReadyQty      int64
+	InProdQty     int64
 }
 
+//CnBlueprints array of CnBlueprint
 type CnBlueprints []CnBlueprint
 
 func (s CnBlueprints) Len() int {
@@ -22,15 +27,16 @@ func (s CnBlueprints) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
 }
 func (s CnBlueprints) Less(i, j int) bool {
-	iId := s[i].Model.TypeId
-	jId := s[j].Model.TypeId
+	iID := s[i].Model.TypeId
+	jID := s[j].Model.TypeId
 
-	sameGoal := s[i].IsGoal == s[j].IsGoal && (static.Types[iId].Name < static.Types[jId].Name)
+	sameGoal := s[i].IsGoal == s[j].IsGoal && (static.Types[iID].Name < static.Types[jID].Name)
 	diffGoal := s[i].IsGoal != s[j].IsGoal && s[i].IsGoal
 
 	return sameGoal || diffGoal
 }
 
+//CnRecord bpo info for constructions page
 type CnRecord struct {
 	Model      Construction
 	Title      string
@@ -38,6 +44,7 @@ type CnRecord struct {
 	Components CnBlueprints
 }
 
+//CnList list of bpos info for constructions page
 type CnList struct {
 	Records []CnRecord
 	Page    int64

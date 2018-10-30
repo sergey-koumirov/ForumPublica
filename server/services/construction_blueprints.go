@@ -14,12 +14,7 @@ func ConstructionBluprintAdd(userId int64, cnId int64, params map[string]int32) 
 		return
 	}
 
-	defaultME := int32(10)
-	defaultTE := int32(20)
-	if static.IsT2BPO(params["BlueprintId"]) {
-		defaultME = int32(2)
-		defaultTE = int32(4)
-	}
+	defaultME, defaultTE := static.DefaultMeTe(params["BlueprintId"])
 
 	new := models.ConstructionBpo{
 		ConstructionId: construction.Id,
