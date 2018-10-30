@@ -8,6 +8,9 @@ var frmFl = new Intl.NumberFormat('ru-RU', {
 
 
 Vue.filter('number', function (value) {
+    if(value==undefined){
+      return '-';
+    }
     return frm.format(value);
 });
 

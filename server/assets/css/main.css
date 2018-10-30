@@ -131,6 +131,14 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
     min-width: 324px;
 }
 
+.construction .bordered.x2{
+    width: 668px;
+}
+
+.two-columns{
+    column-count: 2;
+}
+
 .construction .bordered.wide{
     min-width: 450px;
 }
@@ -142,7 +150,7 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
 
     margin-left: 0px;
     margin-right: 0px;
-    margin-top: 4px;
+    margin-top: 0px;
     margin-bottom: 4px;
 
     padding-left: 4px;
@@ -159,6 +167,19 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
     height: 64px;
 }
 
+.construction .component-item{
+    min-height: 48px;
+}
+
+.construction .component-item.l{
+    width: 324px;
+    float: left;
+}
+
+.construction .component-item.r{
+    width: 324px;
+    float: right;
+}
 
 .construction .bpo .right-top{
     position: absolute;
