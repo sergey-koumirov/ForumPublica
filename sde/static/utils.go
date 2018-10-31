@@ -1,5 +1,10 @@
 package static
 
+import (
+	"ForumPublica/sde/models"
+	"math"
+)
+
 // TypeIdQuantity holds TypeId and Qty pairs
 type TypeIdQuantity struct {
 	TypeId   int32
@@ -64,4 +69,28 @@ func DefaultMeTe(bpoId int32) (int32, int32) {
 		defaultTE = int32(4)
 	}
 	return defaultME, defaultTE
+}
+
+func ApplyME(repeats int64, cnt int64, me int32) int64 {
+	return ApplyMEBonus(repeats, cnt, me, 0.0, 0.0)
+}
+
+func ApplyMEBonus(repeats int64, cnt int64, me int32, bonus1 float64, bonus2 float64) int64 {
+	if cnt == 1 {
+		return repeats
+	}
+	return int64(math.Ceil(float64(repeats*cnt) * (1.0 - float64(me)/100.0) * (1.0 - bonus1/100.0) * (1.0 - bonus2/100.0)))
+}
+
+func ProductIdByBpoId(bpoId int32) int32 {
+	bpo := Blueprints[bpoId]
+	if bpo.Manufacturing != nil {
+		return bpo.Manufacturing.Products[0].TypeId
+	} else {
+		return 0
+	}
+}
+
+func ProductByBpoId(bpoId int32) models.ZipType {
+	return Types[ProductIdByBpoId(bpoId)]
 }

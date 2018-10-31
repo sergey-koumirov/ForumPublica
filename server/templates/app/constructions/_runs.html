@@ -13,7 +13,7 @@
         <span ng-click="DeleteRun(run.ConstructionBpoRunId)" class="glyphicon glyphicon-remove edit delete"></span> -->
 
         <div class="cnt">
-            <span class="grayed">{{run.Repeats}} x {{run.Qty | number}} = {{run.Total }}</span> 
+            <span class="grayed">{{run.Repeats}} x {{run.Qty | number}} = </span> {{run.Repeats * run.Qty | number}}
         </div>
 
         <!-- <div class="cost">{{run.Cost | number}} isk</div> -->

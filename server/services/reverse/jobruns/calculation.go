@@ -4,10 +4,15 @@ import (
 	"ForumPublica/sde/static"
 	"ForumPublica/server/models"
 	"fmt"
+	"math"
 )
 
 //SetJobRuns calculates runs for every given BPO using sorted array
 func SetJobRuns(bpoInfos *models.CnBlueprints, sortedBpoIds []int32, cn *models.Construction) {
+
+	for _, el := range *bpoInfos {
+		fmt.Printf("%+v\n", el)
+	}
 
 	bpoInfosHash := getInfoHash(bpoInfos)
 
@@ -17,18 +22,40 @@ func SetJobRuns(bpoInfos *models.CnBlueprints, sortedBpoIds []int32, cn *models.
 		runs, _ := allRunsHash[id]
 		addPhantomRun(bpoInfosHash[id].Model, &runs, cn)
 		applyRuns(id, bpoInfosHash, &runs)
-
-		fmt.Printf("=== %s x %d\n", static.Types[id].Name, bpoInfosHash[id].Model.Qty)
-		for _, run := range runs {
-			fmt.Printf("      > [%d] %d x %d = %d\n", run.ME, run.Qty, run.Repeats, run.Qty*int64(run.Repeats))
-		}
-
 	}
 
 }
 
 func applyRuns(bpoId int32, bpoInfosHash map[int32]*models.CnBlueprint, runs *[]models.ConstructionBpoRun) {
 	bpoInfosHash[bpoId].Runs = runs
+
+	fmt.Printf("=== %s x %d\n", static.Types[bpoId].Name, bpoInfosHash[bpoId].Model.Qty)
+
+	materialBpos := static.Level1BPO(bpoId)
+
+	for _, run := range *runs {
+
+		productQty := jobsQty(run.TypeId, int64(run.Repeats)*run.Qty)
+
+		fmt.Println("__________", run.Repeats, run.Qty, productQty)
+
+		for _, materialBpo := range materialBpos {
+			materialQty := static.ApplyME(productQty, materialBpo.Quantity, run.ME)
+			batchedQty := jobsQty(materialBpo.TypeId, materialQty) * int64(static.ProductByBpoId(materialBpo.TypeId).PortionSize)
+
+			fmt.Println("______________________", static.Types[materialBpo.TypeId].Name, productQty, materialBpo.Quantity, run.ME, batchedQty)
+
+			bpoInfosHash[materialBpo.TypeId].Model.Qty = bpoInfosHash[materialBpo.TypeId].Model.Qty + batchedQty
+		}
+
+		fmt.Printf("      > [%d] %d x %d = %d\n", run.ME, run.Qty, run.Repeats, run.Qty*int64(run.Repeats))
+	}
+
+}
+
+func jobsQty(bpoId int32, resultQty int64) int64 {
+	batchSize := static.ProductByBpoId(bpoId).PortionSize
+	return int64(math.Ceil(float64(resultQty) / float64(batchSize)))
 }
 
 func addPhantomRun(model models.ConstructionBpo, runs *[]models.ConstructionBpoRun, cn *models.Construction) {

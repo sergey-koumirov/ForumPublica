@@ -154,7 +154,7 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
     margin-bottom: 4px;
 
     padding-left: 4px;
-    padding-right: 16px;
+    padding-right: 2px;
     padding-top: 0px;
     padding-bottom: 0px;
 
@@ -172,17 +172,15 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
 }
 
 .construction .component-item .runs{
-  margin-top: 50px;
+  margin-top: 38px;
+  text-align: right;
 }
 
-.construction .component-item.l{
-    width: 324px;
-    float: left;
-}
-
-.construction .component-item.r{
-    width: 324px;
-    float: right;
+.construction .component-item .runs .run{
+  border: 1px solid #f0f0f0;
+  margin: 2px;
+  padding-right: 4px;
+  border-radius: 3px;
 }
 
 .construction .bpo .right-top{
@@ -192,7 +190,6 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
     cursor: pointer;
     color: #A0C0ff;
 }
-
 
 .construction .bpo .qty{
     float: right;
