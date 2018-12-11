@@ -32,7 +32,7 @@ func fillResult(result *models.CnBlueprints, sortedIds []int32, bpos *models.Con
 				qty = qty + bpo.Qty //multiple bpo allowed
 			}
 		}
-
+		defaultME, _ := static.DefaultMeTe(id)
 		*result = append(
 			*result,
 			models.CnBlueprint{
@@ -40,8 +40,10 @@ func fillResult(result *models.CnBlueprints, sortedIds []int32, bpos *models.Con
 					TypeId: id,
 					Qty:    qty,
 				},
-				IsT2:   static.IsT2BPO(id),
-				IsGoal: isGoal,
+				IsT2:        static.IsT2BPO(id),
+				IsGoal:      isGoal,
+				DefaultME:   defaultME,
+				PortionSize: static.ProductByBpoId(id).PortionSize,
 			},
 		)
 	}

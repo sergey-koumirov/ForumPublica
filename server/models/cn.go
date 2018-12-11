@@ -15,6 +15,8 @@ type CnBlueprint struct {
 	WholeCopyTime int64
 	ReadyQty      int64
 	InProdQty     int64
+	DefaultME     int32
+	PortionSize   int32
 }
 
 //CnBlueprints array of CnBlueprint

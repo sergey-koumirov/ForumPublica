@@ -51,10 +51,12 @@ var constructions = new Vue({
       isLoading: false,
       showMEModal: false,
       showQtyModal: false,
+      showRunModal: false,
       ask: {
         me: null,
         bpId: null,
         qty: null,
+        repeats: null,
       }
     },
 
@@ -114,6 +116,7 @@ var constructions = new Vue({
           this.showQtyModal = true;
           $('input.qty').focus();
         },
+        
 
         SaveQty: function(){
           patch(
@@ -131,6 +134,34 @@ var constructions = new Vue({
 
         OpenCharPopup: function($event, typeId){
           this.$root.$emit('open-market', typeId, $event.pageX, $event.pageY)
+        },
+
+        OpenRunModal: function(bpo){
+          this.ask.bpId = bpo.Model.TypeId;
+          this.ask.repeats = 1;
+          this.ask.qty = 1;
+          this.ask.me = bpo.DefaultME;
+          this.showRunModal = true;
+          console.log(bpo);
+        },
+
+        SaveRun: function(){
+          post(
+            this, 
+            '/app/construction/'+this.construction.Model.Id+'/add_run', 
+            {
+              me: this.ask.me, 
+              repeats: this.ask.repeats, 
+              qty: this.ask.qty, 
+              BlueprintId: this.ask.bpId
+            }, 
+            false
+          );
+          this.showRunModal = false;
+        },
+
+        CloseRun: function(eventName){
+          this.showRunModal = false;
         },
 
     },

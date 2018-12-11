@@ -51,8 +51,8 @@
     <div class="qty">
         <span class="grayed">x</span> {{bpo.Model.Qty | number}}
     </div>
-    <div class="controls pointer oi-btn" v-on:click="ChangeQty(bpo.Model.Id, bpo.Model.Qty)">
-        <span class="oi oi-ellipses"></span>
+    <div class="controls" v-on:click="ChangeQty(bpo.Model.Id, bpo.Model.Qty)">
+        <span class="oi oi-ellipses pointer"></span>
     </div>
 
     <div class="invent" v-show="bpo.IsT2">

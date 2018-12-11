@@ -60,7 +60,7 @@ func bposOrder(db *gorm.DB) *gorm.DB {
 
 func ConstructionGet(userId int64, cnId int64) (models.CnRecord, error) {
 	cn := models.Construction{}
-	errSel := db.DB.Preload("Bpos", bposOrder).Where("id = ? and user_id = ?", cnId, userId).First(&cn).Error
+	errSel := db.DB.Preload("Runs").Preload("Bpos", bposOrder).Where("id = ? and user_id = ?", cnId, userId).First(&cn).Error
 
 	var result models.CnRecord
 
@@ -92,11 +92,14 @@ func loadCn(result *models.CnRecord, cn models.Construction) {
 
 	result.Blueprints = make(models.CnBlueprints, 0)
 	for _, r := range cn.Bpos {
+		defaultME, _ := static.DefaultMeTe(r.TypeId)
+
 		result.Blueprints = append(
 			result.Blueprints,
 			models.CnBlueprint{
 				Model:         r,
 				IsT2:          static.IsT2BPO(r.TypeId),
+				DefaultME:     defaultME,
 				CopyTime:      0, //todo
 				InventCnt:     0, //todo
 				WholeCopyTime: 0, //todo

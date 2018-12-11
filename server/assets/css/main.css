@@ -29,6 +29,7 @@ table td, table th{
   margin-right: 1px;
   border-radius: 3px;
   height: 15px;
+  padding: 1px;
 }
 
 /* MENU */
@@ -181,9 +182,38 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
   margin: 2px;
   padding-right: 4px;
   border-radius: 3px;
+  height: 21px;
+}
+.construction .component-item .runs .me{
+  border: 1px solid #C0CCDF;
+  border-radius: 3px;
+  background: #D0DCEF;
+  color: #ffffff;
+  font-size: 10px;
+  float: left;
+  margin-top: 1px;
+  margin-left: 1px;
 }
 
-.construction .bpo .right-top{
+.construction .component-item .runs .delete{
+  float: left;
+  margin-top: 1px;
+  margin-left: 1px;
+}
+
+.construction .bpo .controls{
+  position: absolute;
+  top: 23px;
+  right: 5px;
+}
+
+.construction .component-item .controls{
+  position: absolute;
+  top: 19px;
+  left: 41px;
+}
+
+.construction .bpo-item .right-top{
     position: absolute;
     right: 6px;
     top: 3px;
@@ -213,28 +243,6 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
     top: 2px;
     left: 40px;
     width: 256px;
-}
-
-.construction .bpo .controls{
-    float: left;
-    position: absolute;
-    top: 23px;
-    right: 5px;
-}
-
-.construction .bpo .me{
-    border: 1px solid #60accf;
-    border-radius: 3px;
-    background: #60a0ff;
-    color: #ffffff;
-    font-size: 10px;
-
-    display: flex;
-    height: 15px;
-    width: 30px;
-    position: absolute;
-    top: 23px;
-    left: 40px;
 }
 
 .construction .bpo .invent{

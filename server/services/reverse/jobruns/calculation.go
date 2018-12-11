@@ -3,17 +3,11 @@ package jobruns
 import (
 	"ForumPublica/sde/static"
 	"ForumPublica/server/models"
-	"fmt"
 	"math"
 )
 
 //SetJobRuns calculates runs for every given BPO using sorted array
 func SetJobRuns(bpoInfos *models.CnBlueprints, sortedBpoIds []int32, cn *models.Construction) {
-
-	for _, el := range *bpoInfos {
-		fmt.Printf("%+v\n", el)
-	}
-
 	bpoInfosHash := getInfoHash(bpoInfos)
 
 	allRunsHash := getRunsHash(&cn.Runs)
@@ -21,59 +15,47 @@ func SetJobRuns(bpoInfos *models.CnBlueprints, sortedBpoIds []int32, cn *models.
 	for _, id := range sortedBpoIds {
 		runs, _ := allRunsHash[id]
 		addPhantomRun(bpoInfosHash[id].Model, &runs, cn)
-		applyRuns(id, bpoInfosHash, &runs)
+		applyRunsMaterialsBpos(id, bpoInfosHash, &runs)
 	}
 
 }
 
-func applyRuns(bpoId int32, bpoInfosHash map[int32]*models.CnBlueprint, runs *[]models.ConstructionBpoRun) {
+func applyRunsMaterialsBpos(bpoId int32, bpoInfosHash map[int32]*models.CnBlueprint, runs *[]models.ConstructionBpoRun) {
 	bpoInfosHash[bpoId].Runs = runs
-
-	fmt.Printf("=== %s x %d\n", static.Types[bpoId].Name, bpoInfosHash[bpoId].Model.Qty)
-
 	materialBpos := static.Level1BPO(bpoId)
-
 	for _, run := range *runs {
-
-		productQty := jobsQty(run.TypeId, int64(run.Repeats)*run.Qty)
-
-		fmt.Println("__________", run.Repeats, run.Qty, productQty)
-
+		productQty := int64(run.Repeats) * run.Qty
 		for _, materialBpo := range materialBpos {
 			materialQty := static.ApplyME(productQty, materialBpo.Quantity, run.ME)
-			batchedQty := jobsQty(materialBpo.TypeId, materialQty) * int64(static.ProductByBpoId(materialBpo.TypeId).PortionSize)
-
-			fmt.Println("______________________", static.Types[materialBpo.TypeId].Name, productQty, materialBpo.Quantity, run.ME, batchedQty)
-
-			bpoInfosHash[materialBpo.TypeId].Model.Qty = bpoInfosHash[materialBpo.TypeId].Model.Qty + batchedQty
+			bpoInfosHash[materialBpo.TypeId].Model.Qty = bpoInfosHash[materialBpo.TypeId].Model.Qty + materialQty
 		}
-
-		fmt.Printf("      > [%d] %d x %d = %d\n", run.ME, run.Qty, run.Repeats, run.Qty*int64(run.Repeats))
 	}
-
 }
 
-func jobsQty(bpoId int32, resultQty int64) int64 {
+func jobsRunsCount(bpoId int32, resultQty int64) int64 {
 	batchSize := static.ProductByBpoId(bpoId).PortionSize
 	return int64(math.Ceil(float64(resultQty) / float64(batchSize)))
 }
 
-func addPhantomRun(model models.ConstructionBpo, runs *[]models.ConstructionBpoRun, cn *models.Construction) {
+func addPhantomRun(cnBpo models.ConstructionBpo, runs *[]models.ConstructionBpoRun, cn *models.Construction) {
 	runsQty := int64(0)
 	for _, run := range *runs {
-		runsQty = runsQty + run.Qty
+		runsQty = runsQty + run.Qty*int64(run.Repeats)
 	}
 
-	defaultME, defaultTE := static.DefaultMeTe(model.TypeId)
+	jobRunsCnt := jobsRunsCount(cnBpo.TypeId, cnBpo.Qty)
+
+	defaultME, defaultTE := static.DefaultMeTe(cnBpo.TypeId)
 
 	*runs = append(
 		*runs,
 		models.ConstructionBpoRun{
-			TypeId:      model.TypeId,
+			TypeId:      cnBpo.TypeId,
 			Repeats:     1,
 			ME:          defaultME,
 			TE:          defaultTE,
-			Qty:         model.Qty - runsQty,
+			ExactQty:    cnBpo.Qty - runsQty*int64(static.ProductByBpoId(cnBpo.TypeId).PortionSize),
+			Qty:         jobRunsCnt - runsQty,
 			CitadelType: cn.CitadelType,
 			RigFactor:   cn.RigFactor,
 			SpaceType:   cn.SpaceType,

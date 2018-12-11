@@ -73,10 +73,11 @@ type ConstructionBpoRun struct {
 	ConstructionId    int64  `gorm:"column:construction_id"`
 	TypeId            int32  `gorm:"column:type_id"`
 	ConstructionBpoId int64  `gorm:"column:construction_bpo_id"`
-	Repeats           int32  `gorm:"column:repeats"`
 	ME                int32  `gorm:"column:me"`
 	TE                int32  `gorm:"column:te"`
+	Repeats           int32  `gorm:"column:repeats"`
 	Qty               int64  `gorm:"column:qty"`
+	ExactQty          int64  `gorm:"-"`
 	CitadelType       string `gorm:"column:citadel_type"`
 	RigFactor         string `gorm:"column:rig_factor"`
 	SpaceType         string `gorm:"column:space_type"`

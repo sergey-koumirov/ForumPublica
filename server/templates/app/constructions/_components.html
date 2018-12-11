@@ -16,10 +16,11 @@
     <div class="name">
         {{bpo.Model.TypeName}}
     </div>
-    <!-- <div class="controls">
-        <span ng-click="StartMnf(bpo.BpoType.id, bpo.ME, bpo.TE)" class="glyphicon glyphicon-play edit" data-toggle="modal" data-target="#askBpoRunsModal"></span>
-        <span class="grayed" ng-show="bpo.RunQty>1">x {{bpo.RunQty}}</span>
-    </div> -->
+    
+    <div class="controls">
+        <span class="oi oi-plus pointer" v-on:click="OpenRunModal(bpo)"></span>
+        <!-- <span class="grayed" ng-show="bpo.RunQty>1">x {{bpo.RunQty}}</span> -->
+    </div>
 
     <!-- <div class="me">
         ME {{bpo.ME}}
@@ -31,7 +32,7 @@
 
     <div class="qty">
         {{bpo.ReadyQty | number}} <span class="grayed">/</span> {{bpo.InProdQty | number}} <span class="grayed">/</span> {{bpo.Model.Qty | number}}
-        <span ng-click="DeleteRuns(bpo.Runs)" class="glyphicon glyphicon-erase edit" ng-show="bpo.Runs.length>0"></span>
+        <!-- <span ng-click="DeleteRuns(bpo.Runs)" class="glyphicon glyphicon-erase edit" ng-show="bpo.Runs.length>0"></span> -->
     </div>
 
     <% template "app/constructions/_runs.html" . %>

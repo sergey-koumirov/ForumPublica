@@ -58,13 +58,38 @@
       </div>
     </modal>
 
-    <modal v-if="showQtyModal" @close="showQtyModal = false" @qty-save="SaveQty()">
+    <modal v-if="showQtyModal" @close="showQtyModal = false">
         <div slot="body">
           <input class="form-control qty" type="number" v-model.number="ask.qty">
         </div>
         <div slot="footer">
-          <button class="btn btn-default btn-sm modal-default-button" @click="SaveQty()">Save</button>
-          <button class="btn btn-primary btn-sm modal-default-button" @click="CloseQty()">Close</button>
+          <button class="btn btn-primary btn-sm modal-default-button" @click="SaveQty()">Save</button>
+          <button class="btn btn-default btn-sm modal-default-button" @click="CloseQty()">Close</button>
+        </div>
+    </modal>
+
+    <modal v-if="showRunModal" @close="showRunModal = false">
+        <div slot="body">
+            <div class="form-group">
+                ME: 
+                <label><input type="radio" value="0" v-model.number="ask.me"><span class="value">0</span></label>
+                <label><input type="radio" value="1" v-model.number="ask.me"><span class="value">1</span></label>
+                <label><input type="radio" value="2" v-model.number="ask.me"><span class="value">2</span></label>
+                <label><input type="radio" value="3" v-model.number="ask.me"><span class="value">3</span></label>
+                <label><input type="radio" value="4" v-model.number="ask.me"><span class="value">4</span></label>
+                <label><input type="radio" value="5" v-model.number="ask.me"><span class="value">5</span></label>
+                <label><input type="radio" value="6" v-model.number="ask.me"><span class="value">6</span></label>
+                <label><input type="radio" value="7" v-model.number="ask.me"><span class="value">7</span></label>
+                <label><input type="radio" value="8" v-model.number="ask.me"><span class="value">8</span></label>
+                <label><input type="radio" value="9" v-model.number="ask.me"><span class="value">9</span></label>
+                <label><input type="radio" value="10" v-model.number="ask.me"><span class="value">10</span></label>
+            </div>
+            Repeats <input class="form-control form-control-sm repeats" type="number" v-model.number="ask.repeats">
+            Qty <input class="form-control form-control-sm qty" type="number" v-model.number="ask.qty">
+        </div>
+        <div slot="footer">
+          <button class="btn btn-primary btn-sm modal-default-button" @click="SaveRun()">Save</button>
+          <button class="btn btn-default btn-sm modal-default-button" @click="CloseRun()">Close</button>
         </div>
     </modal>
 
