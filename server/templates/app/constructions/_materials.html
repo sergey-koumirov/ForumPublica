@@ -2,7 +2,7 @@
 <h5>
     Materials
 </h5>
-<table class="store-items">
+<table class="table table-sm store-items">
     <tr>
         <th></th>
         <th></th>
@@ -34,20 +34,18 @@
     <tr>
         <td></td>
         <td></td>
-        <th class="text-right">{{construction.Materials.Volume | float}}</th>
         <td></td>
+        <th class="text-right">{{construction.Materials.Volume | float}}</th>
         <th class="text-right">{{construction.Materials.Price | float}}</th>
         <td></td>
     </tr>
 
-    <tr ng-if="HasExcluded()">
+    <tr v-if="HasExcluded()">
+        <td></td>
         <td></td>
         <td></td>
         <th class="text-right reded">{{PartialVol() | float}}</th>
-        <td></td>
         <th class="text-right reded">{{PartialPrice() | float}}</th>
-        <td></td>
-        <td></td>
         <td></td>
     </tr>
 

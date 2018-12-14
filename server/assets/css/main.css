@@ -390,3 +390,7 @@ img.loading{
   margin: 0;
   padding: 2px;
 }
+
+.w100rest {
+  width: calc(100% - 1010px);
+}
