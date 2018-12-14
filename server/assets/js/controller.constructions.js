@@ -142,7 +142,6 @@ var constructions = new Vue({
           this.ask.qty = 1;
           this.ask.me = bpo.DefaultME;
           this.showRunModal = true;
-          console.log(bpo);
         },
 
         SaveRun: function(){
@@ -162,6 +161,40 @@ var constructions = new Vue({
 
         CloseRun: function(eventName){
           this.showRunModal = false;
+        },
+
+        SetExcluded: function(item){
+          console.log('SetExcluded', item);
+          item.Excluded = true;
+        },
+
+        ResetExcluded: function(item){
+            item.Excluded = false;
+        },
+
+        HighlightRow: function($event){
+            $($event.currentTarget).closest("table").find("tr").removeClass("highlighted");
+            $($event.currentTarget).closest("tr").addClass("highlighted");
+        },
+
+        PartialVol: function(){
+            var result = 0;
+            this.construction.Materials.forEach(function(item){
+                if(!item.excluded){
+                    result = result + item.Volume||0;
+                }
+            });
+            return result;
+        },
+
+        PartialPrice: function(){
+            var result = 0;
+            this.construction.Materials.forEach(function(item){
+                if(!item.excluded){
+                    result = result + item.Price||0;
+                }
+            });
+            return result;
         },
 
     },

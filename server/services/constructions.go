@@ -5,6 +5,7 @@ import (
 	"ForumPublica/server/db"
 	"ForumPublica/server/models"
 	"ForumPublica/server/services/reverse"
+	"ForumPublica/server/services/reverse/jobruns"
 
 	"github.com/jinzhu/gorm"
 )
@@ -108,4 +109,5 @@ func loadCn(result *models.CnRecord, cn models.Construction) {
 	}
 
 	result.Components = reverse.Assembly(&cn)
+	result.Materials = jobruns.RunsToMaterials(result.Components)
 }

@@ -1,6 +1,7 @@
 package models
 
 import (
+	sdem "ForumPublica/sde/models"
 	"ForumPublica/sde/static"
 )
 
@@ -44,6 +45,7 @@ type CnRecord struct {
 	Title      string
 	Blueprints CnBlueprints
 	Components CnBlueprints
+	Materials  []CnMaterial
 }
 
 //CnList list of bpos info for constructions page
@@ -51,4 +53,11 @@ type CnList struct {
 	Records []CnRecord
 	Page    int64
 	Total   int64
+}
+
+//CnMaterial materil info for constructions page
+type CnMaterial struct {
+	Model    sdem.ZipType
+	Qty      int64
+	Excluded bool
 }

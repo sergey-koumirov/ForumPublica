@@ -9,12 +9,22 @@ var frmFl = new Intl.NumberFormat('ru-RU', {
 
 Vue.filter('number', function (value) {
     if(value==undefined){
-      return '-';
+      return '...';
     }
     return frm.format(value);
 });
 
+Vue.filter('float', function (value) {
+    if(value==undefined){
+        return '...';
+    }
+    return frmFl.format(value);
+});
+
 Vue.filter('price', function (value) {
+    if(!value && value!=0){
+        return '...';
+    }
     return frmFl.format(value);
 });
 

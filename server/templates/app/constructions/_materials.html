@@ -1,0 +1,65 @@
+<% define "app/constructions/_materials.html" %>
+<h5>
+    Materials
+</h5>
+<table class="store-items">
+    <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th class="text-center">Vol</th>
+        <th class="text-center">Price</th>
+        <th class="text-center">Need</th>
+    </tr>
+    <tr v-for="item in construction.Materials">
+        <td>
+            <span v-on:click="SetExcluded(item)" class="oi oi-target pointer" v-if="!item.Excluded"></span>                    
+            <span v-on:click="ResetExcluded(item)" class="oi oi-ban pointer" v-if="item.Excluded"></span>
+            <span v-on:click="OpenCharPopup($event, item.Model.Id)" :data-clipboard-text="item.Qty" class="oi oi-bar-chart pointer copy-item"></span>                    
+            <span v-on:click="HighlightRow($event)" :data-clipboard-text="item.Model.Name" class="oi oi-ellipses pointer copy-item"></span>
+        </td>
+        <td class="first">
+            <img align="left" width="16" height="16" :src="'https://imageserver.eveonline.com/Type/'+item.Model.Id+'_32.png'">
+        </td>
+        <td>
+            {{item.Model.Name}}
+        </td>
+        <td class="over text-right">{{item.Volume | float}}</td>
+        <td class="over text-right">{{item.Price | float}}</td>
+        <td class="over text-right">
+            {{item.Qty | number}}
+            <span ng-click="HighlightRow($event)" ngclipboard :data-clipboard-text="item.Qty" class="glyphicon glyphicon-copy edit"></span>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <th class="text-right">{{construction.Materials.Volume | float}}</th>
+        <td></td>
+        <th class="text-right">{{construction.Materials.Price | float}}</th>
+        <td></td>
+    </tr>
+
+    <tr ng-if="HasExcluded()">
+        <td></td>
+        <td></td>
+        <th class="text-right reded">{{PartialVol() | float}}</th>
+        <td></td>
+        <th class="text-right reded">{{PartialPrice() | float}}</th>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td></td>
+        <td></td>
+        <th></th>
+        <td class="text-right">Mnf Cost:</td>
+        <th class="text-right">{{construction.RunCost | float}}</th>
+        <td></td>
+    </tr>
+
+</table>
+
+<% end %>

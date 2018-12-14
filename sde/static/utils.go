@@ -11,6 +11,13 @@ type TypeIdQuantity struct {
 	Quantity int64
 }
 
+// MaterialInfo holds type material description
+type MaterialInfo struct {
+	TypeId   int32
+	Quantity int64
+	HasBPO   bool
+}
+
 //IsT2BPO checks if given BPO is T2
 func IsT2BPO(typeID int32) bool {
 	_, exBpo := Blueprints[typeID]
@@ -48,13 +55,14 @@ func Level1BPO(bpoID int32) []TypeIdQuantity {
 }
 
 //Level1Materials returns Level 1 (needed for immediate starting mnf job) materials/components for given BPO
-func Level1Materials(bpoID int32) []TypeIdQuantity {
-	result := make([]TypeIdQuantity, 0)
+func Level1Materials(bpoID int32) []MaterialInfo {
+	result := make([]MaterialInfo, 0)
 	bpo := Blueprints[bpoID]
 
 	if bpo.Manufacturing != nil {
 		for _, mtr := range bpo.Manufacturing.Materials {
-			result = append(result, TypeIdQuantity{TypeId: mtr.TypeId, Quantity: mtr.Quantity})
+			_, hasBPO := BpoIdByTypeId[mtr.TypeId]
+			result = append(result, MaterialInfo{TypeId: mtr.TypeId, Quantity: mtr.Quantity, HasBPO: hasBPO})
 		}
 	}
 
