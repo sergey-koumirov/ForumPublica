@@ -60,4 +60,6 @@ type CnMaterial struct {
 	Model    sdem.ZipType
 	Qty      int64
 	Excluded bool
+	Volume   float64
+	Price    float64
 }

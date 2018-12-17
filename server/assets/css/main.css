@@ -17,6 +17,10 @@ table td, table th{
   color: #ffc107;
 }
 
+.grayed .oi{
+  color: #d0d1a7;
+}
+
 .oi.admin{
   color: #ff0707;
 }
@@ -393,4 +397,8 @@ img.loading{
 
 .w100rest {
   width: calc(100% - 1010px);
+}
+
+table.store-items tr.highlighted{
+  background: #ffeecc;
 }

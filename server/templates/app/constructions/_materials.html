@@ -7,14 +7,14 @@
         <th></th>
         <th></th>
         <th></th>
-        <th class="text-center">Vol</th>
+        <th class="text-center">Vol m<sup>3</sup></th>
         <th class="text-center">Price</th>
         <th class="text-center">Need</th>
     </tr>
-    <tr v-for="item in construction.Materials">
+    <tr v-for="item in construction.Materials" v-bind:class="{grayed: !!item.Excluded}">
         <td>
             <span v-on:click="SetExcluded(item)" class="oi oi-target pointer" v-if="!item.Excluded"></span>                    
-            <span v-on:click="ResetExcluded(item)" class="oi oi-ban pointer" v-if="item.Excluded"></span>
+            <span v-on:click="ResetExcluded(item)" class="oi oi-grid-four-up pointer" v-if="item.Excluded"></span>
             <span v-on:click="OpenCharPopup($event, item.Model.Id)" :data-clipboard-text="item.Qty" class="oi oi-bar-chart pointer copy-item"></span>                    
             <span v-on:click="HighlightRow($event)" :data-clipboard-text="item.Model.Name" class="oi oi-ellipses pointer copy-item"></span>
         </td>
@@ -24,7 +24,7 @@
         <td>
             {{item.Model.Name}}
         </td>
-        <td class="over text-right">{{item.Volume | float}}</td>
+        <td class="over text-right"><span class="grayed"><sub>{{item.Model.Volume}}</sub></span> {{item.Volume | float}}</td>
         <td class="over text-right">{{item.Price | float}}</td>
         <td class="over text-right">
             {{item.Qty | number}}
@@ -35,8 +35,8 @@
         <td></td>
         <td></td>
         <td></td>
-        <th class="text-right">{{construction.Materials.Volume | float}}</th>
-        <th class="text-right">{{construction.Materials.Price | float}}</th>
+        <th class="text-right">{{FullVol() | float}}</th>
+        <th class="text-right">{{FullPrice() | float}}</th>
         <td></td>
     </tr>
 

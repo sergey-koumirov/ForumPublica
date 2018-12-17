@@ -134,6 +134,7 @@ var constructions = new Vue({
 
         OpenCharPopup: function($event, typeId){
           this.$root.$emit('open-market', typeId, $event.pageX, $event.pageY)
+          this.HighlightRow($event);
         },
 
         OpenRunModal: function(bpo){
@@ -164,12 +165,20 @@ var constructions = new Vue({
         },
 
         SetExcluded: function(item){
-          console.log('SetExcluded', item);
           item.Excluded = true;
         },
 
         ResetExcluded: function(item){
             item.Excluded = false;
+        },
+
+        HasExcluded: function(){
+            if(!!this.construction.Materials){
+                for(i = 0; i < this.construction.Materials.length; i++){
+                    if(this.construction.Materials[i].Excluded){ return true; }
+                }
+            }
+            return false;
         },
 
         HighlightRow: function($event){
@@ -180,9 +189,17 @@ var constructions = new Vue({
         PartialVol: function(){
             var result = 0;
             this.construction.Materials.forEach(function(item){
-                if(!item.excluded){
+                if(!item.Excluded){
                     result = result + item.Volume||0;
                 }
+            });
+            return result;
+        },
+
+        FullVol: function(){
+            var result = 0;
+            this.construction.Materials.forEach(function(item){
+                result = result + item.Volume||0;
             });
             return result;
         },
@@ -190,13 +207,20 @@ var constructions = new Vue({
         PartialPrice: function(){
             var result = 0;
             this.construction.Materials.forEach(function(item){
-                if(!item.excluded){
+                if(!item.Excluded){
                     result = result + item.Price||0;
                 }
             });
             return result;
         },
 
+        FullPrice: function(){
+            var result = 0;
+            this.construction.Materials.forEach(function(item){
+                result = result + item.Price||0;
+            });
+            return result;
+        },
     },
 });
 
