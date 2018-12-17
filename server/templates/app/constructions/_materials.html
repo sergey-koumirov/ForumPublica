@@ -2,7 +2,7 @@
 <h5>
     Materials
 </h5>
-<table class="table table-sm store-items">
+<table class="table table-sm materials">
     <tr>
         <th></th>
         <th></th>
@@ -16,12 +16,12 @@
             <span v-on:click="SetExcluded(item)" class="oi oi-target pointer" v-if="!item.Excluded"></span>                    
             <span v-on:click="ResetExcluded(item)" class="oi oi-grid-four-up pointer" v-if="item.Excluded"></span>
             <span v-on:click="OpenCharPopup($event, item.Model.Id)" :data-clipboard-text="item.Qty" class="oi oi-bar-chart pointer copy-item"></span>                    
-            <span v-on:click="HighlightRow($event)" :data-clipboard-text="item.Model.Name" class="oi oi-ellipses pointer copy-item"></span>
+            <span v-on:click="HighlightRow($event)" :data-clipboard-text="item.Qty" class="oi oi-ellipses pointer copy-item"></span>
         </td>
         <td class="first">
             <img align="left" width="16" height="16" :src="'https://imageserver.eveonline.com/Type/'+item.Model.Id+'_32.png'">
         </td>
-        <td>
+        <td class="name">
             {{item.Model.Name}}
         </td>
         <td class="over text-right"><span class="grayed"><sub>{{item.Model.Volume}}</sub></span> {{item.Volume | float}}</td>

@@ -1,7 +1,7 @@
 <% define "app/constructions/_components.html" %>
 
 <h5>Build BPOs</h5>
-<div class="two-columns">
+
 
 <div class="bpo component-item"
      ng-class="bpo.ReadyQty >= bpo.Qty ? 'done' : ''"
@@ -19,24 +19,19 @@
     
     <div class="controls">
         <span class="oi oi-plus pointer" v-on:click="OpenRunModal(bpo)"></span>
-        <!-- <span class="grayed" ng-show="bpo.RunQty>1">x {{bpo.RunQty}}</span> -->
     </div>
-
-    <!-- <div class="me">
-        ME {{bpo.ME}}
-    </div> -->
 
     <!-- <div class="time">
         {{ bpo.MnfTime | seconds }}
     </div> -->
 
     <div class="qty">
-        {{bpo.ReadyQty | number}} <span class="grayed">/</span> {{bpo.InProdQty | number}} <span class="grayed">/</span> {{bpo.Model.Qty | number}}
+        {{bpo.Model.Qty | number}}
         <!-- <span ng-click="DeleteRuns(bpo.Runs)" class="glyphicon glyphicon-erase edit" ng-show="bpo.Runs.length>0"></span> -->
     </div>
 
     <% template "app/constructions/_runs.html" . %>
-</div>
+
 
 </div>
 <% end %>

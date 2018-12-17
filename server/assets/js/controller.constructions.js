@@ -52,10 +52,13 @@ var constructions = new Vue({
       showMEModal: false,
       showQtyModal: false,
       showRunModal: false,
+      showExpenseModal: false,
       ask: {
         me: null,
         bpId: null,
         qty: null,
+        exValue: null,
+        description: null,
         repeats: null,
       }
     },
@@ -220,6 +223,42 @@ var constructions = new Vue({
                 result = result + item.Price||0;
             });
             return result;
+        },
+
+        TotalExpenses: function(bpo){
+            var result = 0;
+            bpo.Expenses.forEach(function(item){
+                result = result + item.ExValue||0;
+            });
+            return result;
+        },
+
+        OpenExpenseModal: function(bpo){
+            this.ask.exValue = 0;
+            this.ask.description = null;
+            this.ask.bpId = bpo.Model.Id;
+            this.showExpenseModal = true;
+            this.$nextTick(function () {
+                $('input.expense').focus();
+            });         
+        },
+
+        CloseExpense: function(eventName){
+            this.showExpenseModal = false;
+        },
+
+        SaveExpense: function(){
+            post(
+              this, 
+              '/app/construction/'+this.construction.Model.Id+'/expenses', 
+              {
+                Description: this.ask.description, 
+                ExValue: this.ask.exValue, 
+                BpoId: this.ask.bpId,
+              }, 
+              false
+            );
+            this.showExpenseModal = false;
         },
     },
 });

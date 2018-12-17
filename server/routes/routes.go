@@ -36,6 +36,9 @@ func AddAppRoutes(r *gin.Engine) {
 		authorized.DELETE("/construction/:cid/blueprint/:id", ctrl.AppConstructionBlueprintsDelete)
 		authorized.PATCH("/construction/:cid/blueprint/:id", ctrl.AppConstructionBlueprintsUpdate)
 
+		authorized.POST("/construction/:id/expenses", ctrl.AppConstructionExpensesAdd)
+		// authorized.DELETE("/construction/:cid/blueprint/:bpo_id/expense/:id", ctrl.AppConstructionExpensesDelete)
+
 		authorized.GET("/search/:filter", ctrl.AppSearchItemType)
 
 		authorized.POST("/ui/open_market", ctrl.AppUIOpenMarket)

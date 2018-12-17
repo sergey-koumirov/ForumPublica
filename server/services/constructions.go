@@ -61,7 +61,7 @@ func bposOrder(db *gorm.DB) *gorm.DB {
 
 func ConstructionGet(userId int64, cnId int64) (models.CnRecord, error) {
 	cn := models.Construction{}
-	errSel := db.DB.Preload("Runs").Preload("Bpos", bposOrder).Where("id = ? and user_id = ?", cnId, userId).First(&cn).Error
+	errSel := db.DB.Preload("Bpos.Expenses").Preload("Runs").Preload("Bpos", bposOrder).Where("id = ? and user_id = ?", cnId, userId).First(&cn).Error
 
 	var result models.CnRecord
 
@@ -104,6 +104,7 @@ func loadCn(result *models.CnRecord, cn models.Construction) {
 				CopyTime:      0, //todo
 				InventCnt:     0, //todo
 				WholeCopyTime: 0, //todo
+				Expenses:      r.Expenses,
 			},
 		)
 	}

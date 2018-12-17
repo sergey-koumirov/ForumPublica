@@ -395,10 +395,20 @@ img.loading{
   padding: 2px;
 }
 
-.w100rest {
+.w100rest2x {
   width: calc(100% - 1010px);
 }
 
-table.store-items tr.highlighted{
+.w100rest {
+  width: calc(100% - 680px);
+}
+
+table.materials tr.highlighted{
   background: #ffeecc;
+}
+
+table.materials td.name{
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }

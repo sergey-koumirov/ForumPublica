@@ -1,0 +1,26 @@
+<% define "app/constructions/_expenses.html" %>
+<h5>
+    Expenses
+</h5>
+<table class="table table-sm" v-for="bpo in construction.Blueprints">
+    <tr>
+        <td colspan="2">
+            <b>{{bpo.Model.TypeName}}</b>
+            <span class="oi oi-plus pointer" v-on:click="OpenExpenseModal(bpo)"></span>
+        </td>
+    </tr>
+    <tr v-for="item in bpo.Expenses" >
+        <td>
+            <span class="delete oi oi-x pointer"></span>
+            {{item.Description}}
+        </td>
+        <td>{{item.ExValue | float}}</td>
+    </tr>
+    <tr>
+        <td class="text-right"></td>
+        <th class="text-right">{{TotalExpenses(bpo) | float}}</th>
+    </tr>
+
+</table>
+
+<% end %>

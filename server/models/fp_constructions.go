@@ -41,6 +41,8 @@ type ConstructionBpo struct {
 
 	ConstructionId int64 `gorm:"column:construction_id"`
 	Construction   *Construction
+
+	Expenses ConstructionExpenses `gorm:"foreignkey:ConstructionBpoId"`
 }
 
 func (m *ConstructionBpo) TableName() string {
@@ -93,13 +95,19 @@ func (u *ConstructionBpoRun) Total() int64 {
 	return int64(u.Repeats) * u.Qty
 }
 
+//ConstructionExpense table
 type ConstructionExpense struct {
-	Id                int64   `gorm:"column:id;primary_key"`
-	ConstructionBpoId int64   `gorm:"column:construction_bpo_id"`
-	Description       string  `gorm:"column:description"`
-	ExValue           float64 `gorm:"column:exvalue"`
+	Id          int64   `gorm:"column:id;primary_key"`
+	Description string  `gorm:"column:description"`
+	ExValue     float64 `gorm:"column:exvalue"`
+
+	ConstructionBpoId int64 `gorm:"column:construction_bpo_id"`
+	ConstructionBpo   *ConstructionBpo
 }
 
+//TableName for ConstructionExpense table
 func (u *ConstructionExpense) TableName() string {
 	return "fp_construction_expenses"
 }
+
+type ConstructionExpenses []ConstructionExpense

@@ -9,6 +9,7 @@ import (
 type CnBlueprint struct {
 	Model         ConstructionBpo
 	Runs          *[]ConstructionBpoRun
+	Expenses      []ConstructionExpense
 	IsGoal        bool
 	IsT2          bool
 	CopyTime      int64
@@ -62,4 +63,23 @@ type CnMaterial struct {
 	Excluded bool
 	Volume   float64
 	Price    float64
+}
+
+//CnMaterials materils info for constructions page
+type CnMaterials []CnMaterial
+
+func (s CnMaterials) Len() int {
+	return len(s)
+}
+func (s CnMaterials) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+func (s CnMaterials) Less(i, j int) bool {
+	im := s[i].Model
+	jm := s[j].Model
+
+	same := im.GroupId == jm.GroupId && (im.Name < jm.Name)
+	diff := im.GroupId < jm.GroupId
+
+	return same || diff
 }

@@ -19,7 +19,7 @@
             <% template "app/constructions/_bpos.html" . %>
         </div>
 
-        <div class="bordered x2">
+        <div class="bordered">
             <% template "app/constructions/_components.html" . %>
         </div>
 
@@ -28,14 +28,10 @@
                 <% template "app/constructions/_materials.html" . %>
             </div>
             <div class="bordered">
-                <!-- [% template "constructions/_expenses.html" . %] -->
+                <% template "app/constructions/_expenses.html" . %>
             </div>
         </div>
     </div>
-
-    <!-- [% template "constructions/_store_modal.html" . %]
-    [% template "constructions/_ask_bpo_runs_modal.html" . %]
-    [% template "constructions/_ask_expense_modal.html" . %] -->
 
     <open-market v-bind:chars="chars"></open-market>
 
@@ -89,6 +85,23 @@
           <button class="btn btn-default btn-sm modal-default-button" @click="CloseRun()">Close</button>
         </div>
     </modal>
+
+    <modal v-if="showExpenseModal" @close="showExpenseModal = false">
+        <div slot="body">
+            <input class="form-control form-control-sm qty expense" type="number" v-model.number="ask.exValue">
+            <input class="form-control form-control-sm qty" type="text" v-model.number="ask.description" placeholder="Description">
+            <select class="form-control form-control-sm" v-model="ask.description">
+                <option>Invent</option>
+                <option>Materials</option>
+                <option>Job Costs</option>
+            </select>
+        </div>
+        <div slot="footer">
+            <button class="btn btn-primary btn-sm modal-default-button" @click="SaveExpense()">Save</button>
+            <button class="btn btn-default btn-sm modal-default-button" @click="CloseExpense()">Close</button>
+        </div>
+    </modal>
+    
 
 </div>
 
