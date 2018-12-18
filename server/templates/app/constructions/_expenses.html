@@ -11,14 +11,18 @@
     </tr>
     <tr v-for="item in bpo.Expenses" >
         <td>
-            <span class="delete oi oi-x pointer"></span>
+            <span class="delete oi oi-x pointer" v-on:click="DeleteExpense(item.Id)"></span>
             {{item.Description}}
         </td>
-        <td>{{item.ExValue | float}}</td>
+        <td class="text-right">{{item.ExValue | float}}</td>
     </tr>
     <tr>
-        <td class="text-right"></td>
-        <th class="text-right">{{TotalExpenses(bpo) | float}}</th>
+        <td class="text-right">
+            Per unit: {{AvgExpenses(bpo) | float}}
+        </td>
+        <th class="text-right">
+            {{TotalExpenses(bpo) | float}}
+        </th>
     </tr>
 
 </table>

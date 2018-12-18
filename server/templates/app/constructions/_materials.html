@@ -13,10 +13,10 @@
     </tr>
     <tr v-for="item in construction.Materials" v-bind:class="{grayed: !!item.Excluded}">
         <td>
-            <span v-on:click="SetExcluded(item)" class="oi oi-target pointer" v-if="!item.Excluded"></span>                    
-            <span v-on:click="ResetExcluded(item)" class="oi oi-grid-four-up pointer" v-if="item.Excluded"></span>
+            <span v-on:click="SetExcluded(item)" class="oi oi-eye pointer" v-if="!item.Excluded"></span>                    
+            <span v-on:click="ResetExcluded(item)" class="oi oi-eye pointer" v-if="item.Excluded"></span>
             <span v-on:click="OpenCharPopup($event, item.Model.Id)" :data-clipboard-text="item.Qty" class="oi oi-bar-chart pointer copy-item"></span>                    
-            <span v-on:click="HighlightRow($event)" :data-clipboard-text="item.Qty" class="oi oi-ellipses pointer copy-item"></span>
+            <span v-on:click="HighlightRow($event)" :data-clipboard-text="item.Qty" class="oi oi-sun pointer copy-item"></span>
         </td>
         <td class="first">
             <img align="left" width="16" height="16" :src="'https://imageserver.eveonline.com/Type/'+item.Model.Id+'_32.png'">
@@ -46,15 +46,6 @@
         <td></td>
         <th class="text-right reded">{{PartialVol() | float}}</th>
         <th class="text-right reded">{{PartialPrice() | float}}</th>
-        <td></td>
-    </tr>
-
-    <tr>
-        <td></td>
-        <td></td>
-        <th></th>
-        <td class="text-right">Mnf Cost:</td>
-        <th class="text-right">{{construction.RunCost | float}}</th>
         <td></td>
     </tr>
 

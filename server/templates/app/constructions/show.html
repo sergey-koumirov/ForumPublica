@@ -51,7 +51,7 @@
       </div>
     </modal>
 
-    <modal v-if="showQtyModal" @close="showQtyModal = false">
+    <modal v-if="showQtyModal" @close="showQtyModal = false" class="bpo-modal">
         <div slot="body">
           <input class="form-control qty" type="number" v-model.number="ask.qty">
         </div>
@@ -61,7 +61,7 @@
         </div>
     </modal>
 
-    <modal v-if="showRunModal" @close="showRunModal = false">
+    <modal v-if="showRunModal" @close="showRunModal = false" class="run-modal">
         <div slot="body">
             <div class="form-group">
                 ME: 

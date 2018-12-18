@@ -32,12 +32,13 @@ func AddAppRoutes(r *gin.Engine) {
 		authorized.POST("/construction/:id/save_bonus", ctrl.AppConstructionsSaveBonus)
 		authorized.POST("/construction/:id/add_blueprint", ctrl.AppConstructionsAddBlueprint)
 		authorized.POST("/construction/:id/add_run", ctrl.AppConstructionsAddRun)
+		authorized.DELETE("/construction/:cid/run/:id", ctrl.AppConstructionsDeleteRun)
 
 		authorized.DELETE("/construction/:cid/blueprint/:id", ctrl.AppConstructionBlueprintsDelete)
 		authorized.PATCH("/construction/:cid/blueprint/:id", ctrl.AppConstructionBlueprintsUpdate)
 
 		authorized.POST("/construction/:id/expenses", ctrl.AppConstructionExpensesAdd)
-		// authorized.DELETE("/construction/:cid/blueprint/:bpo_id/expense/:id", ctrl.AppConstructionExpensesDelete)
+		authorized.DELETE("/construction/:cid/expense/:id", ctrl.AppConstructionExpensesDelete)
 
 		authorized.GET("/search/:filter", ctrl.AppSearchItemType)
 

@@ -24,3 +24,16 @@ func AppConstructionsAddRun(c *gin.Context) {
 	c.JSON(http.StatusOK, cn)
 }
 
+func AppConstructionsDeleteRun(c *gin.Context) {
+	raw, _ := c.Get(middleware.USER)
+	user := raw.(models.User)
+
+	cid, _ := strconv.ParseInt(c.Param("cid"), 10, 64)
+	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+
+	services.ConstructionRunDelete(user.Id, cid, id)
+	cn, _ := services.ConstructionGet(user.Id, cid)
+
+	c.JSON(http.StatusOK, cn)
+}
+

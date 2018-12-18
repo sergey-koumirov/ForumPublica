@@ -117,7 +117,10 @@ var constructions = new Vue({
           this.ask.qty = qty;
           this.ask.bpId = bpId;
           this.showQtyModal = true;
-          $('input.qty').focus();
+
+          this.$nextTick(function () {
+            $('.bpo-modal .qty').focus().select();
+          }); 
         },
         
 
@@ -143,9 +146,12 @@ var constructions = new Vue({
         OpenRunModal: function(bpo){
           this.ask.bpId = bpo.Model.TypeId;
           this.ask.repeats = 1;
-          this.ask.qty = 1;
+          this.ask.qty = bpo.DefaultME == 2 ? 10 : 1;
           this.ask.me = bpo.DefaultME;
           this.showRunModal = true;
+          this.$nextTick(function () {
+            $('.run-modal .repeats').focus().select();
+          }); 
         },
 
         SaveRun: function(){
@@ -165,6 +171,14 @@ var constructions = new Vue({
 
         CloseRun: function(eventName){
           this.showRunModal = false;
+        },
+
+        DeleteRun: function(runId){
+            del(
+                this,
+                '/app/construction/'+this.construction.Model.Id+'/run/'+runId,
+                false
+            );
         },
 
         SetExcluded: function(item){
@@ -233,13 +247,21 @@ var constructions = new Vue({
             return result;
         },
 
+        AvgExpenses: function(bpo){
+            var result = 0;
+            bpo.Expenses.forEach(function(item){
+                result = result + item.ExValue||0;
+            });
+            return result / bpo.Model.Qty;
+        },
+
         OpenExpenseModal: function(bpo){
             this.ask.exValue = 0;
             this.ask.description = null;
             this.ask.bpId = bpo.Model.Id;
             this.showExpenseModal = true;
             this.$nextTick(function () {
-                $('input.expense').focus();
+                $('input.expense').focus().select();
             });         
         },
 
@@ -259,6 +281,13 @@ var constructions = new Vue({
               false
             );
             this.showExpenseModal = false;
+        },
+        DeleteExpense: function(id){
+            del(
+              this, 
+              '/app/construction/'+this.construction.Model.Id+'/expense/'+id, 
+              false
+            );
         },
     },
 });

@@ -30,15 +30,15 @@ func AppConstructionExpensesAdd(c *gin.Context) {
 	c.JSON(http.StatusOK, cn)
 }
 
-// func AppConstructionExpensesDelete(c *gin.Context) {
-// 	raw, _ := c.Get(middleware.USER)
-// 	user := raw.(models.User)
+func AppConstructionExpensesDelete(c *gin.Context) {
+	raw, _ := c.Get(middleware.USER)
+	user := raw.(models.User)
 
-// 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
-// 	cid, _ := strconv.ParseInt(c.Param("cid"), 10, 64)
+	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	cid, _ := strconv.ParseInt(c.Param("cid"), 10, 64)
 
-// 	services.ConstructionBlueprintDelete(user.Id, cid, id)
-// 	cn, _ := services.ConstructionGet(user.Id, cid)
+	services.ConstructionExpenseDelete(user.Id, cid, id)
+	cn, _ := services.ConstructionGet(user.Id, cid)
 
-// 	c.JSON(http.StatusOK, cn)
-// }
+	c.JSON(http.StatusOK, cn)
+}

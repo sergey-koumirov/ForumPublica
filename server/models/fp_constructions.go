@@ -27,6 +27,9 @@ func (m *Construction) Delete() {
 	for _, bp := range m.Bpos {
 		bp.Delete()
 	}
+	for _, r := range m.Runs {
+		r.Delete()
+	}
 	db.DB.Delete(&m)
 }
 
@@ -65,6 +68,9 @@ func (u *ConstructionBpo) MarshalJSON() ([]byte, error) {
 }
 
 func (m *ConstructionBpo) Delete() {
+	for _, e := range m.Expenses {
+		e.Delete()
+	}
 	db.DB.Delete(&m)
 }
 
@@ -95,6 +101,10 @@ func (u *ConstructionBpoRun) Total() int64 {
 	return int64(u.Repeats) * u.Qty
 }
 
+func (m *ConstructionBpoRun) Delete() {
+	db.DB.Delete(&m)
+}
+
 //ConstructionExpense table
 type ConstructionExpense struct {
 	Id          int64   `gorm:"column:id;primary_key"`
@@ -111,3 +121,7 @@ func (u *ConstructionExpense) TableName() string {
 }
 
 type ConstructionExpenses []ConstructionExpense
+
+func (m *ConstructionExpense) Delete() {
+	db.DB.Delete(&m)
+}
