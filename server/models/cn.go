@@ -19,6 +19,7 @@ type CnBlueprint struct {
 	InProdQty     int64
 	DefaultME     int32
 	PortionSize   int32
+	MnfTime       int64
 }
 
 //CnBlueprints array of CnBlueprint

@@ -21,13 +21,12 @@
         <span class="oi oi-plus pointer" v-on:click="OpenRunModal(bpo)"></span>
     </div>
 
-    <!-- <div class="time">
+    <div class="time">
         {{ bpo.MnfTime | seconds }}
-    </div> -->
+    </div>
 
     <div class="qty">
         {{bpo.Model.Qty | number}}
-        <!-- <span ng-click="DeleteRuns(bpo.Runs)" class="glyphicon glyphicon-erase edit" ng-show="bpo.Runs.length>0"></span> -->
     </div>
 
     <% template "app/constructions/_runs.html" . %>

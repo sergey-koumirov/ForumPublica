@@ -1,22 +1,18 @@
 <% define "app/constructions/_runs.html" %>
 <div class="runs">
     <div class="run" v-for="run in bpo.Runs" v-if="run.Qty!=0">
-        <!-- <span ng-click="StartRunMnf(run.ConstructionBpoRunId)" class="glyphicon glyphicon-play edit" ng-show="run.Status == 'planned'"></span>
-        <span ng-click="FinishMnf(run.ConstructionBpoRunId)" class="glyphicon glyphicon-stop edit" ng-show="run.Status == 'started'"></span>
-
+        <!-- 
         <span class="grayed" > {{run.CitadelType}}</span>
         <span class="grayed" > {{run.RigFactor}}</span>
         <span class="grayed" > {{run.SpaceType}}</span>
-
         <span>{{run.Comment}}</span>
-     -->
-        
+        -->
         <span class="delete oi oi-x pointer" v-if="run.Id!=0" v-on:click="DeleteRun(run.Id)"></span>
         <span class="me">ME <b>{{run.ME}}</b></span>
+        <span class="te">TE <b>{{run.TE}}</b></span>
         <span class="grayed" v-if="bpo.PortionSize>1">[{{bpo.PortionSize}}] x </span>
         <span class="grayed">{{run.Repeats}} x {{run.Qty | number}} = </span> 
         {{run.Repeats * run.Qty * bpo.PortionSize | number}}
     </div>
-
 </div>
 <% end %>

@@ -90,6 +90,17 @@ func ApplyMEBonus(repeats int64, cnt int64, me int32, bonus1 float64, bonus2 flo
 	return int64(math.Ceil(float64(repeats*cnt) * (1.0 - float64(me)/100.0) * (1.0 - bonus1/100.0) * (1.0 - bonus2/100.0)))
 }
 
+func ApplyTE(seconds int64, te int32) int64 {
+	return ApplyTEBonus(seconds, te, 0.0, 0.0, 0.0)
+}
+
+func ApplyTEBonus(seconds int64, te int32, bonus1 float64, bonus2 float64, space float64) int64 {
+	citadelFactor := (1.0 - bonus1/100.0) * (1 - bonus2*space/100)
+	skillFactor := (1.0 - 4*5/100.0) * (1.0 - 3*5/100.0)
+	teFactor := (1 - float64(te)/100.0)
+	return int64(math.Ceil(float64(seconds) * teFactor * skillFactor * citadelFactor))
+}
+
 func ProductIdByBpoId(bpoId int32) int32 {
 	bpo := Blueprints[bpoId]
 	if bpo.Manufacturing != nil {

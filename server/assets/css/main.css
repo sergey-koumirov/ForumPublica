@@ -197,6 +197,25 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
   float: left;
   margin-top: 1px;
   margin-left: 1px;
+  position: absolute;
+  left: 24px;
+  width: 34px;
+  text-align: center;
+}
+
+.construction .component-item .runs .te{
+  border: 1px solid #D0DDEF;
+  border-radius: 3px;
+  background: #E0ECFF;
+  color: #ffffff;
+  font-size: 10px;
+  float: left;
+  margin-top: 1px;
+  margin-left: 1px;
+  position: absolute;
+  left: 64px;
+  width: 34px;
+  text-align: center;
 }
 
 .construction .component-item .runs .delete{
@@ -215,6 +234,13 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
   position: absolute;
   top: 19px;
   left: 41px;
+}
+
+.construction .component-item .time{
+  position: absolute;
+  top: 23px;
+  right: 81px;
+  color: #A0C0ff;
 }
 
 .construction .bpo-item .right-top{

@@ -18,7 +18,20 @@ func Assembly(cn *models.Construction) models.CnBlueprints {
 
 	jobruns.SetJobRuns(&result, sortedIds, cn)
 
+	calcRunTime(&result)
+
 	return result
+}
+
+func calcRunTime(result *models.CnBlueprints) {
+	for i := range *result {
+		bpo := (*result)[i]
+		t := int64(0)
+		for _, r := range *bpo.Runs {
+			t = t + int64(r.Repeats)*static.ApplyTE(r.Qty*int64(static.Blueprints[bpo.Model.TypeId].Manufacturing.Time), r.TE)
+		}
+		(*result)[i].MnfTime = t
+	}
 }
 
 func fillResult(result *models.CnBlueprints, sortedIds []int32, bpos *models.ConstructionBpos) {
