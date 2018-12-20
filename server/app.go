@@ -7,6 +7,8 @@ import (
 	"ForumPublica/server/middleware"
 	"ForumPublica/server/routes"
 	"ForumPublica/server/utils"
+	"ForumPublica/server/tasks"
+	"ForumPublica/server/services"
 	"fmt"
 	"html/template"
 	"os"
@@ -16,6 +18,8 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+
+	"github.com/astaxie/beego/toolbox"
 )
 
 func main() {
@@ -40,6 +44,8 @@ func main() {
 		return
 	}
 	defer db.DB.Close()
+
+	services.InitPrices()
 
 	store := cookie.NewStore([]byte(config.Vars.SESSION_KEY))
 
@@ -67,6 +73,10 @@ func main() {
 	r.Use(middleware.SetUser)
 
 	routes.AddAppRoutes(r)
+
+	toolbox.AddTask("update_prices", toolbox.NewTask("update_prices", "0 0 5 * * *", tasks.TaskUpdatePrices) )
+	toolbox.StartTask()
+	defer toolbox.StopTask()
 
 	gin.SetMode(config.Vars.MODE)
 	r.Run(":" + config.Vars.PORT)

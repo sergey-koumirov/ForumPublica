@@ -51,6 +51,8 @@ func AddAppRoutes(r *gin.Engine) {
 	{
 		admin.GET("/index", ctrl.AdminIndex)
 		admin.GET("/users", ctrl.AdminUsers)
+		admin.GET("/jobs", ctrl.AdminJobs)
+		admin.GET("/jobs/update_prices", ctrl.AdminJobsUpdatePrices)
 	}
 
 }

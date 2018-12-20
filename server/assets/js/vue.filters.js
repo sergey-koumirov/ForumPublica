@@ -1,9 +1,11 @@
 var frm = new Intl.NumberFormat('ru-RU', {
     minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
 });
 
 var frmFl = new Intl.NumberFormat('ru-RU', {
     minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
 });
 
 

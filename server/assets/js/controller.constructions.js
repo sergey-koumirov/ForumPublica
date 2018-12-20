@@ -231,10 +231,10 @@ var constructions = new Vue({
             return result;
         },
 
-        FullPrice: function(){
+        FullCost: function(){
             var result = 0;
             this.construction.Materials.forEach(function(item){
-                result = result + item.Price||0;
+                result = result + (item.Price||0) * (item.Qty||0);
             });
             return result;
         },

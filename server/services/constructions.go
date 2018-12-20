@@ -111,4 +111,14 @@ func loadCn(result *models.CnRecord, cn models.Construction) {
 
 	result.Components = reverse.Assembly(&cn)
 	result.Materials = jobruns.RunsToMaterials(result.Components)
+
+	typeIds := make([]int32, len(result.Materials))
+	for i, m := range result.Materials{
+		typeIds[i] = m.Model.Id
+	}
+	AppraisalUpdatePrices(typeIds)
+	for i, m := range result.Materials{
+		result.Materials[i].Price = GetDefaultPrice(m.Model.Id)
+	}
+
 }
