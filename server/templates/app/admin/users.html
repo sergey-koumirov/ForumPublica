@@ -14,7 +14,7 @@
   </tr>
   <% range $index, $u := .users %>
   <tr>
-    <td><% $u.Id %></td>
+    <td><% $u.ID %></td>
     <td>
       <% range $index, $c := $u.Characters %>
         <span class="badge badge-light <% $u.Role %>"><%$c.Name%></span>

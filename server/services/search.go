@@ -8,10 +8,13 @@ import (
 	"strings"
 )
 
-var SEARCH_ITEMS int = 10
+//SearchItems count
+var SearchItems = 10
 
+//SearchResult array
 type SearchResult []sdem.ZipType
 
+//SearchSorter for sorting
 type SearchSorter struct {
 	Array SearchResult
 	Term  string
@@ -29,6 +32,7 @@ func (s SearchSorter) Less(i, j int) bool {
 	return ni < nj || (ni == nj && s.Array[i].Name < s.Array[j].Name)
 }
 
+//SearchItemType serahc
 func SearchItemType(term string, filter string) SearchResult {
 
 	result := SearchSorter{Term: strings.ToLower(term), Array: make(SearchResult, 0)}
@@ -40,7 +44,7 @@ func SearchItemType(term string, filter string) SearchResult {
 
 		isMatch := hasTerm.MatchString(v.Name)
 		if filter == "blueprint" {
-			_, bpoEx := static.Blueprints[v.Id]
+			_, bpoEx := static.Blueprints[v.ID]
 			isMatch = bpoEx && isMatch
 		}
 
@@ -52,8 +56,8 @@ func SearchItemType(term string, filter string) SearchResult {
 	rlen := len(result.Array)
 	if rlen > 0 {
 		sort.Sort(result)
-		if rlen > SEARCH_ITEMS {
-			rlen = SEARCH_ITEMS
+		if rlen > SearchItems {
+			rlen = SearchItems
 		}
 	}
 

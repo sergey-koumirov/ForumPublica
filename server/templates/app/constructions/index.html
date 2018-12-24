@@ -17,14 +17,14 @@
   <% range $index, $cn := .constructions.Records %>
   <tr>
     <td>
-      <a href="/app/construction/<% $cn.Model.Id %>">
+      <a href="/app/construction/<% $cn.Model.ID %>">
         <span class="oi oi-pencil"></span>
-        <% $cn.Model.Id %>
+        <% $cn.Model.ID %>
       </a>
     </td>
     <td><% $cn.Title %></td>
     <td class="text-right">
-      <a href="/app/construction/<% $cn.Model.Id %>/delete"><span class="oi oi-delete"></span></a>
+      <a href="/app/construction/<% $cn.Model.ID %>/delete"><span class="oi oi-delete"></span></a>
     </td>
   </tr>
   <% end %>

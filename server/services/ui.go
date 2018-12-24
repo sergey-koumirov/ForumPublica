@@ -6,10 +6,11 @@ import (
 	"fmt"
 )
 
-func UIOpenMarket(userId int64, params map[string]int64) {
+//UIOpenMarket open window request
+func UIOpenMarket(userID int64, params map[string]int64) {
 
 	var char models.Character
-	errSel := db.DB.Where("user_id =? and id = ?", userId, params["CharacterId"]).First(&char).Error
+	errSel := db.DB.Where("user_id =? and id = ?", userID, params["CharacterId"]).First(&char).Error
 	if errSel != nil {
 		return
 	}

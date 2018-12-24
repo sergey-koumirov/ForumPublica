@@ -6,11 +6,12 @@ import (
 	"fmt"
 )
 
+//Character character model
 type Character struct {
-	Id   int64  `gorm:"column:id;primary_key"`
+	ID   int64  `gorm:"column:id;primary_key"`
 	Name string `gorm:"column:name"`
 
-	UserId int64 `gorm:"column:user_id"`
+	UserID int64 `gorm:"column:user_id"`
 
 	VerExpiresOn          string `gorm:"column:ver_expires_on"`
 	VerScopes             string `gorm:"column:ver_scopes"`
@@ -26,14 +27,16 @@ type Character struct {
 	Skills []Skill `gorm:"foreignkey:EsiCharacterId"`
 }
 
-func (c *Character) TableName() string {
+//TableName character table name
+func (char *Character) TableName() string {
 	return "esi_characters"
 }
 
+//GetESI get ESI object for char
 func (char *Character) GetESI() esi.ESI {
-	errGet := db.DB.First(&char, char.Id).Error
+	errGet := db.DB.First(&char, char.ID).Error
 	if errGet != nil {
-		fmt.Println("errGet:", errGet, char, char.Id)
+		fmt.Println("errGet:", errGet, char, char.ID)
 	}
 
 	result := esi.ESI{

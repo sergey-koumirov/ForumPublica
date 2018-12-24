@@ -5,17 +5,20 @@ import (
 	"ForumPublica/server/models"
 )
 
+//CalcNode sorting node
 type CalcNode struct {
 	Color    string
 	Children []int32
 }
 
+//CalcNetwork sorting nodes hash
 type CalcNetwork map[int32]CalcNode
 
+//ArrangeBPO sort BPO by manufacturing dependens
 func ArrangeBPO(cnBpos *models.ConstructionBpos) []int32 {
 	bpoIds := make([]int32, 0)
 	for _, bpo := range *cnBpos {
-		bpoIds = append(bpoIds, bpo.TypeId)
+		bpoIds = append(bpoIds, bpo.TypeID)
 	}
 	network := createNetwork(bpoIds)
 	sorted := sortNetwork(network)
@@ -24,8 +27,8 @@ func ArrangeBPO(cnBpos *models.ConstructionBpos) []int32 {
 
 func createNetwork(bpos []int32) CalcNetwork {
 	result := make(CalcNetwork)
-	for _, bpoId := range bpos {
-		deepAddNetworkElements(bpoId, result)
+	for _, bpoID := range bpos {
+		deepAddNetworkElements(bpoID, result)
 	}
 	return result
 }
@@ -48,7 +51,7 @@ func deepAddNetworkElements(key int32, result CalcNetwork) {
 func sortNetwork(network CalcNetwork) []int32 {
 	result := make([]int32, 0)
 
-	for key, _ := range network {
+	for key := range network {
 		deepSortScan(&result, network, key)
 	}
 
@@ -61,8 +64,8 @@ func deepSortScan(result *[]int32, network CalcNetwork, key int32) {
 		node.Color = "G"
 		network[key] = node
 
-		for _, childBpoId := range node.Children {
-			deepSortScan(result, network, childBpoId)
+		for _, childBpoID := range node.Children {
+			deepSortScan(result, network, childBpoID)
 		}
 
 		node.Color = "B"

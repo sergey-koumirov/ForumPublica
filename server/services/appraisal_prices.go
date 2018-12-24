@@ -3,7 +3,6 @@ package services
 import (
 	"ForumPublica/sde/static"
 	"ForumPublica/server/esi"
-	"fmt"
 	"strings"
 )
 
@@ -66,7 +65,6 @@ func AppraisalUpdatePrices(typeIds []int32) {
 	// fmt.Printf("%+v\n", result)
 	if err == nil {
 		for _, item := range result.Data.Items {
-			fmt.Printf("%+v\n", item)
 			UpsertPrice(
 				item.TypeID,
 				"appraisal",

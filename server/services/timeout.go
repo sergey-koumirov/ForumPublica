@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+//SaveTimeout save
 func SaveTimeout(key string) {
 	nowStr := time.Now().UTC().Format("2006-01-02T15:04:05Z")
 	timeout := models.Timeout{Key: key, Dt: nowStr}
@@ -17,6 +18,7 @@ func SaveTimeout(key string) {
 	}
 }
 
+//GetTimeout get
 func GetTimeout(key string, minutes int64) string {
 	timeout := models.Timeout{Key: key}
 	errDb := db.DB.Where("skey = ?", key).First(&timeout).Error

@@ -12,12 +12,12 @@ func RunsToMaterials(bpoInfos models.CnBlueprints) []models.CnMaterial {
 
 	for _, info := range bpoInfos {
 		// fmt.Println("---", info.Model.TypeName())
-		for _, m := range static.Level1Materials(info.Model.TypeId) {
+		for _, m := range static.Level1Materials(info.Model.TypeID) {
 			// fmt.Println("--- ---", static.Types[m.TypeId].Name, m.Quantity, m.HasBPO)
 			if !m.HasBPO {
-				cnMat, ex := result[m.TypeId]
+				cnMat, ex := result[m.TypeID]
 				if !ex {
-					cnMat.Model = static.Types[m.TypeId]
+					cnMat.Model = static.Types[m.TypeID]
 					cnMat.Qty = int64(0)
 					cnMat.Excluded = false
 				}
@@ -25,7 +25,7 @@ func RunsToMaterials(bpoInfos models.CnBlueprints) []models.CnMaterial {
 					cnMat.Qty = cnMat.Qty + int64(run.Repeats)*static.ApplyME(run.Qty, m.Quantity, run.ME)
 					// fmt.Println("--- --- ---", int64(run.Repeats)*static.ApplyME(run.Qty, m.Quantity, run.ME))
 				}
-				result[m.TypeId] = cnMat
+				result[m.TypeID] = cnMat
 			}
 		}
 

@@ -5,21 +5,23 @@ import (
 	"ForumPublica/server/models"
 )
 
-type CharIdName struct {
-	Id   int64
+//CharIDName model
+type CharIDName struct {
+	ID   int64
 	Name string
 }
 
-func CharsByUserId(userId int64) []CharIdName {
+//CharsByUserID chars by user id
+func CharsByUserID(userID int64) []CharIDName {
 	chars := make([]models.Character, 0)
-	errDb := db.DB.Where("user_id=?", userId).Order("name").Find(&chars).Error
+	errDb := db.DB.Where("user_id=?", userID).Order("name").Find(&chars).Error
 	if errDb != nil {
-		return []CharIdName{}
+		return []CharIDName{}
 	}
 
-	result := make([]CharIdName, 0)
+	result := make([]CharIDName, 0)
 	for _, r := range chars {
-		result = append(result, CharIdName{Id: r.Id, Name: r.Name})
+		result = append(result, CharIDName{ID: r.ID, Name: r.Name})
 	}
 
 	return result

@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//Admin admin checks
 func Admin(c *gin.Context) {
 
 	value, _ := c.Get(USER)

@@ -1,27 +1,28 @@
 package models
 
-// TYPES
+//ZipType in-memory cache model
 type ZipType struct {
-	Id          int32
-	GroupId     int32
+	ID          int32
+	GroupID     int32
 	Name        string
 	PortionSize int32
 	Published   bool
 	Volume      float32
 }
 
+//ZipTypes in-memory cache model
 type ZipTypes map[int32]ZipType
 
-// BLUEPRINTS
+//ZipBlueprint in-memory cache model
 type ZipBlueprint struct {
-	BlueprintTypeId    int32
+	BlueprintTypeID    int32
 	MaxProductionLimit int32
-
-	Copying          *RawActivity
-	Manufacturing    *RawActivity
-	Invention        *RawActivity
-	ResearchMaterial *RawActivity
-	ResearchTime     *RawActivity
+	Copying            *RawActivity
+	Manufacturing      *RawActivity
+	Invention          *RawActivity
+	ResearchMaterial   *RawActivity
+	ResearchTime       *RawActivity
 }
 
+//ZipBlueprints in-memory cache model
 type ZipBlueprints map[int32]ZipBlueprint

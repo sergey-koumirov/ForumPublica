@@ -13,24 +13,28 @@ import (
 )
 
 var (
-	USER_ID = "userId"
+	//UserID var name
+	UserID = "userId"
+	//STATE var name
 	STATE   = "state"
+	//USER user var name
 	USER    = "user"
 )
 
+//SetUser set user
 func SetUser(c *gin.Context) {
 
 	session := sessions.Default(c)
-	value := session.Get(USER_ID)
+	value := session.Get(UserID)
 	if value == nil {
 		return
 	}
 
 	var (
-		userId int64 = value.(int64)
-		user         = models.User{Id: userId}
+		userID int64 = value.(int64)
+		user         = models.User{ID: userID}
 	)
-	errDb := db.DB.First(&user, user.Id).Error
+	errDb := db.DB.First(&user, user.ID).Error
 	if errDb != nil {
 		return
 	}
@@ -39,6 +43,7 @@ func SetUser(c *gin.Context) {
 
 }
 
+//Auth auth callback
 func Auth(c *gin.Context) {
 
 	value, _ := c.Get(USER)
@@ -57,6 +62,7 @@ func Auth(c *gin.Context) {
 
 }
 
+//Add callback
 func Add(c *gin.Context) {
 	url, state := esi.CallbackURL()
 
@@ -68,6 +74,7 @@ func Add(c *gin.Context) {
 	c.Abort()
 }
 
+//AuthCallback callback
 func AuthCallback(c *gin.Context) {
 	session := sessions.Default(c)
 	value := session.Get(STATE)
@@ -85,8 +92,8 @@ func AuthCallback(c *gin.Context) {
 	token, _ := esi.OAuthToken(url.Values{"grant_type": {"authorization_code"}, "code": {code}})
 	info, _ := esi.OAuthVerify(token.AccessToken)
 
-	char := models.Character{Id: info.CharacterID}
-	errChar := db.DB.First(&char, char.Id).Error
+	char := models.Character{ID: info.CharacterID}
+	errChar := db.DB.First(&char, char.ID).Error
 	charEx := errChar == nil
 
 	// fmt.Println(char, errChar, charEx)
@@ -100,14 +107,14 @@ func AuthCallback(c *gin.Context) {
 	}
 
 	if charEx && setUser == nil {
-		user.Id = char.UserId
-		db.DB.First(&user, user.Id)
+		user.ID = char.UserID
+		db.DB.First(&user, user.ID)
 	} else if charEx && setUser != nil {
 		user = setUser.(models.User)
 
-		if user.Id != char.UserId {
-			char.UserId = user.Id
-			db.DB.Model(&char).Update("user_id", user.Id)
+		if user.ID != char.UserID {
+			char.UserID = user.ID
+			db.DB.Model(&char).Update("user_id", user.ID)
 		}
 	} else {
 		user = setUser.(models.User)
@@ -128,9 +135,9 @@ func AuthCallback(c *gin.Context) {
 		}
 	} else {
 		newChar := models.Character{
-			Id:                    info.CharacterID,
+			ID:                    info.CharacterID,
 			Name:                  info.CharacterName,
-			UserId:                user.Id,
+			UserID:                user.ID,
 			VerExpiresOn:          info.ExpiresOn,
 			VerScopes:             info.Scopes,
 			VerTokenType:          info.TokenType,
@@ -143,7 +150,7 @@ func AuthCallback(c *gin.Context) {
 		db.DB.Create(&newChar)
 	}
 
-	session.Set(USER_ID, user.Id)
+	session.Set(UserID, user.ID)
 	session.Save()
 
 	if setUser == nil {
@@ -154,10 +161,11 @@ func AuthCallback(c *gin.Context) {
 
 }
 
+//Logout logout
 func Logout(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Set(STATE, nil)
-	session.Set(USER_ID, nil)
+	session.Set(UserID, nil)
 	session.Save()
 	c.Set(USER, nil)
 	c.Redirect(http.StatusTemporaryRedirect, "/")

@@ -20,10 +20,10 @@ func AppConstructions(c *gin.Context) {
 	if errParse != nil {
 		page = 1
 	}
-	list := services.ConstructionsList(user.Id, page)
+	list := services.ConstructionsList(user.ID, page)
 
 	c.Keys["constructions"] = list
-	c.Keys["p"] = utils.NewPagination(list.Total, services.PER_PAGE, page, "/app/constructions")
+	c.Keys["p"] = utils.NewPagination(list.Total, services.PerPage, page, "/app/constructions")
 
 	c.HTML(http.StatusOK, "app/constructions/index.html", c.Keys)
 }
@@ -32,10 +32,10 @@ func AppConstructionsAdd(c *gin.Context) {
 	raw, _ := c.Get(middleware.USER)
 	user := raw.(models.User)
 
-	new := services.ConstructionCreate(user.Id)
+	new := services.ConstructionCreate(user.ID)
 	c.Keys["construction"] = new
 
-	c.Redirect(http.StatusTemporaryRedirect, fmt.Sprintf("/app/construction/%d", new.Id))
+	c.Redirect(http.StatusTemporaryRedirect, fmt.Sprintf("/app/construction/%d", new.ID))
 }
 
 func AppConstructionsShow(c *gin.Context) {
@@ -43,14 +43,14 @@ func AppConstructionsShow(c *gin.Context) {
 	user := raw.(models.User)
 
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
-	cn, err := services.ConstructionGet(user.Id, id)
+	cn, err := services.ConstructionGet(user.ID, id)
 	if err != nil {
 		c.AbortWithError(404, err)
 		return
 	}
 
 	c.Keys["construction"] = cn
-	c.Keys["chars"] = services.CharsByUserId(user.Id)
+	c.Keys["chars"] = services.CharsByUserID(user.ID)
 
 	c.HTML(http.StatusOK, "app/constructions/show.html", c.Keys)
 }
@@ -60,7 +60,7 @@ func AppConstructionsDelete(c *gin.Context) {
 	user := raw.(models.User)
 
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
-	services.ConstructionDelete(user.Id, id)
+	services.ConstructionDelete(user.ID, id)
 
 	c.Redirect(http.StatusTemporaryRedirect, "/app/constructions")
 }
@@ -73,6 +73,6 @@ func AppConstructionsSaveBonus(c *gin.Context) {
 	params := make(map[string]string)
 	c.BindJSON(&params)
 
-	services.ConstructionSaveBonus(user.Id, id, params)
+	services.ConstructionSaveBonus(user.ID, id, params)
 	c.JSON(http.StatusOK, gin.H{})
 }

@@ -13,7 +13,7 @@ func AppSAP(c *gin.Context) {
 	raw, _ := c.Get(middleware.USER)
 	user := raw.(models.User)
 
-	chars := services.CharJobsList(user.Id)
+	chars := services.CharJobsList(user.ID)
 
 	c.Keys["chars"] = chars
 	c.Keys["timeout"] = services.GetTimeout(services.JOBS, 5)
@@ -24,7 +24,7 @@ func AppSAPRefresh(c *gin.Context) {
 	raw, _ := c.Get(middleware.USER)
 	user := raw.(models.User)
 
-	services.RefreshJobs(user.Id)
+	services.RefreshJobs(user.ID)
 
 	c.Redirect(http.StatusTemporaryRedirect, "/app/sap")
 }

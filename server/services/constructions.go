@@ -10,15 +10,17 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var PER_PAGE int64 = 20
+//PerPage construction per page
+var PerPage int64 = 20
 
-func ConstructionsList(userId int64, page int64) models.CnList {
+//ConstructionsList list
+func ConstructionsList(userID int64, page int64) models.CnList {
 	cns := make([]models.Construction, 0)
 	var total int64
 
-	scope := db.DB.Where("user_id = ?", userId)
+	scope := db.DB.Where("user_id = ?", userID)
 	scope.Model(&models.Construction{}).Count(&total)
-	scope.Order("id desc").Limit(PER_PAGE).Offset((page - 1) * PER_PAGE).Find(&cns)
+	scope.Order("id desc").Limit(PerPage).Offset((page - 1) * PerPage).Find(&cns)
 
 	result := models.CnList{Page: page, Total: total}
 	result.Records = make([]models.CnRecord, 0)
@@ -33,9 +35,10 @@ func ConstructionsList(userId int64, page int64) models.CnList {
 	return result
 }
 
-func ConstructionCreate(userId int64) models.Construction {
+//ConstructionCreate create
+func ConstructionCreate(userID int64) models.Construction {
 	new := models.Construction{
-		UserId:      userId,
+		UserID:      userID,
 		Name:        "",
 		CitadelType: "",
 		RigFactor:   "",
@@ -46,9 +49,10 @@ func ConstructionCreate(userId int64) models.Construction {
 	return new
 }
 
-func ConstructionDelete(userId int64, cnId int64) {
+//ConstructionDelete delete
+func ConstructionDelete(userID int64, cnID int64) {
 	cn := models.Construction{}
-	errSel := db.DB.Where("id = ? and user_id = ?", cnId, userId).First(&cn).Error
+	errSel := db.DB.Where("id = ? and user_id = ?", cnID, userID).First(&cn).Error
 	if errSel != nil {
 		return
 	}
@@ -59,9 +63,10 @@ func bposOrder(db *gorm.DB) *gorm.DB {
 	return db.Order("fp_construction_bpos.id asc")
 }
 
-func ConstructionGet(userId int64, cnId int64) (models.CnRecord, error) {
+//ConstructionGet get
+func ConstructionGet(userID int64, cnID int64) (models.CnRecord, error) {
 	cn := models.Construction{}
-	errSel := db.DB.Preload("Bpos.Expenses").Preload("Runs").Preload("Bpos", bposOrder).Where("id = ? and user_id = ?", cnId, userId).First(&cn).Error
+	errSel := db.DB.Preload("Bpos.Expenses").Preload("Runs").Preload("Bpos", bposOrder).Where("id = ? and user_id = ?", cnID, userID).First(&cn).Error
 
 	var result models.CnRecord
 
@@ -74,9 +79,10 @@ func ConstructionGet(userId int64, cnId int64) (models.CnRecord, error) {
 	return result, nil
 }
 
-func ConstructionSaveBonus(userId int64, cnId int64, params map[string]string) {
-	construction := models.Construction{Id: cnId}
-	errDb := db.DB.Where("user_id=?", userId).Find(&construction).Error
+//ConstructionSaveBonus save citadel bonuses
+func ConstructionSaveBonus(userID int64, cnID int64, params map[string]string) {
+	construction := models.Construction{ID: cnID}
+	errDb := db.DB.Where("user_id=?", userID).Find(&construction).Error
 
 	if errDb != nil {
 		return
@@ -93,15 +99,16 @@ func loadCn(result *models.CnRecord, cn models.Construction) {
 
 	result.Blueprints = make(models.CnBlueprints, 0)
 	for _, r := range cn.Bpos {
-		defaultME, _ := static.DefaultMeTe(r.TypeId)
+		defaultME, _ := static.DefaultMeTe(r.TypeID)
 
 		result.Blueprints = append(
 			result.Blueprints,
 			models.CnBlueprint{
 				Model:         r,
-				IsT2:          static.IsT2BPO(r.TypeId),
+				IsT2:          static.IsT2BPO(r.TypeID),
 				DefaultME:     defaultME,
-				CopyTime:      0, //todo
+				CopyTime:      int32( float64(static.T1CopyTime(r.TypeID)) * (1.0 - 5.0 * 5.0 / 100.0) ),
+				InventTime:    int32( float64(static.InventTime(r.TypeID)) * (1.0 - 3.0 * 5.0 / 100.0) ),
 				InventCnt:     0, //todo
 				WholeCopyTime: 0, //todo
 				Expenses:      r.Expenses,
@@ -114,11 +121,11 @@ func loadCn(result *models.CnRecord, cn models.Construction) {
 
 	typeIds := make([]int32, len(result.Materials))
 	for i, m := range result.Materials{
-		typeIds[i] = m.Model.Id
+		typeIds[i] = m.Model.ID
 	}
 	AppraisalUpdatePrices(typeIds)
 	for i, m := range result.Materials{
-		result.Materials[i].Price = GetDefaultPrice(m.Model.Id)
+		result.Materials[i].Price = GetDefaultPrice(m.Model.ID)
 	}
 
 }

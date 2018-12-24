@@ -5,11 +5,12 @@ import (
 	"fmt"
 )
 
-func (esi *ESI) OpenWindowMarketDetails(typeId int64) error {
+//OpenWindowMarketDetails open window
+func (esi *ESI) OpenWindowMarketDetails(typeID int64) error {
 
-	url := fmt.Sprintf("%s/ui/openwindow/marketdetails/?type_id=%d", ESI_ROOT_URL, typeId)
+	url := fmt.Sprintf("%s/ui/openwindow/marketdetails/?type_id=%d", ESIRootURL, typeID)
 
-	result := EsiError{}
+	result := Error{}
 
 	_, _, err := auth("POST", esi.AccessToken, url, &result)
 	if err != nil {

@@ -31,14 +31,14 @@
 
 <type-select label="Type" v-on:type-selected="TypeSelected($event)" mode="compact" filter="blueprint"></type-select>
 
-<div class="bpo bpo-item" v-for="bpo in construction.Blueprints">
+<div class="bpo bpo-item" v-for="bpo in construction.Blueprints" v-bind:class="{t2: bpo.IsT2}">
     <img class="pointer copy-item"
       align="left"
       width="32" height="32"
       :data-clipboard-text="bpo.Model.TypeName"
-      :src="'https://imageserver.eveonline.com/Type/'+bpo.Model.TypeId+'_32.png'">
+      :src="'https://imageserver.eveonline.com/Type/'+bpo.Model.TypeID+'_32.png'">
     <div class="name">
-      <span class="oi oi-bar-chart pointer" v-on:click="OpenCharPopup($event, bpo.Model.TypeId)"></span>
+      <span class="oi oi-bar-chart pointer" v-on:click="OpenCharPopup($event, bpo.Model.TypeID)"></span>
       {{bpo.Model.TypeName}}
     </div>
 
@@ -56,21 +56,23 @@
     </div>
 
     <div class="invent" v-show="bpo.IsT2">
+        <span class="grayed">Invent:</span>
+        <span class="time">{{ bpo.InventTime | seconds}}</span>
+        <span class="grayed">x</span>
+        {{bpo.InventCnt | number}} =
+        <span class="time">{{ bpo.InventCnt * bpo.InventTime | seconds}}</span>
+    </div>
+
+    <div class="copy" v-show="bpo.IsT2">
         <span class="grayed">Copy:</span>
         <span class="time">{{ bpo.CopyTime | seconds}}</span>
         <span class="grayed">x</span>
         {{bpo.InventCnt | number}} =
         <span class="time">{{ bpo.WholeCopyTime | seconds }}</span>
     </div>
-<!--
 
-    <div class="copy" ng-show="bpo.IsT2">
-        <span class="grayed">Invent:</span>
-        <span class="time">{{ FormatSeconds(bpo.InventTime)}}</span>
-        <span class="grayed">x</span>
-        {{bpo.InventCnt | number}} =
-        <span class="time">{{ FormatSeconds(bpo.InventCnt * bpo.InventTime)}}</span>
-    </div>
+
+    <!--
 
     <div class="copy" ng-show="bpo.IsT2">
         <span class="grayed">T1 BPO:</span>

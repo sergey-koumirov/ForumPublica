@@ -9,6 +9,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+//RefreshSkills request
 func RefreshSkills(cid int64) {
 	var char models.Character
 	errSel := db.DB.Where("id = ?", cid).First(&char).Error
@@ -18,7 +19,7 @@ func RefreshSkills(cid int64) {
 	}
 
 	api := char.GetESI()
-	skills, errEsi := api.CharactersSkills(char.Id)
+	skills, errEsi := api.CharactersSkills(char.ID)
 	if errEsi != nil {
 		fmt.Println("RefreshSkills errEsi", errEsi)
 		return
@@ -27,12 +28,12 @@ func RefreshSkills(cid int64) {
 	for _, skill := range skills.R.Skills {
 
 		temp := models.Skill{
-			EsiCharacterId: cid,
-			SkillId:        skill.SkillId,
-			Name:           static.Types[skill.SkillId].Name,
+			EsiCharacterID: cid,
+			SkillID:        skill.SkillID,
+			Name:           static.Types[skill.SkillID].Name,
 		}
 
-		errSk := db.DB.Where("esi_character_id = ? and skill_id = ?", cid, temp.SkillId).First(&temp).Error
+		errSk := db.DB.Where("esi_character_id = ? and skill_id = ?", cid, temp.SkillID).First(&temp).Error
 
 		temp.Level = skill.ActiveSkillLevel
 

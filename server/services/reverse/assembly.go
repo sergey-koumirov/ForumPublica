@@ -10,7 +10,6 @@ import (
 
 // Assembly get full assembly info using goal BPO and runs
 func Assembly(cn *models.Construction) models.CnBlueprints {
-
 	sortedIds := netsort.ArrangeBPO(&cn.Bpos)
 
 	result := models.CnBlueprints{}
@@ -28,7 +27,7 @@ func calcRunTime(result *models.CnBlueprints) {
 		bpo := (*result)[i]
 		t := int64(0)
 		for _, r := range *bpo.Runs {
-			t = t + int64(r.Repeats)*static.ApplyTE(r.Qty*int64(static.Blueprints[bpo.Model.TypeId].Manufacturing.Time), r.TE)
+			t = t + int64(r.Repeats)*static.ApplyTE(r.Qty*int64(static.MnfTime(bpo.Model.TypeID)), r.TE)
 		}
 		(*result)[i].MnfTime = t
 	}
@@ -40,7 +39,7 @@ func fillResult(result *models.CnBlueprints, sortedIds []int32, bpos *models.Con
 		isGoal := false
 		qty := int64(0)
 		for _, bpo := range *bpos {
-			if bpo.TypeId == id {
+			if bpo.TypeID == id {
 				isGoal = true
 				qty = qty + bpo.Qty //multiple bpo allowed
 			}
@@ -50,13 +49,13 @@ func fillResult(result *models.CnBlueprints, sortedIds []int32, bpos *models.Con
 			*result,
 			models.CnBlueprint{
 				Model: models.ConstructionBpo{
-					TypeId: id,
+					TypeID: id,
 					Qty:    qty,
 				},
 				IsT2:        static.IsT2BPO(id),
 				IsGoal:      isGoal,
 				DefaultME:   defaultME,
-				PortionSize: static.ProductByBpoId(id).PortionSize,
+				PortionSize: static.ProductByBpoID(id).PortionSize,
 			},
 		)
 	}

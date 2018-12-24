@@ -9,6 +9,7 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
+//ImportBlueprints load blueprints from file
 func ImportBlueprints(f *zip.File) *models.ZipBlueprints {
 	fmt.Printf("%+v\n", f.FileHeader.Name)
 
@@ -32,7 +33,7 @@ func ImportBlueprints(f *zip.File) *models.ZipBlueprints {
 		// fmt.Println(key, value)
 
 		temp := models.ZipBlueprint{
-			BlueprintTypeId:    key,
+			BlueprintTypeID:    key,
 			MaxProductionLimit: value.MaxProductionLimit,
 		}
 

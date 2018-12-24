@@ -20,20 +20,20 @@ func SetJobRuns(bpoInfos *models.CnBlueprints, sortedBpoIds []int32, cn *models.
 
 }
 
-func applyRunsMaterialsBpos(bpoId int32, bpoInfosHash map[int32]*models.CnBlueprint, runs *[]models.ConstructionBpoRun) {
-	bpoInfosHash[bpoId].Runs = runs
-	materialBpos := static.Level1BPO(bpoId)
+func applyRunsMaterialsBpos(bpoID int32, bpoInfosHash map[int32]*models.CnBlueprint, runs *[]models.ConstructionBpoRun) {
+	bpoInfosHash[bpoID].Runs = runs
+	materialBpos := static.Level1BPO(bpoID)
 	for _, run := range *runs {
 		productQty := int64(run.Repeats) * run.Qty
 		for _, materialBpo := range materialBpos {
 			materialQty := static.ApplyME(productQty, materialBpo.Quantity, run.ME)
-			bpoInfosHash[materialBpo.TypeId].Model.Qty = bpoInfosHash[materialBpo.TypeId].Model.Qty + materialQty
+			bpoInfosHash[materialBpo.TypeID].Model.Qty = bpoInfosHash[materialBpo.TypeID].Model.Qty + materialQty
 		}
 	}
 }
 
-func jobsRunsCount(bpoId int32, resultQty int64) int64 {
-	batchSize := static.ProductByBpoId(bpoId).PortionSize
+func jobsRunsCount(bpoID int32, resultQty int64) int64 {
+	batchSize := static.ProductByBpoID(bpoID).PortionSize
 	return int64(math.Ceil(float64(resultQty) / float64(batchSize)))
 }
 
@@ -43,18 +43,18 @@ func addPhantomRun(cnBpo models.ConstructionBpo, runs *[]models.ConstructionBpoR
 		runsQty = runsQty + run.Qty*int64(run.Repeats)
 	}
 
-	jobRunsCnt := jobsRunsCount(cnBpo.TypeId, cnBpo.Qty)
+	jobRunsCnt := jobsRunsCount(cnBpo.TypeID, cnBpo.Qty)
 
-	defaultME, defaultTE := static.DefaultMeTe(cnBpo.TypeId)
+	defaultME, defaultTE := static.DefaultMeTe(cnBpo.TypeID)
 
 	*runs = append(
 		*runs,
 		models.ConstructionBpoRun{
-			TypeId:      cnBpo.TypeId,
+			TypeID:      cnBpo.TypeID,
 			Repeats:     1,
 			ME:          defaultME,
 			TE:          defaultTE,
-			ExactQty:    cnBpo.Qty - runsQty*int64(static.ProductByBpoId(cnBpo.TypeId).PortionSize),
+			ExactQty:    cnBpo.Qty - runsQty*int64(static.ProductByBpoID(cnBpo.TypeID).PortionSize),
 			Qty:         jobRunsCnt - runsQty,
 			CitadelType: cn.CitadelType,
 			RigFactor:   cn.RigFactor,
@@ -67,11 +67,11 @@ func getRunsHash(allRuns *models.ConstructionBpoRuns) map[int32][]models.Constru
 	runsHash := map[int32][]models.ConstructionBpoRun{}
 
 	for i, run := range *allRuns {
-		_, ex := runsHash[run.TypeId]
+		_, ex := runsHash[run.TypeID]
 		if !ex {
-			runsHash[run.TypeId] = []models.ConstructionBpoRun{}
+			runsHash[run.TypeID] = []models.ConstructionBpoRun{}
 		}
-		runsHash[run.TypeId] = append(runsHash[run.TypeId], (*allRuns)[i])
+		runsHash[run.TypeID] = append(runsHash[run.TypeID], (*allRuns)[i])
 	}
 
 	return runsHash
@@ -82,7 +82,7 @@ func getInfoHash(bpoInfos *models.CnBlueprints) map[int32]*models.CnBlueprint {
 	bpoInfosHash := map[int32]*models.CnBlueprint{}
 
 	for i := range *bpoInfos {
-		key := (*bpoInfos)[i].Model.TypeId
+		key := (*bpoInfos)[i].Model.TypeID
 		bpoInfosHash[key] = &(*bpoInfos)[i]
 
 	}

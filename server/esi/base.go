@@ -13,29 +13,44 @@ import (
 	"strings"
 )
 
-var USER_AGENT = "Forum Publica 0.1"
-var OAUTH_TOKEN_URL string = "https://login.eveonline.com/oauth/token"
-var OAUTH_VERIFY_URL string = "https://login.eveonline.com/oauth/verify"
-var OAUTH_AUTHORIZE_URL string = "https://login.eveonline.com/oauth/authorize"
-var ESI_ROOT_URL string = "https://esi.tech.ccp.is/latest"
-var SCOPES = []string{
-	"esi-assets.read_assets.v1",
-	"esi-industry.read_character_jobs.v1",
-	"esi-markets.structure_markets.v1",
-	"esi-search.search_structures.v1",
-	"esi-skills.read_skills.v1",
-	"esi-ui.open_window.v1",
-	"esi-universe.read_structures.v1",
-}
+var (
+	//UserAgent app user agent
+	UserAgent = "Forum Publica 0.1"
 
-type OAuthTokenJson struct {
+	//OAuthTokenURL url
+	OAuthTokenURL = "https://login.eveonline.com/oauth/token"
+
+	//OAuthVerifyURL url
+	OAuthVerifyURL = "https://login.eveonline.com/oauth/verify"
+
+	//OAuthAuthorizeURL url
+	OAuthAuthorizeURL = "https://login.eveonline.com/oauth/authorize"
+
+	//ESIRootURL url
+	ESIRootURL = "https://esi.tech.ccp.is/latest"
+
+	//Scopes app scopes
+	Scopes = []string{
+		"esi-assets.read_assets.v1",
+		"esi-industry.read_character_jobs.v1",
+		"esi-markets.structure_markets.v1",
+		"esi-search.search_structures.v1",
+		"esi-skills.read_skills.v1",
+		"esi-ui.open_window.v1",
+		"esi-universe.read_structures.v1",
+	}
+)
+
+//OAuthTokenJSON model
+type OAuthTokenJSON struct {
 	AccessToken  string `json:"access_token"`
 	TokenType    string `json:"token_type"`
 	ExpiresIn    int64  `json:"expires_in"`
 	RefreshToken string `json:"refresh_token"`
 }
 
-type OAuthVerifyJson struct {
+//OAuthVerifyJSON model
+type OAuthVerifyJSON struct {
 	CharacterID        int64  `json:"CharacterID"`
 	CharacterName      string `json:"CharacterName"`
 	ExpiresOn          string `json:"ExpiresOn"`
@@ -44,10 +59,12 @@ type OAuthVerifyJson struct {
 	CharacterOwnerHash string `json:"CharacterOwnerHash"`
 }
 
-type EsiError struct {
+//Error model
+type Error struct {
 	Error string `json:"error"`
 }
 
+//CallbackURL form callback URL
 func CallbackURL() (string, string) {
 	b := make([]byte, 16)
 	rand.Read(b)
@@ -55,18 +72,20 @@ func CallbackURL() (string, string) {
 
 	url := fmt.Sprintf(
 		"%s?response_type=code&redirect_uri=http%%3A%%2F%%2F%s%%3A%s%%2Fprobleme_callback&realm=ESI&client_id=%s&scope=%s&state=%s",
-		OAUTH_AUTHORIZE_URL,
+		OAuthAuthorizeURL,
 		config.Vars.SITE,
+		//coniootrs. url
 		config.Vars.PORT,
 		config.Vars.SSOClientID,
-		strings.Join(SCOPES, "%20"),
+		strings.Join(Scopes, "%20"),
 		state,
 	)
 
 	return url, state
 }
 
-func OAuthToken(data u.Values) (OAuthTokenJson, error) {
+//OAuthToken get token
+func OAuthToken(data u.Values) (OAuthTokenJSON, error) {
 	ssoString := b64.StdEncoding.EncodeToString(
 		[]byte(fmt.Sprintf("%s:%s", config.Vars.SSOClientID, config.Vars.SSOSecretKey)),
 	)
@@ -76,77 +95,83 @@ func OAuthToken(data u.Values) (OAuthTokenJson, error) {
 	client := &http.Client{}
 	req, err1 := http.NewRequest(
 		"POST",
-		OAUTH_TOKEN_URL,
+		OAuthTokenURL,
 		bytes.NewReader(postData),
 	)
 
 	if err1 != nil {
 		fmt.Println(err1)
-		return OAuthTokenJson{}, err1
+		return OAuthTokenJSON{}, err1
 	}
 
-	req.Header.Add("User-Agent", USER_AGENT)
+	req.Header.Add("User-Agent", UserAgent)
 	req.Header.Add("Authorization", auth)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	resp, err2 := client.Do(req)
-	defer resp.Body.Close()
-
 	if err2 != nil {
 		fmt.Println(err2)
-		return OAuthTokenJson{}, err2
+		return OAuthTokenJSON{}, err2
 	}
+	defer resp.Body.Close()
 
 	bodyBytes, err3 := ioutil.ReadAll(resp.Body)
 	if err3 != nil {
 		fmt.Println(err3)
-		return OAuthTokenJson{}, err3
+		return OAuthTokenJSON{}, err3
 	}
 
-	result := OAuthTokenJson{}
+	result := OAuthTokenJSON{}
 	err4 := json.Unmarshal(bodyBytes, &result)
 	if err4 != nil {
 		fmt.Println(err4)
-		return OAuthTokenJson{}, err4
+		return OAuthTokenJSON{}, err4
 	}
 
 	return result, nil
 }
 
-func OAuthVerify(accessToken string) (OAuthVerifyJson, error) {
+//OAuthVerify verify token
+func OAuthVerify(accessToken string) (OAuthVerifyJSON, error) {
 	auth := fmt.Sprintf("Bearer %s", accessToken)
 
-	req, err1 := http.NewRequest(
+	req,
+		err1 := http.NewRequest(
 		"GET",
-		OAUTH_VERIFY_URL,
+
+		//OAuthVerifyURL url
+		OAuthVerifyURL,
+
+		//
 		bytes.NewReader([]byte{}),
 	)
+
 	if err1 != nil {
 		fmt.Println(err1)
-		return OAuthVerifyJson{}, err1
+		return OAuthVerifyJSON{}, err1
 	}
 
-	req.Header.Add("User-Agent", USER_AGENT)
+	req.Header.Add("User-Agent", UserAgent)
 	req.Header.Add("Authorization", auth)
 
 	client := &http.Client{}
 	resp, err2 := client.Do(req)
-	defer resp.Body.Close()
 	if err2 != nil {
 		fmt.Println(err2)
-		return OAuthVerifyJson{}, err2
+		return OAuthVerifyJSON{}, err2
 	}
+	defer resp.Body.Close()
 
 	bodyBytes, err3 := ioutil.ReadAll(resp.Body)
 	if err3 != nil {
 		fmt.Println(err3)
-		return OAuthVerifyJson{}, err3
+		return OAuthVerifyJSON{}, err3
 	}
 
-	result := OAuthVerifyJson{}
+	result := OAuthVerifyJSON{}
 	err4 := json.Unmarshal(bodyBytes, &result)
 	if err4 != nil {
 		fmt.Println(err4)
-		return OAuthVerifyJson{}, err4
+		return OAuthVerifyJSON{}, err4
 	}
 
 	return result, nil

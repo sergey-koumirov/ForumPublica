@@ -6,9 +6,10 @@ import (
 	"encoding/json"
 )
 
+//Construction model
 type Construction struct {
-	Id     int64 `gorm:"column:id;primary_key"`
-	UserId int64 `gorm:"column:user_id"`
+	ID     int64 `gorm:"column:id;primary_key"`
+	UserID int64 `gorm:"column:user_id"`
 
 	Name        string `gorm:"column:name"`
 	CitadelType string `gorm:"column:citadel_type"`
@@ -19,10 +20,12 @@ type Construction struct {
 	Runs ConstructionBpoRuns `gorm:"foreignkey:ConstructionId"`
 }
 
-func (u *Construction) TableName() string {
+//TableName construction table name
+func (m *Construction) TableName() string {
 	return "fp_constructions"
 }
 
+//Delete delete model and children
 func (m *Construction) Delete() {
 	for _, bp := range m.Bpos {
 		bp.Delete()
@@ -33,40 +36,45 @@ func (m *Construction) Delete() {
 	db.DB.Delete(&m)
 }
 
+//ConstructionBpo construction BPO model
 type ConstructionBpo struct {
-	Id            int64  `gorm:"column:id;primary_key"`
-	TransactionId int64  `gorm:"column:transaction_id"`
+	ID            int64  `gorm:"column:id;primary_key"`
+	TransactionID int64  `gorm:"column:transaction_id"`
 	Kind          string `gorm:"column:kind"`
-	TypeId        int32  `gorm:"column:type_id"`
+	TypeID        int32  `gorm:"column:type_id"`
 	ME            int32  `gorm:"column:me"`
 	TE            int32  `gorm:"column:te"`
 	Qty           int64  `gorm:"column:qty"`
 
-	ConstructionId int64 `gorm:"column:construction_id"`
+	ConstructionID int64 `gorm:"column:construction_id"`
 	Construction   *Construction
 
 	Expenses ConstructionExpenses `gorm:"foreignkey:ConstructionBpoId"`
 }
 
+//TableName construction BPO table name
 func (m *ConstructionBpo) TableName() string {
 	return "fp_construction_bpos"
 }
 
+//TypeName construction BPO type name
 func (m *ConstructionBpo) TypeName() string {
-	return static.Types[m.TypeId].Name
+	return static.Types[m.TypeID].Name
 }
 
-func (u *ConstructionBpo) MarshalJSON() ([]byte, error) {
+//MarshalJSON custom marshalling
+func (m *ConstructionBpo) MarshalJSON() ([]byte, error) {
 	type Alias ConstructionBpo
 	return json.Marshal(&struct {
 		TypeName string `json:"TypeName"`
 		*Alias
 	}{
-		TypeName: u.TypeName(),
-		Alias:    (*Alias)(u),
+		TypeName: m.TypeName(),
+		Alias:    (*Alias)(m),
 	})
 }
 
+//Delete delete model and children
 func (m *ConstructionBpo) Delete() {
 	for _, e := range m.Expenses {
 		e.Delete()
@@ -74,13 +82,15 @@ func (m *ConstructionBpo) Delete() {
 	db.DB.Delete(&m)
 }
 
+//ConstructionBpos array
 type ConstructionBpos []ConstructionBpo
 
+//ConstructionBpoRun construction BPO run model
 type ConstructionBpoRun struct {
-	Id                int64  `gorm:"column:id;primary_key"`
-	ConstructionId    int64  `gorm:"column:construction_id"`
-	TypeId            int32  `gorm:"column:type_id"`
-	ConstructionBpoId int64  `gorm:"column:construction_bpo_id"`
+	ID                int64  `gorm:"column:id;primary_key"`
+	ConstructionID    int64  `gorm:"column:construction_id"`
+	TypeID            int32  `gorm:"column:type_id"`
+	ConstructionBpoID int64  `gorm:"column:construction_bpo_id"`
 	ME                int32  `gorm:"column:me"`
 	TE                int32  `gorm:"column:te"`
 	Repeats           int32  `gorm:"column:repeats"`
@@ -91,37 +101,43 @@ type ConstructionBpoRun struct {
 	SpaceType         string `gorm:"column:space_type"`
 }
 
+//ConstructionBpoRuns array
 type ConstructionBpoRuns []ConstructionBpoRun
 
+//TableName table name
 func (u *ConstructionBpoRun) TableName() string {
 	return "fp_construction_bpo_runs"
 }
 
+//Total run total
 func (u *ConstructionBpoRun) Total() int64 {
 	return int64(u.Repeats) * u.Qty
 }
 
-func (m *ConstructionBpoRun) Delete() {
-	db.DB.Delete(&m)
+//Delete delete model
+func (u *ConstructionBpoRun) Delete() {
+	db.DB.Delete(&u)
 }
 
 //ConstructionExpense table
 type ConstructionExpense struct {
-	Id          int64   `gorm:"column:id;primary_key"`
+	ID          int64   `gorm:"column:id;primary_key"`
 	Description string  `gorm:"column:description"`
 	ExValue     float64 `gorm:"column:exvalue"`
 
-	ConstructionBpoId int64 `gorm:"column:construction_bpo_id"`
+	ConstructionBpoID int64 `gorm:"column:construction_bpo_id"`
 	ConstructionBpo   *ConstructionBpo
 }
 
 //TableName for ConstructionExpense table
-func (u *ConstructionExpense) TableName() string {
+func (m *ConstructionExpense) TableName() string {
 	return "fp_construction_expenses"
 }
 
+//ConstructionExpenses array
 type ConstructionExpenses []ConstructionExpense
 
+//Delete delete model
 func (m *ConstructionExpense) Delete() {
 	db.DB.Delete(&m)
 }

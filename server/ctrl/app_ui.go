@@ -16,7 +16,7 @@ func AppUIOpenMarket(c *gin.Context) {
 	params := make(map[string]int64)
 	c.BindJSON(&params)
 
-	services.UIOpenMarket(user.Id, params)
+	services.UIOpenMarket(user.ID, params)
 
 	c.JSON(http.StatusOK, gin.H{})
 }

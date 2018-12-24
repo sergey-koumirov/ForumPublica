@@ -8,27 +8,31 @@ import (
 	"time"
 )
 
-type ESISkill struct {
+//Skill model
+type Skill struct {
 	ActiveSkillLevel   int32 `json:"active_skill_level"`
-	SkillId            int32 `json:"skill_id"`
+	SkillID            int32 `json:"skill_id"`
 	SkillpointsInSkill int64 `json:"skillpoints_in_skill"`
 	TrainedSkillLevel  int32 `json:"trained_skill_level"`
 }
 
-type ESICharactersSkills struct {
-	Skills  []ESISkill `json:"skills"`
-	TotalSP int64      `json:"total_sp"`
-	Error   string     `json:"error"`
+//CharactersSkills model
+type CharactersSkills struct {
+	Skills  []Skill `json:"skills"`
+	TotalSP int64   `json:"total_sp"`
+	Error   string  `json:"error"`
 }
 
+//CharactersSkillsResponse model
 type CharactersSkillsResponse struct {
-	R       ESICharactersSkills
+	R       CharactersSkills
 	Expires time.Time
 }
 
-func (esi *ESI) CharactersSkills(characterId int64) (*CharactersSkillsResponse, error) {
-	url := fmt.Sprintf("%s/characters/%d/skills/", ESI_ROOT_URL, characterId)
-	result := ESICharactersSkills{}
+//CharactersSkills get character skills
+func (esi *ESI) CharactersSkills(characterID int64) (*CharactersSkillsResponse, error) {
+	url := fmt.Sprintf("%s/characters/%d/skills/", ESIRootURL, characterID)
+	result := CharactersSkills{}
 
 	expires, _, err := auth("GET", esi.AccessToken, url, &result)
 	if err != nil {
@@ -40,20 +44,22 @@ func (esi *ESI) CharactersSkills(characterId int64) (*CharactersSkillsResponse, 
 	return &CharactersSkillsResponse{R: result, Expires: expires}, nil
 }
 
-type ESIIdAndName struct {
-	Id   int64  `json:"character_id"`
+//IDAndName model
+type IDAndName struct {
+	ID   int64  `json:"character_id"`
 	Name string `json:"character_name"`
 }
 
-func (esi *ESI) CharactersNames(charIds []int64) ([]ESIIdAndName, error) {
+//CharactersNames get names by ids
+func (esi *ESI) CharactersNames(charIds []int64) ([]IDAndName, error) {
 
 	qIds := make([]string, len(charIds))
 	for i, id := range charIds {
 		qIds[i] = strconv.FormatInt(id, 10)
 	}
 
-	url := fmt.Sprintf("%s/characters/names/?character_ids=%s", ESI_ROOT_URL, strings.Join(qIds, "%2C"))
-	var result []ESIIdAndName
+	url := fmt.Sprintf("%s/characters/names/?character_ids=%s", ESIRootURL, strings.Join(qIds, "%2C"))
+	var result []IDAndName
 
 	err := get(url, &result)
 	if err != nil {

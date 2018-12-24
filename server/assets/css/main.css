@@ -172,6 +172,10 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
     height: 64px;
 }
 
+.construction .bpo-item.t2{
+  height: 84px;
+}
+
 .construction .component-item{
     min-height: 48px;
 }
@@ -278,8 +282,15 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
 .construction .bpo .invent{
     clear: both;
     position: absolute;
-    top: 43px;
+    top: 63px;
     left: 4px;
+}
+
+.construction .bpo .copy{
+  clear: both;
+  position: absolute;
+  top: 43px;
+  left: 4px;
 }
 
 .form-control.sm{

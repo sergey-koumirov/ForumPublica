@@ -7,9 +7,9 @@
   <table class="table table-sm table-striped">
   <tr>
     <td class="text-left">
-      <img width="32" height="32" src="https://image.eveonline.com/Character/<%$e.Id%>_32.jpg">
+      <img width="32" height="32" src="https://image.eveonline.com/Character/<%$e.ID%>_32.jpg">
       <% $e.Name %>
-      (<% $e.Id %>)
+      (<% $e.ID %>)
     </td>
   </tr>
   <tr>
@@ -17,19 +17,19 @@
   </tr>
   <tr>
     <td>
-      <a href="/app/char/<%$e.Id%>/refresh_skills">
+      <a href="/app/char/<%$e.ID%>/refresh_skills">
         <span class="oi oi-loop-circular"></span>
         Refresh Skills
       </a>
       <button class="btn btn-info btn-sm"
               type="button"
               data-toggle="collapse"
-              data-target="#cs<%$e.Id%>"
+              data-target="#cs<%$e.ID%>"
               aria-expanded="false"
-              aria-controls="cs<%$e.Id%>">
+              aria-controls="cs<%$e.ID%>">
         Skills (<%len $e.Skills%>)
       </button>
-      <div class="collapse" id="cs<%$e.Id%>">
+      <div class="collapse" id="cs<%$e.ID%>">
         <% range $si, $s := $e.Skills %>
         <span class="badge badge-info">
           <%$s.Name%> <%$s.Level%>

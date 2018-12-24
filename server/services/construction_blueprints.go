@@ -6,9 +6,10 @@ import (
 	"ForumPublica/server/models"
 )
 
-func ConstructionBluprintAdd(userId int64, cnId int64, params map[string]int32) {
-	construction := models.Construction{Id: cnId}
-	errDb := db.DB.Where("user_id=?", userId).Find(&construction).Error
+//ConstructionBluprintAdd add blueprint to construction
+func ConstructionBluprintAdd(userID int64, cnID int64, params map[string]int32) {
+	construction := models.Construction{ID: cnID}
+	errDb := db.DB.Where("user_id=?", userID).Find(&construction).Error
 
 	if errDb != nil {
 		return
@@ -17,27 +18,26 @@ func ConstructionBluprintAdd(userId int64, cnId int64, params map[string]int32) 
 	defaultME, defaultTE := static.DefaultMeTe(params["BlueprintId"])
 
 	new := models.ConstructionBpo{
-		ConstructionId: construction.Id,
+		ConstructionID: construction.ID,
 		Kind:           "goal",
-		TypeId:         params["BlueprintId"],
+		TypeID:         params["BlueprintId"],
 		ME:             defaultME,
 		TE:             defaultTE,
 		Qty:            1,
 	}
-
 	db.DB.Create(&new)
-
 }
 
-func ConstructionBlueprintDelete(userId int64, cnId int64, bpId int64) {
-	construction := models.Construction{Id: cnId}
-	errDb1 := db.DB.Where("user_id=?", userId).Find(&construction).Error
+//ConstructionBlueprintDelete delete
+func ConstructionBlueprintDelete(userID int64, cnID int64, bpID int64) {
+	construction := models.Construction{ID: cnID}
+	errDb1 := db.DB.Where("user_id=?", userID).Find(&construction).Error
 	if errDb1 != nil {
 		return
 	}
 
-	blueprint := models.ConstructionBpo{Id: bpId}
-	errDb2 := db.DB.Where("construction_id=?", cnId).Find(&blueprint).Error
+	blueprint := models.ConstructionBpo{ID: bpID}
+	errDb2 := db.DB.Where("construction_id=?", cnID).Find(&blueprint).Error
 	if errDb2 != nil {
 		return
 	}
@@ -46,15 +46,16 @@ func ConstructionBlueprintDelete(userId int64, cnId int64, bpId int64) {
 
 }
 
-func ConstructionBlueprintUpdate(userId int64, cnId int64, bpId int64, params map[string]int32) {
-	construction := models.Construction{Id: cnId}
-	errDb1 := db.DB.Where("user_id=?", userId).Find(&construction).Error
+//ConstructionBlueprintUpdate update
+func ConstructionBlueprintUpdate(userID int64, cnID int64, bpID int64, params map[string]int32) {
+	construction := models.Construction{ID: cnID}
+	errDb1 := db.DB.Where("user_id=?", userID).Find(&construction).Error
 	if errDb1 != nil {
 		return
 	}
 
-	blueprint := models.ConstructionBpo{Id: bpId}
-	errDb2 := db.DB.Where("construction_id=?", cnId).Find(&blueprint).Error
+	blueprint := models.ConstructionBpo{ID: bpID}
+	errDb2 := db.DB.Where("construction_id=?", cnID).Find(&blueprint).Error
 	if errDb2 != nil {
 		return
 	}

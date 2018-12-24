@@ -12,7 +12,8 @@ type CnBlueprint struct {
 	Expenses      []ConstructionExpense
 	IsGoal        bool
 	IsT2          bool
-	CopyTime      int64
+	CopyTime      int32
+	InventTime    int32
 	InventCnt     int64
 	WholeCopyTime int64
 	ReadyQty      int64
@@ -32,8 +33,8 @@ func (s CnBlueprints) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
 }
 func (s CnBlueprints) Less(i, j int) bool {
-	iID := s[i].Model.TypeId
-	jID := s[j].Model.TypeId
+	iID := s[i].Model.TypeID
+	jID := s[j].Model.TypeID
 
 	sameGoal := s[i].IsGoal == s[j].IsGoal && (static.Types[iID].Name < static.Types[jID].Name)
 	diffGoal := s[i].IsGoal != s[j].IsGoal && s[i].IsGoal
@@ -79,8 +80,8 @@ func (s CnMaterials) Less(i, j int) bool {
 	im := s[i].Model
 	jm := s[j].Model
 
-	same := im.GroupId == jm.GroupId && (im.Name < jm.Name)
-	diff := im.GroupId < jm.GroupId
+	same := im.GroupID == jm.GroupID && (im.Name < jm.Name)
+	diff := im.GroupID < jm.GroupID
 
 	return same || diff
 }

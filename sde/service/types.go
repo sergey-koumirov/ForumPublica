@@ -9,6 +9,7 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
+//ImportTypes load Types from file
 func ImportTypes(f *zip.File) *models.ZipTypes {
 	fmt.Printf("%+v\n", f.FileHeader.Name)
 
@@ -30,8 +31,8 @@ func ImportTypes(f *zip.File) *models.ZipTypes {
 
 	for key, value := range jsonData {
 		result[key] = models.ZipType{
-			Id:          key,
-			GroupId:     value.GroupId,
+			ID:          key,
+			GroupID:     value.GroupID,
 			Name:        value.Names["en"],
 			PortionSize: value.PortionSize,
 			Published:   value.Published,

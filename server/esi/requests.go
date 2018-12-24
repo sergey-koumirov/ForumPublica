@@ -11,7 +11,8 @@ import (
 	"time"
 )
 
-var TRY int = 5
+//TRY numbers of tries if request fail
+var TRY = 5
 
 func get(url string, result interface{}) error {
 	return request("GET", url, "", result)
@@ -30,7 +31,7 @@ func request(method string, url string, payload string, result interface{}) erro
 		return errReq
 	}
 
-	req.Header.Add("User-Agent", USER_AGENT)
+	req.Header.Add("User-Agent", UserAgent)
 	req.Header.Add("Accept", "application/json")
 
 	var (
@@ -45,18 +46,18 @@ func request(method string, url string, payload string, result interface{}) erro
 		i++
 
 		resp, errDo = client.Do(req)
-		defer resp.Body.Close()
-
 		if errDo != nil {
 			return errDo
-		} else {
-			if resp.StatusCode == 500 {
-				fmt.Println(i, resp.StatusCode, url)
-				time.Sleep(1000 * time.Millisecond)
-			} else {
-				break
-			}
 		}
+		defer resp.Body.Close()
+
+		if resp.StatusCode == 500 {
+			fmt.Println(i, resp.StatusCode, url)
+			time.Sleep(1000 * time.Millisecond)
+		} else {
+			break
+		}
+
 	}
 
 	bodyBytes, errRead := ioutil.ReadAll(resp.Body)
@@ -74,7 +75,7 @@ func request(method string, url string, payload string, result interface{}) erro
 			return errUn
 		}
 	} else {
-		esiError := EsiError{}
+		esiError := Error{}
 		errUn := json.Unmarshal(bodyBytes, &esiError)
 		if errUn != nil {
 			return errUn
@@ -99,7 +100,7 @@ func authRequest(method string, accessToken string, url string, payload string, 
 		return expires, pages, errReq
 	}
 
-	req.Header.Add("User-Agent", USER_AGENT)
+	req.Header.Add("User-Agent", UserAgent)
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	req.Header.Add("Accept", "application/json")
 
@@ -122,13 +123,12 @@ func authRequest(method string, accessToken string, url string, payload string, 
 
 		if errDo != nil {
 			return expires, pages, errDo
+		}
+		if resp.StatusCode == 500 {
+			fmt.Println(i, resp.StatusCode, url)
+			time.Sleep(1000 * time.Millisecond)
 		} else {
-			if resp.StatusCode == 500 {
-				fmt.Println(i, resp.StatusCode, url)
-				time.Sleep(1000 * time.Millisecond)
-			} else {
-				break
-			}
+			break
 		}
 	}
 
@@ -157,7 +157,7 @@ func authRequest(method string, accessToken string, url string, payload string, 
 	} else if resp.StatusCode == 204 {
 		return expires, pages, nil
 	} else {
-		esiError := EsiError{}
+		esiError := Error{}
 		errUn := json.Unmarshal(bodyBytes, &esiError)
 		if errUn != nil {
 			return expires, pages, errUn
