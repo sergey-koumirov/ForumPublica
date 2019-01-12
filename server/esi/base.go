@@ -27,7 +27,7 @@ var (
 	OAuthAuthorizeURL = "https://login.eveonline.com/oauth/authorize"
 
 	//ESIRootURL url
-	ESIRootURL = "https://esi.tech.ccp.is/latest"
+	ESIRootURL = "https://esi.evetech.net/latest"
 
 	//Scopes app scopes
 	Scopes = []string{
