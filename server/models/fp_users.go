@@ -10,7 +10,7 @@ type User struct {
 	ID   int64  `gorm:"column:id;primary_key"`
 	Role string `gorm:"column:role"`
 
-	Characters []Character `gorm:"foreignkey:UserId"`
+	Characters []Character `gorm:"foreignkey:UserID"`
 }
 
 //TableName table name

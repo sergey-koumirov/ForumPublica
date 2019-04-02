@@ -16,8 +16,8 @@ type Construction struct {
 	RigFactor   string `gorm:"column:rig_factor"`
 	SpaceType   string `gorm:"column:space_type"`
 
-	Bpos ConstructionBpos    `gorm:"foreignkey:ConstructionId"`
-	Runs ConstructionBpoRuns `gorm:"foreignkey:ConstructionId"`
+	Bpos ConstructionBpos    `gorm:"foreignkey:ConstructionID"`
+	Runs ConstructionBpoRuns `gorm:"foreignkey:ConstructionID"`
 }
 
 //TableName construction table name
@@ -49,7 +49,7 @@ type ConstructionBpo struct {
 	ConstructionID int64 `gorm:"column:construction_id"`
 	Construction   *Construction
 
-	Expenses ConstructionExpenses `gorm:"foreignkey:ConstructionBpoId"`
+	Expenses ConstructionExpenses `gorm:"foreignkey:ConstructionBpoID"`
 }
 
 //TableName construction BPO table name

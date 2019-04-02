@@ -1,0 +1,26 @@
+<% define "app/market/index.html" %>
+<% template "base_head" .%>
+
+<h5>
+  Market
+  <a href="/app/market/add"><span class="oi oi-plus"></span></a>
+</h5>
+
+<% .p.Render %>
+<table class="table table-striped table-sm">
+  <tr>
+    <th>ID</th>
+    <th></th>
+  </tr>
+  <% range $index, $mi := .MarketItems.Records %>
+  <tr>
+    <td><% $mi.ID %></td>
+    <td class="text-right">
+      <a href="/app/market/<% $mi.ID %>/delete"><span class="oi oi-delete"></span></a>
+    </td>
+  </tr>
+  <% end %>
+</table>
+
+<% template "base_foot" %>
+<% end %>

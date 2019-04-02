@@ -44,6 +44,8 @@ func AddAppRoutes(r *gin.Engine) {
 
 		authorized.POST("/ui/open_market", ctrl.AppUIOpenMarket)
 
+		authorized.GET("/market", ctrl.AppMarket)
+
 	}
 
 	admin := r.Group("/admin")

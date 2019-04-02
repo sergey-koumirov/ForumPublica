@@ -30,7 +30,7 @@ type Job struct {
 	StationID           int64   `gorm:"column:station_id"`
 	Status              string  `gorm:"column:status"`
 
-	Character Character `gorm:"foreignkey:EsiCharacterId"`
+	Character Character `gorm:"foreignkey:EsiCharacterID"`
 }
 
 //TableName job model table name

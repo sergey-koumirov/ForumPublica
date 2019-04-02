@@ -10,9 +10,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-//PerPage construction per page
-var PerPage int64 = 20
-
 //ConstructionsList list
 func ConstructionsList(userID int64, page int64) models.CnList {
 	cns := make([]models.Construction, 0)

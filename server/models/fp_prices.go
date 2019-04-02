@@ -2,7 +2,7 @@ package models
 
 //Price price
 type Price struct {
-	ID        string  `gorm:"column:id;primary_key"`
+	ID        int64   `gorm:"column:id;primary_key"`
 	TypeID    int32   `gorm:"column:type_id"`
 	Source    string  `gorm:"column:source"`
 	BuyPrice  float64 `gorm:"column:buy_price"`

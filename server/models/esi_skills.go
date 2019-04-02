@@ -8,7 +8,7 @@ type Skill struct {
 	Level          int32  `gorm:"column:level"`
 	Name           string `gorm:"column:name"`
 
-	Character *Character `gorm:"foreignkey:EsiCharacterId"`
+	Character *Character `gorm:"foreignkey:EsiCharacterID"`
 }
 
 //TableName skill model table name

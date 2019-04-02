@@ -5,17 +5,21 @@ import (
 	"fmt"
 
 	"github.com/jinzhu/gorm"
+	//because
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	"github.com/golang-migrate/migrate"
+	//because
 	_ "github.com/golang-migrate/migrate/database/mysql"
 	_ "github.com/golang-migrate/migrate/source/file"
 )
 
 var (
-	DB *gorm.DB = nil
+	//DB global db variable
+	DB *gorm.DB
 )
 
+//Migrate db
 func Migrate() error {
 	m, err := migrate.New("file://server/migrations", "mysql://"+config.Vars.DBC+"?multiStatements=true")
 	if err != nil {
@@ -31,6 +35,7 @@ func Migrate() error {
 
 }
 
+//Connect connect to db
 func Connect() {
 
 	var err error

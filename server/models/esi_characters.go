@@ -23,8 +23,8 @@ type Character struct {
 	TokExpiresIn    int64  `gorm:"column:tok_expires_in"`
 	TokRefreshToken string `gorm:"column:tok_refresh_token"`
 
-	Jobs   []Job   `gorm:"foreignkey:EsiCharacterId"`
-	Skills []Skill `gorm:"foreignkey:EsiCharacterId"`
+	Jobs   []Job   `gorm:"foreignkey:EsiCharacterID"`
+	Skills []Skill `gorm:"foreignkey:EsiCharacterID"`
 }
 
 //TableName character table name
