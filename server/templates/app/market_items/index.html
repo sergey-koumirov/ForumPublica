@@ -1,9 +1,9 @@
-<% define "app/market/index.html" %>
+<% define "app/market_items/index.html" %>
 <% template "base_head" .%>
 
 <h5>
   Market
-  <a href="/app/market/add"><span class="oi oi-plus"></span></a>
+  <a href="/app/market_items/add"><span class="oi oi-plus"></span></a>
 </h5>
 
 <% .p.Render %>
@@ -14,9 +14,9 @@
   </tr>
   <% range $index, $mi := .MarketItems.Records %>
   <tr>
-    <td><% $mi.ID %></td>
+    <td><% $mi.Model.ID %></td>
     <td class="text-right">
-      <a href="/app/market/<% $mi.ID %>/delete"><span class="oi oi-delete"></span></a>
+      <a href="/app/market_item/<% $mi.Model.ID %>/delete"><span class="oi oi-delete"></span></a>
     </td>
   </tr>
   <% end %>

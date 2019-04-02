@@ -11,8 +11,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//AppMarket /app/market/index
-func AppMarket(c *gin.Context) {
+//AppMarketItems /app/market/index
+func AppMarketItems(c *gin.Context) {
 	raw, _ := c.Get(middleware.USER)
 	user := raw.(models.User)
 
@@ -23,7 +23,29 @@ func AppMarket(c *gin.Context) {
 	list := services.MarketItemsList(user.ID, page)
 
 	c.Keys["MarketItems"] = list
-	c.Keys["p"] = utils.NewPagination(list.Total, services.PerPage, page, "/app/market")
+	c.Keys["p"] = utils.NewPagination(list.Total, services.PerPage, page, "/app/market_items")
 
-	c.HTML(http.StatusOK, "app/market/index.html", c.Keys)
+	c.HTML(http.StatusOK, "app/market_items/index.html", c.Keys)
+}
+
+//AppMarketItemsAdd add market item
+func AppMarketItemsAdd(c *gin.Context) {
+	raw, _ := c.Get(middleware.USER)
+	user := raw.(models.User)
+
+	new := services.MarketItemsCreate(user.ID)
+	c.Keys["MarketItem"] = new
+
+	c.Redirect(http.StatusTemporaryRedirect, "/app/market_items")
+}
+
+//AppMarketItemsDelete delete market item
+func AppMarketItemsDelete(c *gin.Context) {
+	raw, _ := c.Get(middleware.USER)
+	user := raw.(models.User)
+
+	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	services.MarketItemsDelete(user.ID, id)
+
+	c.Redirect(http.StatusTemporaryRedirect, "/app/market_items")
 }

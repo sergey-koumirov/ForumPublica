@@ -1,5 +1,7 @@
 package models
 
+import "ForumPublica/server/db"
+
 //MarketItem monitored market item
 type MarketItem struct {
 	ID     int64 `gorm:"column:id;primary_key"`
@@ -10,8 +12,16 @@ type MarketItem struct {
 }
 
 //TableName table name
-func (u *MarketItem) TableName() string {
+func (m *MarketItem) TableName() string {
 	return "fp_market_items"
+}
+
+//Delete delete model and children
+func (m *MarketItem) Delete() {
+	for _, l := range m.Locations {
+		l.Delete()
+	}
+	db.DB.Delete(&m)
 }
 
 //MarketLocation market location info
@@ -31,8 +41,16 @@ type MarketLocation struct {
 }
 
 //TableName table name
-func (u *MarketLocation) TableName() string {
+func (m *MarketLocation) TableName() string {
 	return "fp_market_locations"
+}
+
+//Delete delete model and children
+func (m *MarketLocation) Delete() {
+	for _, d := range m.Datas {
+		d.Delete()
+	}
+	db.DB.Delete(&m)
 }
 
 //MarketData market data for market location
@@ -54,8 +72,16 @@ type MarketData struct {
 }
 
 //TableName table name
-func (u *MarketData) TableName() string {
+func (m *MarketData) TableName() string {
 	return "fp_market_data"
+}
+
+//Delete delete model and children
+func (m *MarketData) Delete() {
+	for _, d := range m.Deciles {
+		d.Delete()
+	}
+	db.DB.Delete(&m)
 }
 
 //MarketDecile deciles for market data
@@ -70,6 +96,11 @@ type MarketDecile struct {
 }
 
 //TableName table name
-func (u *MarketDecile) TableName() string {
+func (m *MarketDecile) TableName() string {
 	return "fp_market_deciles"
+}
+
+//Delete delete model and children
+func (m *MarketDecile) Delete() {
+	db.DB.Delete(&m)
 }

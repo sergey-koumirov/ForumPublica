@@ -25,3 +25,23 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 
 	return result
 }
+
+//MarketItemsCreate create
+func MarketItemsCreate(userID int64) models.MarketItem {
+	new := models.MarketItem{
+		UserID: userID,
+	}
+
+	db.DB.Create(&new)
+	return new
+}
+
+//MarketItemsDelete delete
+func MarketItemsDelete(userID int64, miID int64) {
+	mi := models.MarketItem{}
+	errSel := db.DB.Where("id = ? and user_id = ?", miID, userID).First(&mi).Error
+	if errSel != nil {
+		return
+	}
+	mi.Delete()
+}
