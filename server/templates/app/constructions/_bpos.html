@@ -3,12 +3,6 @@
 <h5>BPOs</h5>
 
 <div class="bpo">
-    Full Manufacturing Time
-    <div class="time">
-        {{ construction.MnfTime | seconds }}
-    </div>
-</div>
-<div class="bpo">
     Default Bonuses:
     <br>
     <select class="form-control form-control-sm" v-model="construction.Model.CitadelType" v-on:change="SaveBonus()">
@@ -68,7 +62,7 @@
         <span class="time">{{ bpo.CopyTime | seconds}}</span>
         <span class="grayed">x</span>
         {{bpo.InventCnt | number}} =
-        <span class="time">{{ bpo.WholeCopyTime | seconds }}</span>
+        <span class="time">{{ bpo.CopyTime * bpo.InventCnt | seconds }}</span>
     </div>
 
 

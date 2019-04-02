@@ -74,5 +74,7 @@ func AppConstructionsSaveBonus(c *gin.Context) {
 	c.BindJSON(&params)
 
 	services.ConstructionSaveBonus(user.ID, id, params)
-	c.JSON(http.StatusOK, gin.H{})
+
+	cn, _ := services.ConstructionGet(user.ID, id)
+	c.JSON(http.StatusOK, cn)
 }

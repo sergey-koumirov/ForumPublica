@@ -2,14 +2,17 @@
 <div class="runs">
     <div class="run" v-for="run in bpo.Runs" v-if="run.Qty!=0">
         <!-- 
-        <span class="grayed" > {{run.CitadelType}}</span>
         <span class="grayed" > {{run.RigFactor}}</span>
         <span class="grayed" > {{run.SpaceType}}</span>
         <span>{{run.Comment}}</span>
         -->
-        <span class="delete oi oi-x pointer" v-if="run.Id!=0" v-on:click="DeleteRun(run.Id)"></span>
+        <span class="delete oi oi-x pointer" v-if="run.ID!=0" v-on:click="DeleteRun(run.ID)"></span>
         <span class="me">ME <b>{{run.ME}}</b></span>
         <span class="te">TE <b>{{run.TE}}</b></span>
+        <span class="grayed citadel" > {{run.CitadelType}}</span>        
+        <span class="grayed rig" > {{run.RigFactor}}</span>        
+        <span class="grayed space" > {{run.SpaceType}}</span>        
+
         <span class="grayed" v-if="bpo.PortionSize>1">[{{bpo.PortionSize}}] x </span>
         <span class="grayed">{{run.Repeats}} x {{run.Qty | number}} = </span> 
         {{run.Repeats * run.Qty * bpo.PortionSize | number}}

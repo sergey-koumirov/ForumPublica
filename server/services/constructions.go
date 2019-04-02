@@ -109,8 +109,7 @@ func loadCn(result *models.CnRecord, cn models.Construction) {
 				DefaultME:     defaultME,
 				CopyTime:      int32( float64(static.T1CopyTime(r.TypeID)) * (1.0 - 5.0 * 5.0 / 100.0) ),
 				InventTime:    int32( float64(static.InventTime(r.TypeID)) * (1.0 - 3.0 * 5.0 / 100.0) ),
-				InventCnt:     0, //todo
-				WholeCopyTime: 0, //todo
+				InventCnt:     static.InventCount(r.TypeID, r.Qty),
 				Expenses:      r.Expenses,
 			},
 		)
