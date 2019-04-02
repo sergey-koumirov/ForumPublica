@@ -467,3 +467,8 @@ table.materials td.name{
   white-space: nowrap;
   overflow: hidden;
 }
+
+table.sap td.paused{
+  color: #D0D0D0;
+  font-weight: bold;
+}
