@@ -6,8 +6,7 @@
     <tr>
         <th></th>
         <th></th>
-        <th></th>
-        <th class="text-center">Vol m<sup>3</sup></th>
+        <th class="text-center"><span class="grayed"><sub>vol 1u</sub></span>Vol m<sup>3</sup></th>
         <th class="text-center"><span class="grayed"><sub>price</sub></span>Cost</th>
         <th class="text-center">Need</th>
     </tr>
@@ -18,14 +17,13 @@
             <span v-on:click="OpenCharPopup($event, item.Model.Id)" :data-clipboard-text="item.Qty" class="oi oi-bar-chart pointer copy-item"></span>                    
             <span v-on:click="HighlightRow($event)" :data-clipboard-text="item.Qty" class="oi oi-sun pointer copy-item"></span>
         </td>
-        <td class="first">
-            <img align="left" width="16" height="16" :src="'https://imageserver.eveonline.com/Type/'+item.Model.Id+'_32.png'">
-        </td>
         <td class="name">
+            <img align="left" width="16" height="16" :src="'https://imageserver.eveonline.com/Type/'+item.Model.ID+'_32.png'">
+            &nbsp;
             {{item.Model.Name}}
         </td>
         <td class="over text-right">
-            <span class="grayed"><sub>{{item.Model.Volume}}</sub></span> {{item.Volume | float}}
+            <span class="grayed"><sub>{{item.Model.Volume | float}}</sub></span> {{item.Volume | float}}
         </td>
         <td class="over text-right">
                 <span class="grayed"><sub>{{item.Price | float}}</sub></span> {{item.Price*item.Qty | float}}
@@ -38,14 +36,12 @@
     <tr>
         <td></td>
         <td></td>
-        <td></td>
         <th class="text-right">{{FullVol() | float}}</th>
         <th class="text-right">{{FullCost() | float}}</th>
         <td></td>
     </tr>
 
     <tr v-if="HasExcluded()">
-        <td></td>
         <td></td>
         <td></td>
         <th class="text-right reded">{{PartialVol() | float}}</th>

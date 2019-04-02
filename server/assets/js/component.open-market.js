@@ -5,7 +5,7 @@ Vue.component('open-market', {
       '  <div class="content">'+
       '    <ul>'+
       '      <li class="pointer" v-for="c in chars" v-on:click="OpenMarket(c.ID)">'+
-      '        <span class="oi oi-external-link"></span>{{c.Name}}'+
+      '        <span class="oi oi-external-link"></span>&nbsp;{{c.Name}}'+
       '      </li>'+
       '    </ul>'+
       '  </div>'+

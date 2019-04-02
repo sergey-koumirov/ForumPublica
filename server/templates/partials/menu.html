@@ -5,7 +5,7 @@
   <a href="/login">Login</a> |
   <%else%>
   <a href="/app/index">Index</a> |
-  <a href="/logout">Log Out (<%.user.ID%>)</a> |
+  <a href="/logout">Log Out (<%.user.CharNames%>)</a> |
     <% if eq .user.Role "A" %>
     <a href="/admin/index"><span class="oi admin oi-aperture"></span></a>
     <%end%>

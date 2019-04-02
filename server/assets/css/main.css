@@ -448,6 +448,7 @@ img.loading{
 .popup ul{
   margin: 0;
   padding: 2px;
+  list-style: none;
 }
 
 .w100rest2x {
