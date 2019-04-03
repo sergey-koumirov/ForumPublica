@@ -1,3 +1,8 @@
+# todo
+
+- ore calc inside construction
+- load expenses from wallet api (job cost, sell taxes)
+
 # run dev
 server
 
