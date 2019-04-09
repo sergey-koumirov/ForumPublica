@@ -9,6 +9,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+//AdminUsers list users
 func AdminUsers(c *gin.Context) {
 
 	var users []models.User

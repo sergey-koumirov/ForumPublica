@@ -45,7 +45,7 @@ func AddAppRoutes(r *gin.Engine) {
 		authorized.POST("/ui/open_market", ctrl.AppUIOpenMarket)
 
 		authorized.GET("/market_items", ctrl.AppMarketItems)
-		authorized.GET("/market_items/add", ctrl.AppMarketItemsAdd)
+		authorized.POST("/market_items", ctrl.AppMarketItemsAdd)
 		authorized.GET("/market_item/:id/delete", ctrl.AppMarketItemsDelete)
 	}
 

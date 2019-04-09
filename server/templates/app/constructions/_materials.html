@@ -14,7 +14,7 @@
         <td>
             <span v-on:click="SetExcluded(item)" class="oi oi-eye pointer" v-if="!item.Excluded"></span>                    
             <span v-on:click="ResetExcluded(item)" class="oi oi-eye pointer" v-if="item.Excluded"></span>
-            <span v-on:click="OpenCharPopup($event, item.Model.Id)" :data-clipboard-text="item.Qty" class="oi oi-bar-chart pointer copy-item"></span>                    
+            <span v-on:click="OpenCharPopup($event, item.Model.ID)" :data-clipboard-text="item.Qty" class="oi oi-bar-chart pointer copy-item"></span>                    
             <span v-on:click="HighlightRow($event)" :data-clipboard-text="item.Qty" class="oi oi-sun pointer copy-item"></span>
         </td>
         <td class="name">

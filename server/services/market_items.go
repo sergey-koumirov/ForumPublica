@@ -5,7 +5,7 @@ import (
 	"ForumPublica/server/models"
 )
 
-//MarketItemList list
+//MarketItemsList list
 func MarketItemsList(userID int64, page int64) models.MiList {
 	cns := make([]models.MarketItem, 0)
 	var total int64
@@ -27,13 +27,15 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 }
 
 //MarketItemsCreate create
-func MarketItemsCreate(userID int64) models.MarketItem {
-	new := models.MarketItem{
-		UserID: userID,
+func MarketItemsCreate(userID int64, params map[string]int32) {
+	typeID, ex := params["TypeID"]
+	if ex {
+		new := models.MarketItem{
+			UserID: userID,
+			TypeID: typeID,
+		}
+		db.DB.Create(&new)
 	}
-
-	db.DB.Create(&new)
-	return new
 }
 
 //MarketItemsDelete delete

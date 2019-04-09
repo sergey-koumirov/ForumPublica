@@ -11,7 +11,7 @@
     </tr>
     <tr v-for="item in bpo.Expenses" >
         <td>
-            <span class="delete oi oi-x pointer" v-on:click="DeleteExpense(item.Id)"></span>
+            <span class="delete oi oi-x pointer" v-on:click="DeleteExpense(item.ID)"></span>
             {{item.Description}}
         </td>
         <td class="text-right">{{item.ExValue | float}}</td>

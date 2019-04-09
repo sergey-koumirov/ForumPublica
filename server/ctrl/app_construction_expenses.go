@@ -1,10 +1,8 @@
 package ctrl
 
 import (
-	"fmt"
-	"ForumPublica/server/middleware"
-	"ForumPublica/server/models"
 	"ForumPublica/server/services"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -13,32 +11,31 @@ import (
 
 //AppConstructionExpensesAdd add expense
 func AppConstructionExpensesAdd(c *gin.Context) {
-	raw, _ := c.Get(middleware.USER)
-	user := raw.(models.User)
+	u := user(c)
 
 	cid, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 
 	params := services.ExpenseParams{}
 	err := c.BindJSON(&params)
-	if err!=nil {
-		fmt.Println("AppConstructionExpensesAdd",err)
+	if err != nil {
+		fmt.Println("AppConstructionExpensesAdd", err)
 	}
 
-	services.ConstructionExpenseAdd(user.ID, cid, params)
-	cn, _ := services.ConstructionGet(user.ID, cid)
+	services.ConstructionExpenseAdd(u.ID, cid, params)
+	cn, _ := services.ConstructionGet(u.ID, cid)
 
 	c.JSON(http.StatusOK, cn)
 }
 
+//AppConstructionExpensesDelete delete expense
 func AppConstructionExpensesDelete(c *gin.Context) {
-	raw, _ := c.Get(middleware.USER)
-	user := raw.(models.User)
+	u := user(c)
 
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	cid, _ := strconv.ParseInt(c.Param("cid"), 10, 64)
 
-	services.ConstructionExpenseDelete(user.ID, cid, id)
-	cn, _ := services.ConstructionGet(user.ID, cid)
+	services.ConstructionExpenseDelete(u.ID, cid, id)
+	cn, _ := services.ConstructionGet(u.ID, cid)
 
 	c.JSON(http.StatusOK, cn)
 }

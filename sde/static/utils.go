@@ -153,8 +153,8 @@ func InventTime(bpoID int32) int32 {
 
 //ProductQuantity manufactoring result batch size
 func ProductQuantity(bpoID int32) int64 {
-	b := Blueprints[bpoID]
-	if len(b.Manufacturing.Products) > 0 {
+	b, ex := Blueprints[bpoID]
+	if ex && len(b.Manufacturing.Products) > 0 {
 		return b.Manufacturing.Products[0].Quantity
 	}
 	return 0

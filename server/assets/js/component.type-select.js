@@ -37,7 +37,7 @@ Vue.component('type-select', {
             renderItem: function (item, search){
                 search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
                 var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
-                return '<div class="autocomplete-suggestion" data-id="'+item.Id+'" data-val="'+item.Name+'">'+item.Name.replace(re, "<b>$1</b>")+'</div>';
+                return '<div class="autocomplete-suggestion" data-id="'+item.ID+'" data-val="'+item.Name+'">'+item.Name.replace(re, "<b>$1</b>")+'</div>';
             },
             onSelect: function(e, term, item){
                 vm.initialCopy="";

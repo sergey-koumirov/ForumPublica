@@ -2,7 +2,6 @@ package ctrl
 
 import (
 	"ForumPublica/server/db"
-	"ForumPublica/server/middleware"
 	"ForumPublica/server/models"
 	"ForumPublica/server/services"
 	"fmt"
@@ -15,12 +14,10 @@ import (
 
 //AppChars list
 func AppChars(c *gin.Context) {
-
-	raw, _ := c.Get(middleware.USER)
-	user := raw.(models.User)
+	u := user(c)
 
 	var chars []models.Character
-	db.DB.Preload("Skills", skillsOrder).Where("user_id = ?", user.ID).Order("name").Find(&chars)
+	db.DB.Preload("Skills", skillsOrder).Where("user_id = ?", u.ID).Order("name").Find(&chars)
 
 	c.Keys["chars"] = chars
 
@@ -33,12 +30,11 @@ func skillsOrder(db *gorm.DB) *gorm.DB {
 
 //CharRefreshSkills refresh skills
 func CharRefreshSkills(c *gin.Context) {
-	raw, _ := c.Get(middleware.USER)
-	user := raw.(models.User)
+	u := user(c)
 
 	cid, _ := strconv.ParseInt(c.Param("cid"), 10, 64)
 	char := models.Character{}
-	errSel := db.DB.Where("id = ? and user_id = ?", cid, user.ID).First(&char).Error
+	errSel := db.DB.Where("id = ? and user_id = ?", cid, u.ID).First(&char).Error
 
 	if errSel == nil {
 		services.RefreshSkills(cid)

@@ -1,8 +1,6 @@
 package ctrl
 
 import (
-	"ForumPublica/server/middleware"
-	"ForumPublica/server/models"
 	"ForumPublica/server/services"
 	"ForumPublica/server/utils"
 	"fmt"
@@ -12,69 +10,66 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//AppConstructions list
 func AppConstructions(c *gin.Context) {
-	raw, _ := c.Get(middleware.USER)
-	user := raw.(models.User)
+	u := user(c)
 
-	page, errParse := strconv.ParseInt(c.Query("page"), 10, 64)
-	if errParse != nil {
-		page = 1
-	}
-	list := services.ConstructionsList(user.ID, page)
+	p := page(c)
+	list := services.ConstructionsList(u.ID, p)
 
 	c.Keys["constructions"] = list
-	c.Keys["p"] = utils.NewPagination(list.Total, services.PerPage, page, "/app/constructions")
+	c.Keys["p"] = utils.NewPagination(list.Total, services.PerPage, p, "/app/constructions")
 
 	c.HTML(http.StatusOK, "app/constructions/index.html", c.Keys)
 }
 
+//AppConstructionsAdd add
 func AppConstructionsAdd(c *gin.Context) {
-	raw, _ := c.Get(middleware.USER)
-	user := raw.(models.User)
+	u := user(c)
 
-	new := services.ConstructionCreate(user.ID)
+	new := services.ConstructionCreate(u.ID)
 	c.Keys["construction"] = new
 
 	c.Redirect(http.StatusTemporaryRedirect, fmt.Sprintf("/app/construction/%d", new.ID))
 }
 
+//AppConstructionsShow show
 func AppConstructionsShow(c *gin.Context) {
-	raw, _ := c.Get(middleware.USER)
-	user := raw.(models.User)
+	u := user(c)
 
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
-	cn, err := services.ConstructionGet(user.ID, id)
+	cn, err := services.ConstructionGet(u.ID, id)
 	if err != nil {
 		c.AbortWithError(404, err)
 		return
 	}
 
 	c.Keys["construction"] = cn
-	c.Keys["chars"] = services.CharsByUserID(user.ID)
+	c.Keys["chars"] = services.CharsByUserID(u.ID)
 
 	c.HTML(http.StatusOK, "app/constructions/show.html", c.Keys)
 }
 
+//AppConstructionsDelete delete
 func AppConstructionsDelete(c *gin.Context) {
-	raw, _ := c.Get(middleware.USER)
-	user := raw.(models.User)
+	u := user(c)
 
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
-	services.ConstructionDelete(user.ID, id)
+	services.ConstructionDelete(u.ID, id)
 
 	c.Redirect(http.StatusTemporaryRedirect, "/app/constructions")
 }
 
+//AppConstructionsSaveBonus save bonus
 func AppConstructionsSaveBonus(c *gin.Context) {
-	raw, _ := c.Get(middleware.USER)
-	user := raw.(models.User)
+	u := user(c)
 
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	params := make(map[string]string)
 	c.BindJSON(&params)
 
-	services.ConstructionSaveBonus(user.ID, id, params)
+	services.ConstructionSaveBonus(u.ID, id, params)
 
-	cn, _ := services.ConstructionGet(user.ID, id)
+	cn, _ := services.ConstructionGet(u.ID, id)
 	c.JSON(http.StatusOK, cn)
 }

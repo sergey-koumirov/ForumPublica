@@ -1,26 +1,40 @@
 <% define "app/market_items/index.html" %>
 <% template "base_head" .%>
+<div id="market-items" market-items="<% .MarketItems | Marshal %>">
 
-<h5>
-  Market
-  <a href="/app/market_items/add"><span class="oi oi-plus"></span></a>
-</h5>
+  <h5>
+    Market
+    <span class="oi oi-plus pointer" v-on:click="OpenAddModal()"></span>  
+  </h5>
 
-<% .p.Render %>
-<table class="table table-striped table-sm">
-  <tr>
-    <th>ID</th>
-    <th></th>
-  </tr>
-  <% range $index, $mi := .MarketItems.Records %>
-  <tr>
-    <td><% $mi.Model.ID %></td>
-    <td class="text-right">
-      <a href="/app/market_item/<% $mi.Model.ID %>/delete"><span class="oi oi-delete"></span></a>
-    </td>
-  </tr>
-  <% end %>
-</table>
+  <pagination v-bind:total="marketItems.Total" v-bind:current="marketItems.Page" pp="25"></pagination>
+
+  <table class="table table-striped table-sm">
+    <tr>
+      <th>ID</th>
+      <th></th>
+    </tr>
+    <% range $index, $mi := .MarketItems.Records %>
+    <tr>
+      <td><% $mi.Model.ID %></td>
+      <td class="text-right">
+        <a href="/app/market_item/<% $mi.Model.ID %>/delete"><span class="oi oi-delete"></span></a>
+      </td>
+    </tr>
+    <% end %>
+  </table>
+
+  <% template "app/market_items/_add_modal.html" . %>
+
+</div>
+
+<script src="/assets/js/vue.js"></script>
+<script src="/assets/js/component.modal.js"></script>
+<script src="/assets/js/component.type-select.js"></script>
+<script src="/assets/js/component.pagination.js"></script>
+<script src="/assets/js/vue.filters.js"></script>
+<script src="/assets/js/controller.market_items.js"></script>
+
 
 <% template "base_foot" %>
 <% end %>

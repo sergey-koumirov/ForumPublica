@@ -31,7 +31,7 @@ function post(vm, url, payload, ignore){
 function del(vm, url, ignore){
   vm.isLoading = true,
   axios.delete(
-    url
+      url
   ).then(function(response){
       if(!ignore){
           vm.construction = response.data;
@@ -41,6 +41,7 @@ function del(vm, url, ignore){
       console.log(error);
   });
 }
+
 
 var constructions = new Vue({
     el: '#construction',

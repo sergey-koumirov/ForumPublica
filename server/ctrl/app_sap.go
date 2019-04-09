@@ -1,30 +1,24 @@
 package ctrl
 
 import (
-	"ForumPublica/server/middleware"
-	"ForumPublica/server/models"
 	"ForumPublica/server/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
+//AppSAP index
 func AppSAP(c *gin.Context) {
-	raw, _ := c.Get(middleware.USER)
-	user := raw.(models.User)
-
-	chars := services.CharJobsList(user.ID)
-
+	u := user(c)
+	chars := services.CharJobsList(u.ID)
 	c.Keys["chars"] = chars
 	c.Keys["timeout"] = services.GetTimeout(services.JOBS, 5)
 	c.HTML(http.StatusOK, "app/sap/index.html", c.Keys)
 }
 
+//AppSAPRefresh refresh
 func AppSAPRefresh(c *gin.Context) {
-	raw, _ := c.Get(middleware.USER)
-	user := raw.(models.User)
-
-	services.RefreshJobs(user.ID)
-
+	u := user(c)
+	services.RefreshJobs(u.ID)
 	c.Redirect(http.StatusTemporaryRedirect, "/app/sap")
 }

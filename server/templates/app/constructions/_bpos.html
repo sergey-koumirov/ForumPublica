@@ -36,16 +36,16 @@
       {{bpo.Model.TypeName}}
     </div>
 
-    <span v-on:click="DeleteBpo(bpo.Model.Id)" class="oi oi-delete right-top"></span>
+    <span v-on:click="DeleteBpo(bpo.Model.ID)" class="oi oi-delete right-top"></span>
 
-    <!-- <div class="me pointer oi-btn" v-on:click="ChangeME(bpo.Model.Id, bpo.Model.ME)">
+    <!-- <div class="me pointer oi-btn" v-on:click="ChangeME(bpo.Model.ID, bpo.Model.ME)">
         ME<b>{{bpo.Model.ME}}</b>
     </div> -->
 
     <div class="qty">
         <span class="grayed">x</span> {{bpo.Model.Qty | number}}
     </div>
-    <div class="controls" v-on:click="ChangeQty(bpo.Model.Id, bpo.Model.Qty)">
+    <div class="controls" v-on:click="ChangeQty(bpo.Model.ID, bpo.Model.Qty)">
         <span class="oi oi-ellipses pointer"></span>
     </div>
 
