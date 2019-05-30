@@ -1,16 +1,11 @@
 Vue.component('pagination', {
     template:
-        '<nav> {{total}} / {{current}} / {{pp}}'+
-        '<ul class="pagination pagination-sm">'+
-        '  <li class="page-item disabled">'+
-        '    <span class="page-link">&lt;</span>'+
-        '    <a href="?page=2" class="page-link">&gt;</a>'+
+        '<nav>'+
+        '<ul class="pagination pagination-sm" v-if="visible">'+
+        '  <li class="page-item" v-for="n in pageCount" :class="{active: n==current}">'+
+        '    <span class="page-link" v-if="n==current">{{n}}</span>'+
+        '    <a :href="\'?page=\'+n" class="page-link" v-if="n!=current">{{n}}</a>'+
         '  </li>'+
-        
-        '  <li class="page-item active"><span class="page-link">1</span></li>'+
-        '  <li class="page-item"><a href="?page=2" class="page-link">2</a></li>'+
-
-        '  <li class="page-item"><a href="?page=2" class="page-link">&gt;</a></li>'+
         '</ul>'+
         '</nav>',
 
@@ -19,26 +14,26 @@ Vue.component('pagination', {
     data: function () {
       return {
           visible: false,
-          
+          pageCount: 0,           
       }
     },
 
     mounted: function () {
-        var vm = this;
+        this.onChange();
     },
 
     methods: {
         onChange: function () {
-            console.log(this.visible, this.firstDisabled, this.lastDisabled);
+            var vm = this;
+            vm.visible = vm.total/vm.pp > 1;
+            vm.pageCount = Math.ceil(vm.total/vm.pp);
         }
     },
 
     watch: {
-        total: {
-            immediate: true,
-            handler: function(newVal, oldVal){
-                this.onChange();
-            }
+        total: function(){
+            this.onChange();
         }
     }
+
 })

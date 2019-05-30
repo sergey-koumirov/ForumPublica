@@ -20,3 +20,10 @@ func AdminJobsUpdatePrices(c *gin.Context) {
 
 	c.Redirect(http.StatusTemporaryRedirect, "/admin/jobs")
 }
+
+//AdminJobsTestMarket start test market job
+func AdminJobsTestMarket(c *gin.Context) {
+	u := user(c)
+	tasks.TaskTestMarket(u)
+	c.Redirect(http.StatusTemporaryRedirect, "/admin/jobs")
+}

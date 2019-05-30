@@ -1,6 +1,7 @@
 package services
 
 import (
+	"ForumPublica/sde/static"
 	"ForumPublica/server/db"
 	"ForumPublica/server/models"
 )
@@ -12,13 +13,14 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 
 	scope := db.DB.Where("user_id = ?", userID)
 	scope.Model(&models.MarketItem{}).Count(&total)
-	scope.Order("id desc").Limit(PerPage).Offset((page - 1) * PerPage).Find(&cns)
+	scope.Order("id desc").Limit(MIPerPage).Offset((page - 1) * MIPerPage).Find(&cns)
 
-	result := models.MiList{Page: page, Total: total}
+	result := models.MiList{Page: page, Total: total, PerPage: MIPerPage}
 	result.Records = make([]models.MiRecord, 0)
 	for _, r := range cns {
 		temp := models.MiRecord{
-			Model: r,
+			Model:    r,
+			TypeName: static.Types[r.TypeID].Name,
 		}
 		result.Records = append(result.Records, temp)
 	}

@@ -14,21 +14,23 @@ import (
 //TRY numbers of tries if request fail
 var TRY = 5
 
-func get(url string, result interface{}) error {
+func get(url string, result interface{}) (time.Time, int64, error) {
 	return request("GET", url, "", result)
 }
 
-func post(url string, payload string, result interface{}) error {
+func post(url string, payload string, result interface{}) (time.Time, int64, error) {
 	return request("POST", url, payload, result)
 }
 
-func request(method string, url string, payload string, result interface{}) error {
+func request(method string, url string, payload string, result interface{}) (time.Time, int64, error) {
+	expires := time.Now()
+	pages := int64(1)
 	client := &http.Client{}
 
 	req, errReq := http.NewRequest(method, url, bytes.NewBufferString(payload))
 	if errReq != nil {
 		fmt.Println(errReq)
-		return errReq
+		return expires, pages, errReq
 	}
 
 	req.Header.Add("User-Agent", UserAgent)
@@ -47,7 +49,7 @@ func request(method string, url string, payload string, result interface{}) erro
 
 		resp, errDo = client.Do(req)
 		if errDo != nil {
-			return errDo
+			return expires, pages, errDo
 		}
 		defer resp.Body.Close()
 
@@ -60,9 +62,17 @@ func request(method string, url string, payload string, result interface{}) erro
 
 	}
 
+	if len(resp.Header["Expires"]) > 0 {
+		expires, _ = time.Parse("Mon, 02 Jan 2006 15:04:05 MST", resp.Header["Expires"][0])
+	}
+
+	if len(resp.Header["X-Pages"]) > 0 {
+		pages, _ = strconv.ParseInt(resp.Header["X-Pages"][0], 10, 64)
+	}
+
 	bodyBytes, errRead := ioutil.ReadAll(resp.Body)
 	if errRead != nil {
-		return errRead
+		return expires, pages, errRead
 	}
 
 	//fmt.Println( url )
@@ -72,17 +82,17 @@ func request(method string, url string, payload string, result interface{}) erro
 	if resp.StatusCode == 200 {
 		errUn := json.Unmarshal(bodyBytes, result)
 		if errUn != nil {
-			return errUn
+			return expires, pages, errUn
 		}
 	} else {
 		esiError := Error{}
 		errUn := json.Unmarshal(bodyBytes, &esiError)
 		if errUn != nil {
-			return errUn
+			return expires, pages, errUn
 		}
-		return errors.New(esiError.Error)
+		return expires, pages, errors.New(esiError.Error)
 	}
-	return nil
+	return expires, pages, nil
 }
 
 func auth(method string, accessToken string, url string, result interface{}) (time.Time, int64, error) {

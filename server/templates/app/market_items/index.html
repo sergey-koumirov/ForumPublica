@@ -1,27 +1,25 @@
 <% define "app/market_items/index.html" %>
 <% template "base_head" .%>
-<div id="market-items" market-items="<% .MarketItems | Marshal %>">
+<div id="market-items" market-items="<% .MarketItems | Marshal %>" v-cloak>
 
   <h5>
     Market
     <span class="oi oi-plus pointer" v-on:click="OpenAddModal()"></span>  
   </h5>
 
-  <pagination v-bind:total="marketItems.Total" v-bind:current="marketItems.Page" pp="25"></pagination>
+  <pagination :total="data.Total" :current="data.Page" :pp="data.PerPage"></pagination>
 
   <table class="table table-striped table-sm">
     <tr>
-      <th>ID</th>
+      <th>Item</th>
       <th></th>
     </tr>
-    <% range $index, $mi := .MarketItems.Records %>
-    <tr>
-      <td><% $mi.Model.ID %></td>
+    <tr v-for="record in data.Records">
+      <td>{{record.TypeName}}</td>
       <td class="text-right">
-        <a href="/app/market_item/<% $mi.Model.ID %>/delete"><span class="oi oi-delete"></span></a>
+        <a :href="`/app/market_item/${record.Model.ID}/delete`"><span class="oi oi-delete"></span></a>
       </td>
     </tr>
-    <% end %>
   </table>
 
   <% template "app/market_items/_add_modal.html" . %>

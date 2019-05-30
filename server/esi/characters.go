@@ -61,7 +61,7 @@ func (esi *ESI) CharactersNames(charIds []int64) ([]IDAndName, error) {
 	url := fmt.Sprintf("%s/characters/names/?character_ids=%s", ESIRootURL, strings.Join(qIds, "%2C"))
 	var result []IDAndName
 
-	err := get(url, &result)
+	_, _, err := get(url, &result)
 	if err != nil {
 		return result, err
 	}

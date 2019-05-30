@@ -20,7 +20,8 @@ function post(vm, url, payload, ignore){
       payload
   ).then(function(response){
       if(!ignore){
-          // vm.construction = response.data;
+          vm.data = response.data;
+          console.log(response.data);
       }
       vm.isLoading = false;
   }).catch(function(error){
@@ -47,9 +48,12 @@ var marketItems = new Vue({
     el: '#market-items',
 
     data: {
-      marketItems: {},
+      data: {},
       showAddModal: false,
       isLoading: false,
+      addModal: {
+        selectedTypeId: null,
+      }
     },
 
     created: function () {
@@ -57,13 +61,12 @@ var marketItems = new Vue({
     },
 
     beforeMount: function () {
-        this.marketItems = JSON.parse(this.$el.attributes['market-items'].value);
-
-        console.log(this.marketItems);
+        this.data = JSON.parse(this.$el.attributes['market-items'].value);
     },
 
     methods: {
       OpenAddModal: function(){
+        this.addModal.selectedTypeId = null;
         this.showAddModal = true;
       },
 
@@ -72,8 +75,11 @@ var marketItems = new Vue({
       },
 
       TypeSelected: function(typeID){
-        console.log(typeID);
-        post(this, '/app/market_items', {TypeID: typeID}, false)
+        this.addModal.selectedTypeId = typeID;
+        if(!!typeID){
+          post(this, '/app/market_items?page='+this.data.Page, {TypeID: typeID});
+          this.showAddModal = false;
+        }        
       },
 
     },
