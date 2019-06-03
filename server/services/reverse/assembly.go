@@ -20,8 +20,22 @@ func Assembly(cn *models.Construction) models.CnBlueprints {
 
 	calcRunTime(&result)
 	calcSgtRunQty(&result)
+	setHasRuns(&result)
 
 	return result
+}
+
+func setHasRuns(result *models.CnBlueprints) {
+	for i := range *result {
+		bpo := (*result)[i]
+		hasRuns := false
+		for _, r := range *bpo.Runs {
+			if r.ID > 0 {
+				hasRuns = true
+			}
+		}
+		(*result)[i].HasRuns = hasRuns
+	}
 }
 
 func calcRunTime(result *models.CnBlueprints) {
@@ -36,20 +50,30 @@ func calcRunTime(result *models.CnBlueprints) {
 }
 
 func calcSgtRunQty(result *models.CnBlueprints) {
+	// #todo use PortionSize
 	for i := range *result {
 		bpo := (*result)[i]
 
 		days := math.Ceil(float64(bpo.MnfTime) / float64(24*60*60))
 
+		// fmt.Println("days", bpo.Model.TypeName(), days, bpo.MnfTime, 24*60*60)
+
+		pQty := int64(math.Ceil(float64(bpo.Model.Qty) / float64(bpo.PortionSize)))
+
 		if int64(days) == 1 {
 			(*result)[i].SgtRepeats = 1
-		} else if bpo.Model.Qty%int64(days*10) == 0 {
+		} else if pQty%int64(days*10) == 0 || (pQty < 150 && pQty%int64(days) == 0) {
 			(*result)[i].SgtRepeats = int64(days)
 		} else {
 			(*result)[i].SgtRepeats = int64(days) - 1
 		}
 
-		qtyPerDay := int64(math.Ceil(float64(bpo.Model.Qty)/(10*days)) * 10)
+		var qtyPerDay int64
+		if pQty < 150 {
+			qtyPerDay = int64(math.Ceil(float64(pQty) / days))
+		} else {
+			qtyPerDay = int64(math.Ceil(float64(pQty)/(10*days)) * 10)
+		}
 
 		(*result)[i].SgtRunQty = qtyPerDay
 	}

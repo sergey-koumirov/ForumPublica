@@ -3,8 +3,7 @@
 <h5>Build BPOs</h5>
 
 
-<div class="bpo component-item"
-     ng-class="bpo.ReadyQty >= bpo.Qty ? 'done' : ''"
+<div class="bpo component-item" :class="{'has-runs': bpo.HasRuns}"
      v-for="(bpo, index) in construction.Components">
 
     <img class="pointer copy-item"

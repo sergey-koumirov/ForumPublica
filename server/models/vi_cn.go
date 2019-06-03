@@ -22,6 +22,7 @@ type CnBlueprint struct {
 	MnfTime     int64
 	SgtRunQty   int64
 	SgtRepeats  int64
+	HasRuns     bool
 }
 
 //CnBlueprints array of CnBlueprint

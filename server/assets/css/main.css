@@ -180,6 +180,11 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
     min-height: 48px;
 }
 
+.construction .component-item.has-runs{
+  /* border: 1px solid #f0f0f0; */
+  background: #f0f0f0;
+}
+
 .construction .component-item .runs{
   margin-top: 38px;
   text-align: right;

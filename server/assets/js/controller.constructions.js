@@ -145,9 +145,6 @@ var constructions = new Vue({
         },
 
         OpenRunModal: function(bpo){
-
-          console.log(bpo.SgtRepeats, bpo.SgtRunQty);
-
           this.ask.bpId = bpo.Model.TypeID;
           this.ask.repeats = bpo.SgtRepeats;
           this.ask.qty = bpo.DefaultME == 2 ? 10 : bpo.SgtRunQty;
