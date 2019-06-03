@@ -240,6 +240,12 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
   width: 34px;
 }
 
+.construction .component-item .runs .repeats{
+  font-size: 14px;
+  font-weight: bold;
+}
+
+
 .construction .component-item .runs .delete{
   float: left;
   margin-top: 1px;

@@ -24,9 +24,8 @@ func applyRunsMaterialsBpos(bpoID int32, bpoInfosHash map[int32]*models.CnBluepr
 	bpoInfosHash[bpoID].Runs = runs
 	materialBpos := static.Level1BPO(bpoID)
 	for _, run := range *runs {
-		productQty := int64(run.Repeats) * run.Qty
 		for _, materialBpo := range materialBpos {
-			materialQty := static.ApplyME(productQty, materialBpo.Quantity, run.ME)
+			materialQty := int64(run.Repeats) * static.ApplyME(run.Qty, materialBpo.Quantity, run.ME)
 			bpoInfosHash[materialBpo.TypeID].Model.Qty = bpoInfosHash[materialBpo.TypeID].Model.Qty + materialQty
 		}
 	}

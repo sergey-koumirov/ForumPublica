@@ -64,3 +64,43 @@ func (esi *ESI) MarketsOrders(regionID int64, typeID int64, orderType string, pa
 
 	return &result, nil
 }
+
+//CharacterMarketOrder model
+type CharacterMarketOrder struct {
+	Duration int `json:"duration"`
+	// Escrow        float64   `json:"escrow"`
+	// IsBuyOrder    bool      `json:"is_buy_order"`
+	IsCorporation bool      `json:"is_corporation"`
+	Issued        time.Time `json:"issued"`
+	LocationID    int64     `json:"location_id"`
+	// MinVolume     int64     `json:"min_volume"`
+	OrderID  int64   `json:"order_id"`
+	Price    float64 `json:"price"`
+	Range    string  `json:"range"`
+	RegionID int64   `json:"region_id"`
+	// State         string    `json:"state"`
+	TypeID       int64 `json:"type_id"`
+	VolumeRemain int64 `json:"volume_remain"`
+	VolumeTotal  int64 `json:"volume_total"`
+}
+
+//CharacterMarketOrders array
+type CharacterMarketOrders []CharacterMarketOrder
+
+//CharactersOrdersResponse Characters Orders Response
+type CharactersOrdersResponse struct {
+	R       CharacterMarketOrders
+	Expires time.Time
+}
+
+//CharactersOrders character open orders
+func (esi *ESI) CharactersOrders(characterID int64) (*CharactersOrdersResponse, error) {
+	url := fmt.Sprintf("%s/characters/%d/orders/", ESIRootURL, characterID)
+	result := make(CharacterMarketOrders, 0)
+
+	expires, _, err := auth("GET", esi.AccessToken, url, &result)
+	if err != nil {
+		return nil, err
+	}
+	return &CharactersOrdersResponse{R: result, Expires: expires}, nil
+}

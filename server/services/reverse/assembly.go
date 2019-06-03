@@ -5,6 +5,7 @@ import (
 	"ForumPublica/server/models"
 	"ForumPublica/server/services/reverse/jobruns"
 	"ForumPublica/server/services/reverse/netsort"
+	"math"
 	"sort"
 )
 
@@ -18,6 +19,7 @@ func Assembly(cn *models.Construction) models.CnBlueprints {
 	jobruns.SetJobRuns(&result, sortedIds, cn)
 
 	calcRunTime(&result)
+	calcSgtRunQty(&result)
 
 	return result
 }
@@ -30,6 +32,26 @@ func calcRunTime(result *models.CnBlueprints) {
 			t = t + int64(r.Repeats)*static.ApplyTE(r.Qty*int64(static.MnfTime(bpo.Model.TypeID)), r.TE)
 		}
 		(*result)[i].MnfTime = t
+	}
+}
+
+func calcSgtRunQty(result *models.CnBlueprints) {
+	for i := range *result {
+		bpo := (*result)[i]
+
+		days := math.Ceil(float64(bpo.MnfTime) / float64(24*60*60))
+
+		if int64(days) == 1 {
+			(*result)[i].SgtRepeats = 1
+		} else if bpo.Model.Qty%int64(days*10) == 0 {
+			(*result)[i].SgtRepeats = int64(days)
+		} else {
+			(*result)[i].SgtRepeats = int64(days) - 1
+		}
+
+		qtyPerDay := int64(math.Ceil(float64(bpo.Model.Qty)/(10*days)) * 10)
+
+		(*result)[i].SgtRunQty = qtyPerDay
 	}
 }
 
