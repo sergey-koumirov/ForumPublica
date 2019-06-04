@@ -4,8 +4,14 @@ import (
 	"ForumPublica/server/db"
 	"ForumPublica/server/esi"
 	"ForumPublica/server/models"
+	"ForumPublica/server/utils"
 	"fmt"
 )
+
+type partInfo struct {
+	amount   int64
+	sequence string
+}
 
 //TaskTestMarket updates prices using ESI API
 func TaskTestMarket(user models.User) error {
@@ -34,23 +40,52 @@ func TaskTestMarket(user models.User) error {
 
 	api := esi.ESI{}
 
-	result, err := api.MarketsOrders(10000002, 3090, "sell", 1)
+	result, err := api.MarketsOrdersAll(10000002, 11393, "sell")
 
 	if err != nil {
 		fmt.Println("err: ", err)
 	} else {
 		fmt.Println("Markets Orders")
-		fmt.Println("Pages: ", result.Pages)
-		fmt.Println("Expires: ", result.Expires)
+		// fmt.Println("Pages: ", result.Pages)
+		// fmt.Println("Expires: ", result.Expires)
 
 		total := int64(0)
+		accumulator := int64(0)
+		sequence := "undecided"
+		parts := make([]partInfo, 0)
 
-		for _, record := range result.R {
+		for _, record := range result {
+			possibleSequence := ""
+			if utils.Find(orderIDs, record.OrderID) > -1 {
+				possibleSequence = "mine"
+			} else {
+				possibleSequence = "other"
+			}
+
+			if possibleSequence != sequence && sequence != "undecided" {
+				parts = append(parts, partInfo{amount: accumulator, sequence: sequence})
+				accumulator = 0
+			}
+			sequence = possibleSequence
 			total = total + record.VolumeRemain
-			fmt.Printf("%+v\n", record)
+			accumulator = accumulator + record.VolumeRemain
+
+			s := ""
+			if utils.Find(orderIDs, record.OrderID) > -1 {
+				s = "M"
+			}
+			fmt.Printf("Price: %.2f, Vol: %d  %s\n", record.Price, record.VolumeRemain, s)
+
+		}
+		if sequence != "undecided" {
+			parts = append(parts, partInfo{amount: accumulator, sequence: sequence})
+		}
+		fmt.Println("------------------")
+
+		for _, r := range parts {
+			fmt.Printf("%s %d %.2f\n", r.sequence, r.amount, float64(r.amount)/float64(total)*100)
 		}
 
-		fmt.Println("% Vol: ", 490.0/float64(total)*100.0)
 	}
 
 	return nil

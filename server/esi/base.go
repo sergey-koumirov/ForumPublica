@@ -38,6 +38,7 @@ var (
 		"esi-skills.read_skills.v1",
 		"esi-ui.open_window.v1",
 		"esi-universe.read_structures.v1",
+		"esi-markets.read_character_orders.v1",
 	}
 )
 

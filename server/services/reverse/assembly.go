@@ -56,8 +56,6 @@ func calcSgtRunQty(result *models.CnBlueprints) {
 
 		days := math.Ceil(float64(bpo.MnfTime) / float64(24*60*60))
 
-		// fmt.Println("days", bpo.Model.TypeName(), days, bpo.MnfTime, 24*60*60)
-
 		pQty := int64(math.Ceil(float64(bpo.Model.Qty) / float64(bpo.PortionSize)))
 
 		if int64(days) == 1 {

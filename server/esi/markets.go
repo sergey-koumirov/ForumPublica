@@ -2,6 +2,7 @@ package esi
 
 import (
 	"fmt"
+	"sort"
 	"time"
 )
 
@@ -63,6 +64,22 @@ func (esi *ESI) MarketsOrders(regionID int64, typeID int64, orderType string, pa
 	result.Expires = expires
 
 	return &result, nil
+}
+
+//MarketsOrdersAll all orders sorted
+func (esi *ESI) MarketsOrdersAll(regionID int64, typeID int64, orderType string) (MarketsOrdersArray, error) {
+
+	result := make(MarketsOrdersArray, 0)
+	response, err := esi.MarketsOrders(regionID, typeID, orderType, 1)
+
+	if err != nil {
+		return result, err
+	}
+
+	result = append(result, (response.R)...)
+
+	sort.Sort(result)
+	return result, nil
 }
 
 //CharacterMarketOrder model
