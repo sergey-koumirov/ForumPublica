@@ -484,3 +484,12 @@ table.sap td.paused{
   color: #D0D0D0;
   font-weight: bold;
 }
+
+#market-items .round-border{
+  border-radius: 3px;
+  border: 1px solid #007bff;
+  display: inline;
+  background: #f0f8ff;
+  padding-right: 4px;
+  padding-left: 4px;
+}

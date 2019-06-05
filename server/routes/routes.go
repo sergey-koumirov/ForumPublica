@@ -40,7 +40,9 @@ func AddAppRoutes(r *gin.Engine) {
 		authorized.POST("/construction/:id/expenses", ctrl.AppConstructionExpensesAdd)
 		authorized.DELETE("/construction/:cid/expense/:id", ctrl.AppConstructionExpensesDelete)
 
-		authorized.GET("/search/:filter", ctrl.AppSearchItemType)
+		authorized.GET("/search/location", ctrl.AppSearchLocation)
+		authorized.GET("/search/blueprint", ctrl.AppSearchBlueprint)
+		authorized.GET("/search/item_type", ctrl.AppSearchItemType)
 
 		authorized.POST("/ui/open_market", ctrl.AppUIOpenMarket)
 

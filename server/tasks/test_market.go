@@ -40,7 +40,7 @@ func TaskTestMarket(user models.User) error {
 
 	api := esi.ESI{}
 
-	result, err := api.MarketsOrdersAll(10000002, 11393, "sell")
+	result, err := api.MarketsOrdersAll(10000002, 34, "sell")
 
 	if err != nil {
 		fmt.Println("err: ", err)
@@ -74,7 +74,7 @@ func TaskTestMarket(user models.User) error {
 			if utils.Find(orderIDs, record.OrderID) > -1 {
 				s = "M"
 			}
-			fmt.Printf("Price: %.2f, Vol: %d  %s\n", record.Price, record.VolumeRemain, s)
+			fmt.Printf("L: %d, Price: %.2f, Vol: %d  %s\n", record.LocationID, record.Price, record.VolumeRemain, s)
 
 		}
 		if sequence != "undecided" {

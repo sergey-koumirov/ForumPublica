@@ -26,3 +26,25 @@ type ZipBlueprint struct {
 
 //ZipBlueprints in-memory cache model
 type ZipBlueprints map[int32]ZipBlueprint
+
+//ZipRegion in-memory cache model
+type ZipRegion struct {
+	ID        int64
+	Name      string
+	RegionKey string
+}
+
+//ZipRegions in-memory cache model
+type ZipRegions []ZipRegion
+
+//ZipSolarSystem in-memory cache model
+type ZipSolarSystem struct {
+	ID        int64
+	Name      string
+	Region    *ZipRegion
+	Security  float64
+	RegionKey string
+}
+
+//ZipSolarSystems in-memory cache model
+type ZipSolarSystems []ZipSolarSystem

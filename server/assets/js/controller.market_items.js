@@ -50,9 +50,14 @@ var marketItems = new Vue({
     data: {
       data: {},
       showAddModal: false,
+      showWhereModal: false,
       isLoading: false,
       addModal: {
         selectedTypeId: null,
+      },
+      whereModal: {
+        selectedLocationId: null,
+        selectedWarehouseId: null,
       }
     },
 
@@ -70,8 +75,18 @@ var marketItems = new Vue({
         this.showAddModal = true;
       },
 
+      OpenWhereModal: function(){
+        this.whereModal.selectedLocationId = null;
+        this.whereModal.selectedWarehouseId = null;
+        this.showWhereModal = true;
+      },
+
       CloseAddModal: function(){
         this.showAddModal = false;
+      },
+
+      CloseWhereModal: function(){
+        this.showWhereModal = false;
       },
 
       TypeSelected: function(typeID){

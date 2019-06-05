@@ -31,7 +31,4 @@ func main() {
 
 	static.LoadJSONs(*fileName)
 
-	fmt.Printf("%+v\n", static.Types[17325])
-	fmt.Printf("%+v\n", static.Blueprints[17325])
-
 }

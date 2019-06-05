@@ -6,13 +6,14 @@ import (
 	"ForumPublica/server/db"
 	"ForumPublica/server/middleware"
 	"ForumPublica/server/routes"
-	"ForumPublica/server/utils"
-	"ForumPublica/server/tasks"
 	"ForumPublica/server/services"
+	"ForumPublica/server/tasks"
+	"ForumPublica/server/utils"
 	"fmt"
 	"html/template"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/gin-contrib/sessions"
@@ -31,6 +32,7 @@ func main() {
 	}
 
 	static.LoadJSONs(config.Vars.SDE)
+	runtime.GC()
 
 	errMgr := db.Migrate()
 	if errMgr != nil {
@@ -74,7 +76,7 @@ func main() {
 
 	routes.AddAppRoutes(r)
 
-	toolbox.AddTask("update_prices", toolbox.NewTask("update_prices", "0 22 14 * * *", tasks.TaskUpdatePrices) )
+	toolbox.AddTask("update_prices", toolbox.NewTask("update_prices", "0 22 14 * * *", tasks.TaskUpdatePrices))
 	toolbox.StartTask()
 	defer toolbox.StopTask()
 

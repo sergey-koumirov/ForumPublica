@@ -44,3 +44,21 @@ type RawBlueprint struct {
 
 //RawBlueprints json-to-go model
 type RawBlueprints map[int32]RawBlueprint
+
+//RawSolarSystem yaml-to-go model
+type RawSolarSystem struct {
+	Security          float64 `yaml:"security"`
+	SolarSystemID     int64   `yaml:"solarSystemID"`
+	SolarSystemNameID int64   `yaml:"solarSystemNameID"`
+}
+
+//RawRegion yaml-to-go model
+type RawRegion struct {
+	RegionID int64 `yaml:"regionID"`
+}
+
+//RawName yaml-to-go model
+type RawName struct {
+	ItemID   int64  `yaml:"itemID"`
+	ItemName string `yaml:"itemName"`
+}

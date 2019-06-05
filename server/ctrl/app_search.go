@@ -9,6 +9,18 @@ import (
 
 //AppSearchItemType search
 func AppSearchItemType(c *gin.Context) {
-	temp := services.SearchItemType(c.Query("term"), c.Param("filter"))
+	temp := services.SearchItemType(c.Query("term"), "")
+	c.JSON(http.StatusOK, temp)
+}
+
+//AppSearchBlueprint search
+func AppSearchBlueprint(c *gin.Context) {
+	temp := services.SearchItemType(c.Query("term"), "blueprint")
+	c.JSON(http.StatusOK, temp)
+}
+
+//AppSearchLocation search
+func AppSearchLocation(c *gin.Context) {
+	temp := services.SearchLocation(c.Query("term"))
 	c.JSON(http.StatusOK, temp)
 }
