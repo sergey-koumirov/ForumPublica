@@ -5,7 +5,10 @@ import (
 	"ForumPublica/sde/service"
 	"archive/zip"
 	"fmt"
+	"io/ioutil"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
 var (
@@ -32,7 +35,48 @@ var (
 )
 
 //LoadJSONs load data from zipped jsons
-func LoadJSONs(fileName string) {
+func LoadJSONs(fileName string, resetCache bool) {
+
+	if resetCache {
+		loadZip(fileName)
+		saveYAML(Types, "sde/cache/_types.yaml")
+		saveYAML(Blueprints, "sde/cache/_blueprints.yaml")
+		saveYAML(T2toT1, "sde/cache/_t2_to_t1.yaml")
+		saveYAML(BpoIDByTypeID, "sde/cache/_bpo_id_by_type_id.yaml")
+		saveYAML(SolarSystemsList, "sde/cache/_solar_system_list.yaml")
+		saveYAML(RegionsList, "sde/cache/_regions_list.yaml")
+		saveYAML(Regions, "sde/cache/_regions.yaml")
+	} else {
+		loadYAML(&Types, "sde/cache/_types.yaml")
+		loadYAML(&Blueprints, "sde/cache/_blueprints.yaml")
+		loadYAML(&T2toT1, "sde/cache/_t2_to_t1.yaml")
+		loadYAML(&BpoIDByTypeID, "sde/cache/_bpo_id_by_type_id.yaml")
+		loadYAML(&SolarSystemsList, "sde/cache/_solar_system_list.yaml")
+		loadYAML(&RegionsList, "sde/cache/_regions_list.yaml")
+		loadYAML(&Regions, "sde/cache/_regions.yaml")
+	}
+
+}
+
+func loadYAML(obj interface{}, filename string) {
+	freshData, err := ioutil.ReadFile(filename)
+	if err != nil {
+		fmt.Println("loadYAML", err, filename)
+	} else {
+		yaml.Unmarshal([]byte(freshData), obj)
+	}
+}
+
+func saveYAML(obj interface{}, filename string) {
+	bytes, err := yaml.Marshal(obj)
+	if err != nil {
+		fmt.Println("saveYAML: ", err, filename)
+	} else {
+		ioutil.WriteFile(filename, bytes, 0644)
+	}
+}
+
+func loadZip(fileName string) {
 	r, zipErr := zip.OpenReader(fileName)
 	if zipErr != nil {
 		fmt.Println("zip.OpenReader:", zipErr)
@@ -98,5 +142,4 @@ func LoadJSONs(fileName string) {
 			BpoIDByTypeID[bpo.Manufacturing.Products[0].TypeID] = bpoID
 		}
 	}
-
 }

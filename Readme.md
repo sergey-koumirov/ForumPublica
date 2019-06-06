@@ -8,6 +8,9 @@ server
 
 `go run ./server/app.go`
 
+run & reset cache
+`go run ./server/app.go --reset-cache`
+
 run import
 
 `go run ./sde/app.go --file ~/Downloads/sde-20180713-TRANQUILITY.zip`

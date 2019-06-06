@@ -9,6 +9,7 @@ import (
 	"ForumPublica/server/services"
 	"ForumPublica/server/tasks"
 	"ForumPublica/server/utils"
+	"flag"
 	"fmt"
 	"html/template"
 	"os"
@@ -31,7 +32,9 @@ func main() {
 		return
 	}
 
-	static.LoadJSONs(config.Vars.SDE)
+	resetCache := flag.Bool("reset-cache", false, "true/false")
+	flag.Parse()
+	static.LoadJSONs(config.Vars.SDE, *resetCache)
 	runtime.GC()
 
 	errMgr := db.Migrate()
