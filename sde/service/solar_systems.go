@@ -10,7 +10,7 @@ import (
 )
 
 //AddSolarSystem add solar system from file
-func AddSolarSystem(f *zip.File, regionKey string, result *models.ZipSolarSystems) {
+func AddSolarSystem(f *zip.File, regionKey string, result *models.ZipSolarSystemsList) {
 	// fmt.Printf("%+v\n", f.FileHeader.Name)
 
 	zipFile, zfErr := f.Open()

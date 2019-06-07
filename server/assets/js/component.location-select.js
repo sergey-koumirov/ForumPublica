@@ -35,10 +35,15 @@ Vue.component('location-select', {
             },
             renderItem: function (item, search){
                 search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-                var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
-                return '<div class="autocomplete-suggestion" data-id="'+item.ID+'" data-val="'+item.Name+'" data-type="'+item.Type+'">'
-                       + item.Name.replace(re, "<b>$1</b>") + 
-                       '</div>';
+                var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi"),
+                    result = '<div class="autocomplete-suggestion" data-id="'+item.ID+'" data-val="'+item.Name+'" data-type="'+item.Type+'">';
+                if(item.Type == "solar_system" || item.Type == "station" || item.Type == "structure"){
+                    result = result + '<img class="icon-suggestion" width="16" height="16" src="/assets/images/'+item.Type+'.png" />';
+                }
+                result = result + item.Name.replace(re, "<b>$1</b>") + '</div>';
+
+                console.log(result, item);
+                return result;
             },
             onSelect: function(e, term, item){
                 vm.initialCopy="";

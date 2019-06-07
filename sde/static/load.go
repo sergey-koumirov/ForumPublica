@@ -25,7 +25,10 @@ var (
 	BpoIDByTypeID map[int32]int32
 
 	//SolarSystemsList array with K-space solar systems
-	SolarSystemsList models.ZipSolarSystems
+	SolarSystemsList models.ZipSolarSystemsList
+
+	//SolarSystems hash with K-space solar systems
+	SolarSystems models.ZipSolarSystems
 
 	//RegionsList array with K-space regions
 	RegionsList models.ZipRegions
@@ -43,7 +46,8 @@ func LoadJSONs(fileName string, resetCache bool) {
 		saveYAML(Blueprints, "sde/cache/_blueprints.yaml")
 		saveYAML(T2toT1, "sde/cache/_t2_to_t1.yaml")
 		saveYAML(BpoIDByTypeID, "sde/cache/_bpo_id_by_type_id.yaml")
-		saveYAML(SolarSystemsList, "sde/cache/_solar_system_list.yaml")
+		saveYAML(SolarSystemsList, "sde/cache/_solar_systems_list.yaml")
+		saveYAML(SolarSystems, "sde/cache/_solar_systems.yaml")
 		saveYAML(RegionsList, "sde/cache/_regions_list.yaml")
 		saveYAML(Regions, "sde/cache/_regions.yaml")
 	} else {
@@ -51,7 +55,8 @@ func LoadJSONs(fileName string, resetCache bool) {
 		loadYAML(&Blueprints, "sde/cache/_blueprints.yaml")
 		loadYAML(&T2toT1, "sde/cache/_t2_to_t1.yaml")
 		loadYAML(&BpoIDByTypeID, "sde/cache/_bpo_id_by_type_id.yaml")
-		loadYAML(&SolarSystemsList, "sde/cache/_solar_system_list.yaml")
+		loadYAML(&SolarSystemsList, "sde/cache/_solar_systems_list.yaml")
+		loadYAML(&SolarSystems, "sde/cache/_solar_systems.yaml")
 		loadYAML(&RegionsList, "sde/cache/_regions_list.yaml")
 		loadYAML(&Regions, "sde/cache/_regions.yaml")
 	}
@@ -85,7 +90,7 @@ func loadZip(fileName string) {
 	defer r.Close()
 
 	var names map[int64]string
-	SolarSystemsList = make(models.ZipSolarSystems, 0)
+	SolarSystemsList = make(models.ZipSolarSystemsList, 0)
 
 	for _, f := range r.File {
 		// fmt.Printf("%+v\n", f.FileHeader.Name)
@@ -123,10 +128,12 @@ func loadZip(fileName string) {
 	}
 	fmt.Println("Loaded regions: ", len(RegionsList))
 
+	SolarSystems = make(models.ZipSolarSystems)
 	for i, s := range SolarSystemsList {
 		SolarSystemsList[i].Name = names[s.ID]
 		r, _ := regionsByKey[s.RegionKey]
-		SolarSystemsList[i].Region = &r
+		SolarSystemsList[i].RegionID = r.ID
+		SolarSystems[s.ID] = SolarSystemsList[i]
 	}
 	fmt.Println("Loaded solar systems: ", len(SolarSystemsList))
 

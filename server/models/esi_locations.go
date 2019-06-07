@@ -2,8 +2,9 @@ package models
 
 //Location location names
 type Location struct {
-	ID   int64  `gorm:"column:id;primary_key"`
-	Name string `gorm:"column:name"`
+	ID          int64  `gorm:"column:id;primary_key"`
+	Name        string `gorm:"column:name"`
+	LastCheckAt string `gorm:"column:last_check_at"`
 }
 
 //TableName table name

@@ -13,7 +13,7 @@ run & reset cache
 
 run import
 
-`go run ./sde/app.go --file ~/Downloads/sde-20180713-TRANQUILITY.zip`
+`go run ./sde/app.go --reset-cache --file sde.zip`
 
 set variables in var.json by example
 

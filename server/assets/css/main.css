@@ -250,6 +250,11 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
   font-weight: bold;
 }
 
+.construction .component-item .runs .one-qty{
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffc680;
+}
 
 .construction .component-item .runs .delete{
   float: left;
@@ -492,4 +497,9 @@ table.sap td.paused{
   background: #f0f8ff;
   padding-right: 4px;
   padding-left: 4px;
+}
+
+.icon-suggestion {
+  margin-top: -5px;
+  margin-right: 4px;
 }

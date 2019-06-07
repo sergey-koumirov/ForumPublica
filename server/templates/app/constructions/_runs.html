@@ -14,7 +14,11 @@
         <span class="grayed space" > {{run.SpaceType}}</span>        
 
         <span class="grayed" v-if="bpo.PortionSize>1">[{{bpo.PortionSize}}] x </span>
-        <span class="grayed"><span class="repeats">{{run.Repeats}}</span> x {{run.Qty | number}} = </span> 
+        <span class="grayed">
+            <span class="repeats">{{run.Repeats}}</span> 
+            x 
+            <span class="one-qty">{{run.Qty | number}}</span> = 
+        </span> 
         {{run.Repeats * run.Qty * bpo.PortionSize | number}}
     </div>
 </div>

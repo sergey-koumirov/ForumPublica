@@ -21,6 +21,7 @@ func AppSearchBlueprint(c *gin.Context) {
 
 //AppSearchLocation search
 func AppSearchLocation(c *gin.Context) {
-	temp := services.SearchLocation(c.Query("term"))
+	u := user(c)
+	temp := services.SearchLocation(u.ID, 1099415243, c.Query("term"))
 	c.JSON(http.StatusOK, temp)
 }

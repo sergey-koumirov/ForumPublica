@@ -41,10 +41,13 @@ type ZipRegions []ZipRegion
 type ZipSolarSystem struct {
 	ID        int64
 	Name      string
-	Region    *ZipRegion
+	RegionID  int64
 	Security  float64
 	RegionKey string
 }
 
+//ZipSolarSystemsList in-memory cache model
+type ZipSolarSystemsList []ZipSolarSystem
+
 //ZipSolarSystems in-memory cache model
-type ZipSolarSystems []ZipSolarSystem
+type ZipSolarSystems map[int64]ZipSolarSystem
