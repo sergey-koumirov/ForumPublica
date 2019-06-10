@@ -37,6 +37,8 @@ type MarketLocation struct {
 	StoreLocationID   int64  `gorm:"column:store_location_id"`
 	StoreQty          int64  `gorm:"column:store_qty"`
 
+	EsiCharacterID int64 `gorm:"column:esi_character_id"`
+
 	Datas []MarketData `gorm:"foreignkey:MarketLocationID"`
 }
 

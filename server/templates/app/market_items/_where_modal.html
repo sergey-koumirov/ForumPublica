@@ -2,9 +2,19 @@
 <modal v-if="showWhereModal" @close="CloseWhereModal()">
     <div slot="body">
         
-        <location-select label="Where" v-on:type-selected="LocationSelected($event)"></location-select>
+        <div class="form-group">
+            <label>API Character</label>
+            <select class="form-control form-control-sm" v-model="whereModal.characterId">
+            <option value="">---None---</option>
+            <option v-for="option in data.Characters" v-bind:value="option.ID">
+                    {{ option.Name }}
+                </option>
+            </select>
+        </div>
 
-        <location-select label="Warehouse" v-on:type-selected="WarehouseSelected($event)"></location-select>
+        <location-select label="Where" :character-id="whereModal.characterId" v-on:type-selected="LocationSelected($event)"></location-select>
+
+        <location-select label="Warehouse" :character-id="whereModal.characterId" filter="stations" v-on:type-selected="WarehouseSelected($event)"></location-select>
 
     </div>
     <div slot="footer">

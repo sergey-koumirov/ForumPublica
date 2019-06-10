@@ -98,7 +98,7 @@ func (s SearchLocationSorter) Less(i, j int) bool {
 }
 
 //SearchLocation search
-func SearchLocation(userID int64, charID int64, term string) SearchLocationResult {
+func SearchLocation(userID int64, charID int64, term string, filter string) SearchLocationResult {
 
 	result := SearchLocationSorter{Term: strings.ToLower(term), Array: make(SearchLocationResult, 0)}
 
@@ -110,7 +110,14 @@ func SearchLocation(userID int64, charID int64, term string) SearchLocationResul
 	}
 
 	api := char.GetESI()
-	ids, apiErr := api.CharactersSearch(charID, []string{"solar_system", "structure", "station"}, term, false)
+	var filters []string
+	if filter == "stations" {
+		filters = []string{"structure", "station"}
+	} else {
+		filters = []string{"solar_system", "structure", "station"}
+	}
+
+	ids, apiErr := api.CharactersSearch(charID, filters, term, false)
 	if apiErr != nil {
 		fmt.Println("SearchLocation: [api.CharactersSearch]", apiErr)
 	}

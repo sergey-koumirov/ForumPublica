@@ -56,6 +56,7 @@ var marketItems = new Vue({
         selectedTypeId: null,
       },
       whereModal: {
+        characterId: "",
         selectedLocationId: null,
         selectedWarehouseId: null,
       }

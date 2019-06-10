@@ -15,7 +15,12 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 	scope.Model(&models.MarketItem{}).Count(&total)
 	scope.Order("id desc").Limit(MIPerPage).Offset((page - 1) * MIPerPage).Find(&cns)
 
-	result := models.MiList{Page: page, Total: total, PerPage: MIPerPage}
+	result := models.MiList{
+		Page:       page,
+		Total:      total,
+		PerPage:    MIPerPage,
+		Characters: CharsByUserID(userID),
+	}
 	result.Records = make([]models.MiRecord, 0)
 	for _, r := range cns {
 		temp := models.MiRecord{

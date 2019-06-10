@@ -3,6 +3,7 @@ package ctrl
 import (
 	"ForumPublica/server/services"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,6 +23,8 @@ func AppSearchBlueprint(c *gin.Context) {
 //AppSearchLocation search
 func AppSearchLocation(c *gin.Context) {
 	u := user(c)
-	temp := services.SearchLocation(u.ID, 1099415243, c.Query("term"))
+	cid, _ := strconv.ParseInt(c.Query("cid"), 10, 64)
+
+	temp := services.SearchLocation(u.ID, cid, c.Query("term"), c.Query("filter"))
 	c.JSON(http.StatusOK, temp)
 }

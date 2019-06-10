@@ -2,11 +2,11 @@ Vue.component('location-select', {
     template:
         '<div class="form-group location-select">'+
         '    <label>{{label}}:</label>'+
-        '    <input ref="selector" type="text" class="form-control form-control-sm" v-model="initialCopy">'+
+        '    <input ref="selector" type="text" class="form-control form-control-sm" v-model="initialCopy" :disabled="characterId==\'\'">'+
         '</div>',
 
 
-    props: ['label'],
+    props: ['label','filter','characterId'],
 
     data: function () {
       return {
@@ -23,7 +23,7 @@ Vue.component('location-select', {
             delay: 500,
             cache: false,
             source: function(term, suggest){
-                axios.get('/app/search/location?term='+encodeURIComponent(term))
+                axios.get('/app/search/location?term='+encodeURIComponent(term)+'&filter='+vm.filter+'&cid='+vm.characterId)
                     .then(function (r) {
                         if(!!r.data){
                             suggest(r.data);

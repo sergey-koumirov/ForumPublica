@@ -6,6 +6,8 @@ import (
 	"archive/zip"
 	"fmt"
 	"io/ioutil"
+	"os"
+	"path"
 	"strings"
 
 	"gopkg.in/yaml.v2"
@@ -64,7 +66,12 @@ func LoadJSONs(fileName string, resetCache bool) {
 }
 
 func loadYAML(obj interface{}, filename string) {
-	freshData, err := ioutil.ReadFile(filename)
+	dir, errWd := os.Getwd()
+	if errWd != nil {
+		fmt.Println("loadYAML: ", errWd, filename)
+	}
+
+	freshData, err := ioutil.ReadFile(path.Join(dir, filename))
 	if err != nil {
 		fmt.Println("loadYAML", err, filename)
 	} else {

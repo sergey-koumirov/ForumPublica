@@ -17,14 +17,21 @@ func ConstructionsList(userID int64, page int64) models.CnList {
 
 	scope := db.DB.Where("user_id = ?", userID)
 	scope.Model(&models.Construction{}).Count(&total)
-	scope.Order("id desc").Limit(PerPage).Offset((page - 1) * PerPage).Find(&cns)
+	scope.Preload("Bpos").Order("id desc").Limit(PerPage).Offset((page - 1) * PerPage).Find(&cns)
 
 	result := models.CnList{Page: page, Total: total}
 	result.Records = make([]models.CnRecord, 0)
 	for _, r := range cns {
+
+		bpos := make(models.CnBlueprints, 0)
+		for _, b := range r.Bpos {
+			bpos = append(bpos, models.CnBlueprint{Model: b})
+		}
+
 		temp := models.CnRecord{
-			Model: r,
-			Title: "N/A",
+			Model:      r,
+			Title:      "N/A",
+			Blueprints: bpos,
 		}
 		result.Records = append(result.Records, temp)
 	}
@@ -101,13 +108,13 @@ func loadCn(result *models.CnRecord, cn models.Construction) {
 		result.Blueprints = append(
 			result.Blueprints,
 			models.CnBlueprint{
-				Model:         r,
-				IsT2:          static.IsT2BPO(r.TypeID),
-				DefaultME:     defaultME,
-				CopyTime:      int32( float64(static.T1CopyTime(r.TypeID)) * (1.0 - 5.0 * 5.0 / 100.0) ),
-				InventTime:    int32( float64(static.InventTime(r.TypeID)) * (1.0 - 3.0 * 5.0 / 100.0) ),
-				InventCnt:     static.InventCount(r.TypeID, r.Qty),
-				Expenses:      r.Expenses,
+				Model:      r,
+				IsT2:       static.IsT2BPO(r.TypeID),
+				DefaultME:  defaultME,
+				CopyTime:   int32(float64(static.T1CopyTime(r.TypeID)) * (1.0 - 5.0*5.0/100.0)),
+				InventTime: int32(float64(static.InventTime(r.TypeID)) * (1.0 - 3.0*5.0/100.0)),
+				InventCnt:  static.InventCount(r.TypeID, r.Qty),
+				Expenses:   r.Expenses,
 			},
 		)
 	}
@@ -116,11 +123,11 @@ func loadCn(result *models.CnRecord, cn models.Construction) {
 	result.Materials = jobruns.RunsToMaterials(result.Components)
 
 	typeIds := make([]int32, len(result.Materials))
-	for i, m := range result.Materials{
+	for i, m := range result.Materials {
 		typeIds[i] = m.Model.ID
 	}
 	AppraisalUpdatePrices(typeIds)
-	for i, m := range result.Materials{
+	for i, m := range result.Materials {
 		result.Materials[i].Price = GetDefaultPrice(m.Model.ID)
 	}
 

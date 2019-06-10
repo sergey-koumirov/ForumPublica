@@ -12,6 +12,7 @@
   <tr>
     <th>ID</th>
     <th>Title</th>
+    <th>BPOs</th>
     <th></th>
   </tr>
   <% range $index, $cn := .constructions.Records %>
@@ -23,6 +24,13 @@
       </a>
     </td>
     <td><% $cn.Title %></td>
+    <td>
+      <ul class="list-group">
+        <% range $i, $b := $cn.Blueprints %>
+        <li class="list-group-item"><% $b.Model.Qty %> <span class="grayed">x</span> <% $b.Model.TypeName %></li>
+        <% end %>
+      </ul>
+    </td>
     <td class="text-right">
       <a href="/app/construction/<% $cn.Model.ID %>/delete"><span class="oi oi-delete"></span></a>
     </td>
