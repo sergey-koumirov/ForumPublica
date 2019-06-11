@@ -49,6 +49,8 @@ func AddAppRoutes(r *gin.Engine) {
 		authorized.GET("/market_items", ctrl.AppMarketItems)
 		authorized.POST("/market_items", ctrl.AppMarketItemsAdd)
 		authorized.GET("/market_item/:id/delete", ctrl.AppMarketItemsDelete)
+		authorized.POST("/market_item/:id/locations", ctrl.AppMarketItemsLocationsAdd)
+		authorized.DELETE("/market_item/:id/location/:lid", ctrl.AppMarketItemsLocationsDelete)
 	}
 
 	admin := r.Group("/admin")

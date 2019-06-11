@@ -503,3 +503,16 @@ table.sap td.paused{
   margin-top: -5px;
   margin-right: 4px;
 }
+
+.list-group-item-sm {
+  padding-left: 4px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  background-color: initial;
+}
+
+ul.simple-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}

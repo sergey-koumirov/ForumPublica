@@ -12,14 +12,23 @@
             </select>
         </div>
 
-        <location-select label="Where" :character-id="whereModal.characterId" v-on:type-selected="LocationSelected($event)"></location-select>
+        <location-select label="Where" 
+            :character-id="whereModal.characterId" 
+            v-on:type-selected="LocationSelected"
+            v-on:type-reset="LocationReset"></location-select>
 
-        <location-select label="Warehouse" :character-id="whereModal.characterId" filter="stations" v-on:type-selected="WarehouseSelected($event)"></location-select>
+        <location-select label="Warehouse" 
+            :character-id="whereModal.characterId" 
+            filter="stations" 
+            v-on:type-selected="WarehouseSelected"
+            v-on:type-reset="WarehouseReset"></location-select>
 
     </div>
     <div slot="footer">
         <button class="btn btn-default btn-sm modal-default-button" @click="CloseWhereModal()">Close</button>
-        <button class="btn btn-primary btn-sm modal-default-button" @click="AddWhere()">Add</button>
+        <button class="btn btn-primary btn-sm modal-default-button" 
+            @click="AddWhere()" 
+            :disabled="whereModal.selectedLocationId==null">Add</button>
     </div>
 </modal>
     

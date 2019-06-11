@@ -2,7 +2,10 @@ Vue.component('location-select', {
     template:
         '<div class="form-group location-select">'+
         '    <label>{{label}}:</label>'+
-        '    <input ref="selector" type="text" class="form-control form-control-sm" v-model="initialCopy" :disabled="characterId==\'\'">'+
+        '    <input v-show="selected.id==null" ref="selector" type="text" class="form-control form-control-sm" v-model="initialCopy" :disabled="characterId==\'\'">'+
+        '    <img v-if="!!selected.type" class="icon-suggestion" width="16" height="16" :src="\'/assets/images/\'+selected.type+\'.png\'" />'+
+        '    <span v-show="selected.id!=null">{{selected.text}}</span>'+
+        '    <span v-show="selected.id!=null" class="oi oi-delete pointer" @click="resetSelected"></span>'+
         '</div>',
 
 
@@ -10,7 +13,12 @@ Vue.component('location-select', {
 
     data: function () {
       return {
-        initialCopy: ""
+        initialCopy: "",
+        selected: {
+            id: null,
+            text: null,
+            type: null
+        }
       }
     },
 
@@ -41,20 +49,37 @@ Vue.component('location-select', {
                     result = result + '<img class="icon-suggestion" width="16" height="16" src="/assets/images/'+item.Type+'.png" />';
                 }
                 result = result + item.Name.replace(re, "<b>$1</b>") + '</div>';
-
-                console.log(result, item);
                 return result;
             },
             onSelect: function(e, term, item){
                 vm.initialCopy="";
+                vm.selected.id = parseInt(item.getAttribute('data-id'));
+                vm.selected.text = item.getAttribute('data-val');
+                vm.selected.type = item.getAttribute('data-type');
+
                 vm.$emit(
                     'type-selected', 
-                    parseInt(item.getAttribute('data-id')),
-                    item.getAttribute('data-val'),   
-                    item.getAttribute('data-type'),   
+                    vm.selected.id,
+                    vm.selected.text,   
+                    vm.selected.type,   
                 );
+                
             }
         });
 
     },
+
+    methods: {
+        resetSelected: function(){
+            this.selected = {
+                id: null,
+                text: null,
+                type: null
+            };
+            
+            this.$emit(
+                'type-reset'   
+            );
+        },
+      },
 })

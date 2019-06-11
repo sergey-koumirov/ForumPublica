@@ -15,10 +15,10 @@ create table fp_market_locations(
   id int not null auto_increment primary key,  
   market_item_id int not null,
   location_type varchar(32),
-  location_id int,  
+  location_id bigint,  
   store_location_type varchar(32),
-  store_location_id int,
-  store_qty int
+  store_location_id bigint,
+  store_qty bigint
 );
 
 create table fp_market_data(

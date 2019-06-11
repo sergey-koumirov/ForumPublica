@@ -35,7 +35,7 @@ function del(vm, url, ignore){
       url
   ).then(function(response){
       if(!ignore){
-          // vm.construction = response.data;
+        vm.data = response.data;
       }
       vm.isLoading = false;
   }).catch(function(error){
@@ -56,9 +56,12 @@ var marketItems = new Vue({
         selectedTypeId: null,
       },
       whereModal: {
+        marketItemId: null,
         characterId: "",
         selectedLocationId: null,
+        selectedLocationType: null,
         selectedWarehouseId: null,
+        selectedWarehouseType: null,
       }
     },
 
@@ -76,7 +79,8 @@ var marketItems = new Vue({
         this.showAddModal = true;
       },
 
-      OpenWhereModal: function(){
+      OpenWhereModal: function(marketItemId){
+        this.whereModal.marketItemId = marketItemId;        
         this.whereModal.selectedLocationId = null;
         this.whereModal.selectedWarehouseId = null;
         this.showWhereModal = true;
@@ -97,6 +101,41 @@ var marketItems = new Vue({
           this.showAddModal = false;
         }        
       },
+
+      LocationSelected: function(id,text,type){
+        this.whereModal.selectedLocationId = id;
+        this.whereModal.selectedLocationType = type;
+      },
+      LocationReset: function(){
+        this.whereModal.selectedLocationId = null;
+      },
+      WarehouseSelected: function(id,text,type){
+        this.whereModal.selectedWarehouseId = id;
+        this.whereModal.selectedWarehouseType = type;
+      },
+      WarehouseReset: function(){
+        this.whereModal.selectedWarehouseId = null;
+      },
+
+      AddWhere: function(){
+        //todo insert
+        post(
+          this, 
+          '/app/market_item/'+this.whereModal.marketItemId+'/locations', 
+          {
+            LocationID: this.whereModal.selectedLocationId,
+            LocationType: this.whereModal.selectedLocationType,
+            StoreLocationID: this.whereModal.selectedWarehouseId,
+            StoreLocationType: this.whereModal.selectedWarehouseType,
+            CharacterID: this.whereModal.characterId,
+          }
+        );
+        this.CloseWhereModal();
+      },
+
+      DeleteMarketLocation: function(miId, lId){
+        del(this, '/app/market_item/'+miId+'/location/'+lId+'?page='+this.data.Page);
+      }
 
     },
 });
