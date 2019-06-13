@@ -54,7 +54,7 @@ func main() {
 
 	store := cookie.NewStore([]byte(config.Vars.SESSION_KEY))
 
-	gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(config.Vars.MODE)
 	r := gin.Default()
 	r.SetFuncMap(template.FuncMap{
 		"TimeoutClass": utils.TimeoutClass,
