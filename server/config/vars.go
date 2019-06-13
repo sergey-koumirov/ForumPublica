@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 )
 
+//VarsValues var values from file
 type VarsValues struct {
 	MODE         string
 	PORT         string
@@ -13,12 +14,15 @@ type VarsValues struct {
 	SSOClientID  string
 	SSOSecretKey string
 	DBC          string
-	SESSION_KEY  string
+	SessionKey   string
 	SDE          string
+	SSLPath      string
 }
 
-var Vars *VarsValues = nil
+//Vars global variable
+var Vars *VarsValues
 
+//LoadVars load vars
 func LoadVars() {
 	data, rErr := ioutil.ReadFile("server/vars.json")
 	if rErr != nil {

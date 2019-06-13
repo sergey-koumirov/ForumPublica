@@ -52,7 +52,7 @@ func main() {
 
 	services.InitPrices()
 
-	store := cookie.NewStore([]byte(config.Vars.SESSION_KEY))
+	store := cookie.NewStore([]byte(config.Vars.SessionKey))
 
 	gin.SetMode(config.Vars.MODE)
 	r := gin.Default()
@@ -84,5 +84,5 @@ func main() {
 	toolbox.StartTask()
 	defer toolbox.StopTask()
 
-	r.Run(":" + config.Vars.PORT)
+	r.RunTLS(":"+config.Vars.PORT, config.Vars.SSLPath+"nginx.crt", config.Vars.SSLPath+"nginx.key")
 }

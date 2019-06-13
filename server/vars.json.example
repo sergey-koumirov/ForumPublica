@@ -5,6 +5,7 @@
   "SSOClientID": "123",
   "SSOSecretKey": "321"
   "DBC": "user:password@/database",
-  "SESSION_KEY": "secret session key",
-  "SDE": "./sde-20180713-TRANQUILITY.zip"
+  "SessionKey": "secret session key",
+  "SDE": "./sde-20180713-TRANQUILITY.zip",
+  "SSLPath": "./ssl/"
 }

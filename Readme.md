@@ -5,14 +5,13 @@
 
 # run dev
 server
+`go run ./server/app.go`
+`go build -o publica ./server/app.go`
 
+run
 `go run ./server/app.go`
 
-run & reset cache
-`go run ./server/app.go --reset-cache`
-
-run import
-
+run import & reset cache
 `curl https://cdn1.eveonline.com/data/sde/tranquility/sde-20190529-TRANQUILITY.zip --output sde.zip`
 `go run ./sde/app.go --file sde.zip`
 
