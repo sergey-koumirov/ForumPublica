@@ -13,7 +13,8 @@ run & reset cache
 
 run import
 
-`go run ./sde/app.go --reset-cache --file sde.zip`
+`curl https://cdn1.eveonline.com/data/sde/tranquility/sde-20190529-TRANQUILITY.zip --output sde.zip`
+`go run ./sde/app.go --file sde.zip`
 
 set variables in var.json by example
 

@@ -54,6 +54,7 @@ func main() {
 
 	store := cookie.NewStore([]byte(config.Vars.SESSION_KEY))
 
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	r.SetFuncMap(template.FuncMap{
 		"TimeoutClass": utils.TimeoutClass,
@@ -83,6 +84,5 @@ func main() {
 	toolbox.StartTask()
 	defer toolbox.StopTask()
 
-	gin.SetMode(config.Vars.MODE)
 	r.Run(":" + config.Vars.PORT)
 }
