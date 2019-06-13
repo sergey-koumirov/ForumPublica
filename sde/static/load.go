@@ -44,23 +44,23 @@ func LoadJSONs(fileName string, resetCache bool) {
 
 	if resetCache {
 		loadZip(fileName)
-		saveYAML(Types, "sde/cache/_types.yaml")
-		saveYAML(Blueprints, "sde/cache/_blueprints.yaml")
-		saveYAML(T2toT1, "sde/cache/_t2_to_t1.yaml")
-		saveYAML(BpoIDByTypeID, "sde/cache/_bpo_id_by_type_id.yaml")
-		saveYAML(SolarSystemsList, "sde/cache/_solar_systems_list.yaml")
-		saveYAML(SolarSystems, "sde/cache/_solar_systems.yaml")
-		saveYAML(RegionsList, "sde/cache/_regions_list.yaml")
-		saveYAML(Regions, "sde/cache/_regions.yaml")
+		saveYAML(Types, "./sde/cache/_types.yaml")
+		saveYAML(Blueprints, "./sde/cache/_blueprints.yaml")
+		saveYAML(T2toT1, "./sde/cache/_t2_to_t1.yaml")
+		saveYAML(BpoIDByTypeID, "./sde/cache/_bpo_id_by_type_id.yaml")
+		saveYAML(SolarSystemsList, "./sde/cache/_solar_systems_list.yaml")
+		saveYAML(SolarSystems, "./sde/cache/_solar_systems.yaml")
+		saveYAML(RegionsList, "./sde/cache/_regions_list.yaml")
+		saveYAML(Regions, "./sde/cache/_regions.yaml")
 	} else {
-		loadYAML(&Types, "sde/cache/_types.yaml")
-		loadYAML(&Blueprints, "sde/cache/_blueprints.yaml")
-		loadYAML(&T2toT1, "sde/cache/_t2_to_t1.yaml")
-		loadYAML(&BpoIDByTypeID, "sde/cache/_bpo_id_by_type_id.yaml")
-		loadYAML(&SolarSystemsList, "sde/cache/_solar_systems_list.yaml")
-		loadYAML(&SolarSystems, "sde/cache/_solar_systems.yaml")
-		loadYAML(&RegionsList, "sde/cache/_regions_list.yaml")
-		loadYAML(&Regions, "sde/cache/_regions.yaml")
+		loadYAML(&Types, "./sde/cache/_types.yaml")
+		loadYAML(&Blueprints, "./sde/cache/_blueprints.yaml")
+		loadYAML(&T2toT1, "./sde/cache/_t2_to_t1.yaml")
+		loadYAML(&BpoIDByTypeID, "./sde/cache/_bpo_id_by_type_id.yaml")
+		loadYAML(&SolarSystemsList, "./sde/cache/_solar_systems_list.yaml")
+		loadYAML(&SolarSystems, "./sde/cache/_solar_systems.yaml")
+		loadYAML(&RegionsList, "./sde/cache/_regions_list.yaml")
+		loadYAML(&Regions, "./sde/cache/_regions.yaml")
 	}
 
 }
@@ -69,6 +69,7 @@ func loadYAML(obj interface{}, filename string) {
 	dir, errWd := os.Getwd()
 	if errWd != nil {
 		fmt.Println("loadYAML: ", errWd, filename)
+		return
 	}
 
 	freshData, err := ioutil.ReadFile(path.Join(dir, filename))
@@ -80,12 +81,24 @@ func loadYAML(obj interface{}, filename string) {
 }
 
 func saveYAML(obj interface{}, filename string) {
+	dir, errWd := os.Getwd()
+	if errWd != nil {
+		fmt.Println("loadYAML: ", errWd, filename)
+		return
+	}
+
 	bytes, err := yaml.Marshal(obj)
 	if err != nil {
 		fmt.Println("saveYAML: ", err, filename)
-	} else {
-		ioutil.WriteFile(filename, bytes, 0644)
+		return
 	}
+
+	fmt.Println("save: ", path.Join(dir, filename))
+	errWr := ioutil.WriteFile(path.Join(dir, filename), bytes, 0644)
+	if err != nil {
+		fmt.Println("saveYAML: ", errWr, filename)
+	}
+
 }
 
 func loadZip(fileName string) {
