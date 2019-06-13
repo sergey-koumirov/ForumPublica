@@ -16,9 +16,9 @@ var (
 	//UserID var name
 	UserID = "userId"
 	//STATE var name
-	STATE   = "state"
+	STATE = "state"
 	//USER user var name
-	USER    = "user"
+	USER = "user"
 )
 
 //SetUser set user
@@ -96,15 +96,8 @@ func AuthCallback(c *gin.Context) {
 	errChar := db.DB.First(&char, char.ID).Error
 	charEx := errChar == nil
 
-	// fmt.Println(char, errChar, charEx)
-
 	var user models.User
 	setUser, _ := c.Get(USER)
-
-	if !charEx && setUser == nil {
-		user = models.User{Role: "U"}
-		db.DB.Create(&user)
-	}
 
 	if charEx && setUser == nil {
 		user.ID = char.UserID
@@ -116,8 +109,11 @@ func AuthCallback(c *gin.Context) {
 			char.UserID = user.ID
 			db.DB.Model(&char).Update("user_id", user.ID)
 		}
-	} else {
+	} else if !charEx && setUser != nil {
 		user = setUser.(models.User)
+	} else if !charEx && setUser == nil {
+		user = models.User{Role: "U"}
+		db.DB.Create(&user)
 	}
 
 	if charEx {
@@ -147,7 +143,11 @@ func AuthCallback(c *gin.Context) {
 			TokExpiresIn:          token.ExpiresIn,
 			TokRefreshToken:       token.RefreshToken,
 		}
-		db.DB.Create(&newChar)
+
+		dbErr := db.DB.Create(&newChar).Error
+		if dbErr != nil {
+			fmt.Println("db.DB.Create(&newChar)", dbErr)
+		}
 	}
 
 	session.Set(UserID, user.ID)
