@@ -22,7 +22,6 @@ func main() {
 	}
 
 	fileName := flag.String("file", "NONE", "a string")
-	resetCache := flag.Bool("reset-cache", false, "true/false")
 	flag.Parse()
 
 	fmt.Println("Unzip...", *fileName)
@@ -30,6 +29,6 @@ func main() {
 		return
 	}
 
-	static.LoadJSONs(*fileName, *resetCache)
+	static.LoadJSONs(*fileName, true)
 
 }
