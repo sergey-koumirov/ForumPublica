@@ -72,7 +72,7 @@ func CallbackURL() (string, string) {
 	state := b64.URLEncoding.EncodeToString(b)
 
 	url := fmt.Sprintf(
-		"%s?response_type=code&redirect_uri=http%%3A%%2F%%2F%s%%3A%s%%2Fprobleme_callback&realm=ESI&client_id=%s&scope=%s&state=%s",
+		"%s?response_type=code&redirect_uri=https%%3A%%2F%%2F%s%%3A%s%%2Fprobleme_callback&realm=ESI&client_id=%s&scope=%s&state=%s",
 		OAuthAuthorizeURL,
 		config.Vars.SITE,
 		//coniootrs. url
