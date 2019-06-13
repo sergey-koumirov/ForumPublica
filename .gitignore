@@ -1,4 +1,4 @@
-sde/cache
+sde/cache/*.yaml
 server/vars.json
 sde.zip
 .DS_Store
