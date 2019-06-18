@@ -2,6 +2,7 @@ package esi
 
 import (
 	"fmt"
+	"net/url"
 	"strings"
 )
 
@@ -16,7 +17,7 @@ func (esi *ESI) CharactersSearch(charID int64, categories []string, term string,
 		ESIRootURL,
 		charID,
 		strings.Join(categories, ","),
-		term,
+		url.QueryEscape(term),
 		strict,
 	)
 	var result CharactersSearchResult

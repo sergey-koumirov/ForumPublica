@@ -2,9 +2,10 @@ package models
 
 //MiLocation model
 type MiLocation struct {
-	ID   int64
-	Type string
-	Name string
+	ID            int64
+	Type          string
+	Name          string
+	CharacterName string
 }
 
 //MiRecord market item info for index page

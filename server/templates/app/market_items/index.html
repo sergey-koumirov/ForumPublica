@@ -11,8 +11,7 @@
 
   <table class="table table-striped table-sm">
     <tr>
-      <th>What</th>
-      <th>Where</th>
+      <th><b>What</b><br>Where</th>
       <th>Statistics</th>
       <th>My Orders</th>
       <th>90d Sells</th>
@@ -20,18 +19,16 @@
     </tr>
     <tr v-for="record in data.Records">
       <td>
-        {{record.TypeName}}
+      <b>{{record.TypeName}}</b>
         <div class="round-border pointer" v-on:click="OpenWhereModal(record.Model.ID)">
             <span class="oi oi-plus"></span>
             <span class="oi oi-map-marker"></span>
         </div>
-      </td>
-      <td>
 
         <ul class="simple-list">
           <li v-for="location in record.Locations">
             <img class="icon-suggestion" width="16" height="16" :src="'/assets/images/'+location.Type+'.png'" />
-            {{location.Name}}
+            {{location.Name}} <span class="gray">{{location.CharacterName}}</span>
             <span class="oi oi-delete pointer" @click="DeleteMarketLocation(record.Model.ID, location.ID)"></span>
           </li>
         </ul>

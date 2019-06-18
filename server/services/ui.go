@@ -15,7 +15,7 @@ func UIOpenMarket(userID int64, params map[string]int64) {
 		return
 	}
 
-	api := char.GetESI()
+	api, _ := char.GetESI()
 	errEsi := api.OpenWindowMarketDetails(params["TypeId"])
 	if errEsi != nil {
 		fmt.Println("UIOpenMarket errEsi", errEsi)

@@ -18,7 +18,7 @@ func RefreshSkills(cid int64) {
 		return
 	}
 
-	api := char.GetESI()
+	api, _ := char.GetESI()
 	skills, errEsi := api.CharactersSkills(char.ID)
 	if errEsi != nil {
 		fmt.Println("RefreshSkills errEsi", errEsi)

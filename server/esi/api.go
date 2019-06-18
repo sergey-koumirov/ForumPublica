@@ -21,19 +21,20 @@ func (obj *ESI) IsAccessTokenExpired() bool {
 }
 
 //RefreshAccessToken Refresh Access Token
-func (obj *ESI) RefreshAccessToken() {
+func (obj *ESI) RefreshAccessToken() error {
 	token, errAuth := OAuthToken(url.Values{"grant_type": {"refresh_token"}, "refresh_token": {obj.RefreshToken}})
 	if errAuth != nil {
-		fmt.Println(errAuth)
-		return
+		fmt.Println("RefreshAccessToken/OAuthToken", errAuth)
+		return errAuth
 	}
 	info, errVer := OAuthVerify(token.AccessToken)
 	if errVer != nil {
-		fmt.Println(errVer)
-		return
+		fmt.Println("RefreshAccessToken/OAuthVerify", errVer)
+		return errVer
 	}
 	obj.AccessToken = token.AccessToken
 	obj.ExpiresOn = info.ExpiresOn
+	return nil
 }
 
 //Get get main object using given tokens

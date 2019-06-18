@@ -19,8 +19,6 @@ type LocationParams struct {
 //MarketItemsLocationsCreate create
 func MarketItemsLocationsCreate(userID int64, marketItemID int64, params LocationParams) {
 
-	fmt.Println("MarketItemsLocationsCreate", marketItemID)
-
 	mi := models.MarketItem{}
 	errDb1 := db.DB.Model(&models.MarketItem{}).Where("id = ? and user_id = ?", marketItemID, userID).Find(&mi).Error
 	if errDb1 != nil {

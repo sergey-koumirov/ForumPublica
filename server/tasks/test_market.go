@@ -22,7 +22,7 @@ func TaskTestMarket(user models.User) error {
 	var orderIDs = make([]int64, 0)
 
 	for _, char := range chars {
-		charAPI := char.GetESI()
+		charAPI, _ := char.GetESI()
 
 		data, charErr := charAPI.CharactersOrders(char.ID)
 		if charErr != nil {
@@ -56,7 +56,7 @@ func TaskTestMarket(user models.User) error {
 
 		for _, record := range result {
 			possibleSequence := ""
-			if utils.Find(orderIDs, record.OrderID) > -1 {
+			if utils.FindInt64(orderIDs, record.OrderID) > -1 {
 				possibleSequence = "mine"
 			} else {
 				possibleSequence = "other"
@@ -71,7 +71,7 @@ func TaskTestMarket(user models.User) error {
 			accumulator = accumulator + record.VolumeRemain
 
 			s := ""
-			if utils.Find(orderIDs, record.OrderID) > -1 {
+			if utils.FindInt64(orderIDs, record.OrderID) > -1 {
 				s = "M"
 			}
 			fmt.Printf("L: %d, Price: %.2f, Vol: %d  %s\n", record.LocationID, record.Price, record.VolumeRemain, s)

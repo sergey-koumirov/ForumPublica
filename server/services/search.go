@@ -109,7 +109,7 @@ func SearchLocation(userID int64, charID int64, term string, filter string) Sear
 		return result.Array
 	}
 
-	api := char.GetESI()
+	api, _ := char.GetESI()
 	var filters []string
 	if filter == "stations" {
 		filters = []string{"structure", "station"}
@@ -191,8 +191,8 @@ func addStations(api esi.ESI, ids []int64, result *SearchLocationSorter) {
 			fmt.Println("addStations: api.UniverseNames", e)
 		} else {
 			for _, l := range newLocations {
-				newLocation := models.Location{ID: l.ID, Name: l.Name}
-				db.DB.Create(&newLocation)
+				api := esi.ESI{}
+				AddLocation(api, l.ID, l.Name, 0, 0)
 				result.Array = append(
 					result.Array,
 					SearchLocationRecord{
@@ -224,16 +224,10 @@ func addStructures(api esi.ESI, ids []int64, result *SearchLocationSorter) {
 			}
 		}
 		if notFound || founded.LastCheckAt == "" || utils.StrToMinut(founded.LastCheckAt) > 24*60 {
-			d, e := api.UniverseStructures(id)
-			if err != nil {
-				fmt.Println("addStructures: api.UniverseStructures", e)
+			if notFound {
+				founded = AddLocation(api, id, "", 0, 0)
 			} else {
-				founded = models.Location{ID: id, Name: d.Name, LastCheckAt: utils.NowUTCStr()}
-				if notFound {
-					db.DB.Create(&founded)
-				} else {
-					db.DB.Model(&founded).Updates(&founded)
-				}
+				db.DB.Model(&founded).Update("last_check_at", utils.NowUTCStr())
 			}
 		}
 

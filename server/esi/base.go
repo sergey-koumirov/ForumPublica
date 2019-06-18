@@ -101,7 +101,7 @@ func OAuthToken(data u.Values) (OAuthTokenJSON, error) {
 	)
 
 	if err1 != nil {
-		fmt.Println(err1)
+		fmt.Println("OAuthToken err1", err1)
 		return OAuthTokenJSON{}, err1
 	}
 
@@ -110,21 +110,21 @@ func OAuthToken(data u.Values) (OAuthTokenJSON, error) {
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	resp, err2 := client.Do(req)
 	if err2 != nil {
-		fmt.Println(err2)
+		fmt.Println("OAuthToken err2", err2)
 		return OAuthTokenJSON{}, err2
 	}
 	defer resp.Body.Close()
 
 	bodyBytes, err3 := ioutil.ReadAll(resp.Body)
 	if err3 != nil {
-		fmt.Println(err3)
+		fmt.Println("OAuthToken err3", err3)
 		return OAuthTokenJSON{}, err3
 	}
 
 	result := OAuthTokenJSON{}
 	err4 := json.Unmarshal(bodyBytes, &result)
 	if err4 != nil {
-		fmt.Println(err4)
+		fmt.Println("OAuthToken err4", err4)
 		return OAuthTokenJSON{}, err4
 	}
 

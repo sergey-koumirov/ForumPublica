@@ -25,6 +25,7 @@ require (
 	github.com/sqs/goreturns v0.0.0-20180302073349-83e02874ec12 // indirect
 	github.com/stretchr/testify v1.2.2 // indirect
 	github.com/tpng/gopkgs v0.0.0-20180428091733-81e90e22e204 // indirect
+	github.com/twotwotwo/sorts v0.0.0-20160814051341-bf5c1f2b8553
 	github.com/ugorji/go/codec v0.0.0-20180831062425-e253f1f20942 // indirect
 	github.com/zmb3/goaddimport v0.0.0-20170810013102-4ab94a07ab86 // indirect
 	github.com/zmb3/gogetdoc v0.0.0-20181009153131-0d07153cccef // indirect

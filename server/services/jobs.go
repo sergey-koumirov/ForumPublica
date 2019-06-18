@@ -88,7 +88,7 @@ func RefreshJobs(userID int64) {
 	for _, char := range chars {
 		db.DB.Exec(sql, char.ID)
 
-		api := char.GetESI()
+		api, _ := char.GetESI()
 		jobs, errEsi := api.CharactersIndustryJobs(char.ID)
 		if errEsi != nil {
 			fmt.Println("errEsi", errEsi)

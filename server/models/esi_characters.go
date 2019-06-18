@@ -33,10 +33,11 @@ func (char *Character) TableName() string {
 }
 
 //GetESI get ESI object for char
-func (char *Character) GetESI() esi.ESI {
+func (char *Character) GetESI() (esi.ESI, error) {
 	errGet := db.DB.First(&char, char.ID).Error
 	if errGet != nil {
 		fmt.Println("errGet:", errGet, char, char.ID)
+		return esi.ESI{}, errGet
 	}
 
 	result := esi.ESI{
@@ -55,5 +56,5 @@ func (char *Character) GetESI() esi.ESI {
 		}
 	}
 
-	return result
+	return result, nil
 }
