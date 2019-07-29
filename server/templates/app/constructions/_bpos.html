@@ -26,7 +26,7 @@
 <type-select label="Type" v-on:type-selected="TypeSelected($event)" mode="compact" filter="blueprint"></type-select>
 
 <div class="bpo bpo-item" v-for="bpo in construction.Blueprints" v-bind:class="{t2: bpo.IsT2}">
-    <img class="pointer copy-item"
+    <img class="pointer copy-item main"
       align="left"
       width="32" height="32"
       :data-clipboard-text="bpo.Model.TypeName"
@@ -65,22 +65,25 @@
         <span class="time">{{ bpo.CopyTime * bpo.InventCnt | seconds }}</span>
     </div>
 
-
-    <!--
-
-    <div class="copy" ng-show="bpo.IsT2">
+    <div class="t1" v-if="bpo.IsT2">
         <span class="grayed">T1 BPO:</span>
-        <span ngclipboard data-clipboard-text="{{bpo.BlueprintT1.BlueprintItem.name}}" class="glyphicon glyphicon-copy edit"></span>
-        {{bpo.BlueprintT1.BlueprintItem.name}}
+        <br>
+        <img class="pointer copy-item" width="32" height="32"
+        :data-clipboard-text="bpo.BlueprintTypeT1.Name"
+        :src="'https://imageserver.eveonline.com/Type/'+bpo.BlueprintTypeT1.ID+'_32.png'">
+
+        {{bpo.BlueprintTypeT1.Name}}
         <br>
         <span class="grayed">Decryptors:</span>
-        <div ng-repeat="d in bpo.BlueprintT1.Materials">
-            <span ng-click="OpenCharPopup($event, d.Type.id)" class="glyphicon glyphicon-stats edit"></span>&nbsp;
-            <span ngclipboard data-clipboard-text="{{d.Type.name}}" class="glyphicon glyphicon-copy edit"></span>&nbsp;
-            {{d.Type.name}} <span class="grayed">x</span> {{d.Quantity}}
+        <div v-for="d in bpo.T1Decryptors">
+            <img class="pointer copy-item" width="32" height="32"
+              :data-clipboard-text="d.Name"
+              :src="'https://imageserver.eveonline.com/Type/'+d.TypeID+'_32.png'">
+            <span class="oi oi-bar-chart pointer" v-on:click="OpenCharPopup($event, d.TypeID)"></span>
+            {{d.Name}} 
+            <span class="grayed">x</span> {{d.Quantity}}
         </div>
-
-    </div> -->
+    </div>
 
 </div>
 

@@ -108,13 +108,15 @@ func loadCn(result *models.CnRecord, cn models.Construction) {
 		result.Blueprints = append(
 			result.Blueprints,
 			models.CnBlueprint{
-				Model:      r,
-				IsT2:       static.IsT2BPO(r.TypeID),
-				DefaultME:  defaultME,
-				CopyTime:   int32(float64(static.T1CopyTime(r.TypeID)) * (1.0 - 5.0*5.0/100.0)),
-				InventTime: int32(float64(static.InventTime(r.TypeID)) * (1.0 - 3.0*5.0/100.0)),
-				InventCnt:  static.InventCount(r.TypeID, r.Qty),
-				Expenses:   r.Expenses,
+				Model:           r,
+				DefaultME:       defaultME,
+				CopyTime:        int32(float64(static.T1CopyTime(r.TypeID)) * (1.0 - 5.0*5.0/100.0)),
+				InventTime:      int32(float64(static.InventTime(r.TypeID)) * (1.0 - 3.0*5.0/100.0)),
+				InventCnt:       static.InventCount(r.TypeID, r.Qty),
+				Expenses:        r.Expenses,
+				IsT2:            static.IsT2BPO(r.TypeID),
+				BlueprintTypeT1: static.T1BPOTypeForT2(r.TypeID),
+				T1Decryptors:    static.T1DecryptorsForT2(r.TypeID),
 			},
 		)
 	}

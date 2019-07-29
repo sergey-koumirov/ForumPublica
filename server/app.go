@@ -59,6 +59,7 @@ func main() {
 	r.SetFuncMap(template.FuncMap{
 		"TimeoutClass": utils.TimeoutClass,
 		"Marshal":      utils.Marshal,
+		"TypeName":     utils.Marshal,
 	})
 
 	r.Static("/assets", "./server/assets")

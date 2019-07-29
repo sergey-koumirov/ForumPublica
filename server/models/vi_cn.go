@@ -7,22 +7,24 @@ import (
 
 //CnBlueprint model and calculated info about BPO
 type CnBlueprint struct {
-	Model       ConstructionBpo
-	Runs        *[]ConstructionBpoRun
-	Expenses    []ConstructionExpense
-	IsGoal      bool
-	IsT2        bool
-	CopyTime    int32
-	InventTime  int32
-	InventCnt   int64
-	ReadyQty    int64
-	InProdQty   int64
-	DefaultME   int32
-	PortionSize int32
-	MnfTime     int64
-	SgtRunQty   int64
-	SgtRepeats  int64
-	HasRuns     bool
+	Model           ConstructionBpo
+	Runs            *[]ConstructionBpoRun
+	Expenses        []ConstructionExpense
+	IsGoal          bool
+	IsT2            bool
+	CopyTime        int32
+	InventTime      int32
+	InventCnt       int64
+	ReadyQty        int64
+	InProdQty       int64
+	DefaultME       int32
+	PortionSize     int32
+	MnfTime         int64
+	SgtRunQty       int64
+	SgtRepeats      int64
+	HasRuns         bool
+	BlueprintTypeT1 *sdem.ZipType
+	T1Decryptors    *static.TypeIDQuantityNameList
 }
 
 //CnBlueprints array of CnBlueprint

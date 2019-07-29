@@ -173,7 +173,7 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
 }
 
 .construction .bpo-item.t2{
-  height: 84px;
+  height: 224px;
 }
 
 .construction .component-item{
@@ -296,7 +296,7 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
     right: 25px;
 }
 
-.construction .bpo img{
+.construction .bpo img.main{
     margin: 0px;
     position: absolute;
     top: 5px;
@@ -324,6 +324,13 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
   clear: both;
   position: absolute;
   top: 43px;
+  left: 4px;
+}
+
+.construction .bpo .t1{
+  clear: both;
+  position: absolute;
+  top: 83px;
   left: 4px;
 }
 

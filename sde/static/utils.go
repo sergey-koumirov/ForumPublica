@@ -3,7 +3,28 @@ package static
 import (
 	"ForumPublica/sde/models"
 	"math"
+	"sort"
 )
+
+// TypeIDQuantityName holds TypeID and Qty and Name
+type TypeIDQuantityName struct {
+	TypeID   int32
+	Quantity int64
+	Name     string
+}
+
+//TypeIDQuantityNameList array of TypeIDQuantityName
+type TypeIDQuantityNameList []TypeIDQuantityName
+
+func (s TypeIDQuantityNameList) Len() int {
+	return len(s)
+}
+func (s TypeIDQuantityNameList) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+func (s TypeIDQuantityNameList) Less(i, j int) bool {
+	return s[i].Name < s[j].Name
+}
 
 // TypeIDQuantity holds TypeDd and Qty pairs
 type TypeIDQuantity struct {
@@ -200,4 +221,39 @@ func InventCount(bpoID int32, qty int64) int64 {
 			float64(qty) / (float64(ProductQuantity(bpoID)) * float64(T2Runs(bpoID)) * T2Chance(bpoID)),
 		),
 	)
+}
+
+//T1BPOTypeForT2 T1 BPO for T2
+func T1BPOTypeForT2(bpoID int32) *models.ZipType {
+	t1Id, existsT1 := T2toT1[bpoID]
+	if existsT1 {
+		t1Bpo := Types[t1Id]
+		return &t1Bpo
+	}
+	return nil
+}
+
+//T1BPOForT2 T1 BPO for T2
+func T1BPOForT2(bpoID int32) *models.ZipBlueprint {
+	t1Id, existsT1 := T2toT1[bpoID]
+	if existsT1 {
+		t1Bpo := Blueprints[t1Id]
+		return &t1Bpo
+	}
+	return nil
+}
+
+//T1DecryptorsForT2 for T2
+func T1DecryptorsForT2(bpoID int32) *TypeIDQuantityNameList {
+	t1Id, existsT1 := T2toT1[bpoID]
+	if existsT1 {
+		result := make(TypeIDQuantityNameList, 0)
+		activity := *Blueprints[t1Id].Invention
+		for _, el := range activity.Materials {
+			result = append(result, TypeIDQuantityName{TypeID: el.TypeID, Quantity: el.Quantity, Name: Types[el.TypeID].Name})
+		}
+		sort.Sort(result)
+		return &result
+	}
+	return nil
 }
