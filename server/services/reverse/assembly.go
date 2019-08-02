@@ -50,30 +50,31 @@ func calcRunTime(result *models.CnBlueprints) {
 }
 
 func calcSgtRunQty(result *models.CnBlueprints) {
-	// #todo use PortionSize
 	for i := range *result {
 		bpo := (*result)[i]
 
-		days := math.Ceil(float64(bpo.MnfTime) / float64(24*60*60))
-
 		pQty := int64(math.Ceil(float64(bpo.Model.Qty) / float64(bpo.PortionSize)))
 
-		if int64(days) == 1 {
+		oneMnfTime := float64(bpo.MnfTime) / float64(pQty)
+		onePQty := int64(math.Floor(float64(24*60*60) / oneMnfTime))
+		onePQty10 := int64(math.Floor(float64(onePQty)/10) * 10)
+
+		if float64(onePQty-onePQty10)*oneMnfTime < float64(4*60*60) {
+			onePQty = onePQty10
+		}
+
+		if int64(pQty/onePQty) == 0 {
 			(*result)[i].SgtRepeats = 1
-		} else if pQty%int64(days*10) == 0 || (pQty < 150 && pQty%int64(days) == 0) {
-			(*result)[i].SgtRepeats = int64(days)
 		} else {
-			(*result)[i].SgtRepeats = int64(days) - 1
+			(*result)[i].SgtRepeats = int64(pQty / onePQty)
 		}
 
-		var qtyPerDay int64
-		if pQty < 150 {
-			qtyPerDay = int64(math.Ceil(float64(pQty) / days))
+		if int64(pQty/onePQty) == 0 {
+			(*result)[i].SgtRunQty = pQty
 		} else {
-			qtyPerDay = int64(math.Ceil(float64(pQty)/(10*days)) * 10)
+			(*result)[i].SgtRunQty = onePQty
 		}
 
-		(*result)[i].SgtRunQty = qtyPerDay
 	}
 }
 
