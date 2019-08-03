@@ -1,7 +1,7 @@
 package static
 
 import (
-	"ForumPublica/sde/models"
+	sdem "ForumPublica/sde/models"
 	"math"
 	"sort"
 )
@@ -115,14 +115,23 @@ func ApplyMEBonus(repeats int64, cnt int64, me int32, bonus1 float64, bonus2 flo
 }
 
 //ApplyTE apply TE to manufacturing time
-func ApplyTE(seconds int64, te int32) int64 {
-	return ApplyTEBonus(seconds, te, 0.0, 0.0, 0.0)
+func ApplyTE(seconds int64, te int32, skills []sdem.RawSkill) int64 {
+	return ApplyTEBonus(seconds, te, 0.0, 0.0, 0.0, skills)
 }
 
 //ApplyTEBonus apply TE and bonuses to manufacturing time
-func ApplyTEBonus(seconds int64, te int32, bonus1 float64, bonus2 float64, space float64) int64 {
+func ApplyTEBonus(seconds int64, te int32, bonus1 float64, bonus2 float64, space float64, skills []sdem.RawSkill) int64 {
 	citadelFactor := (1.0 - bonus1/100.0) * (1 - bonus2*space/100)
 	skillFactor := (1.0 - 4*5/100.0) * (1.0 - 3*5/100.0)
+	//3380 - Industry
+	//3388 - Advanced Industry
+	for _, sk := range skills {
+		if sk.TypeID != 3380 && sk.TypeID != 3388 {
+			skillFactor = skillFactor * (1.0 - 0.01*5)
+		}
+	}
+
+	// toso use science skills
 	teFactor := (1 - float64(te)/100.0)
 	return int64(math.Ceil(float64(seconds) * teFactor * skillFactor * citadelFactor))
 }
@@ -137,7 +146,7 @@ func ProductIDByBpoID(bpoID int32) int32 {
 }
 
 //ProductByBpoID get product by bpo id
-func ProductByBpoID(bpoID int32) models.ZipType {
+func ProductByBpoID(bpoID int32) sdem.ZipType {
 	return Types[ProductIDByBpoID(bpoID)]
 }
 
@@ -224,7 +233,7 @@ func InventCount(bpoID int32, qty int64) int64 {
 }
 
 //T1BPOTypeForT2 T1 BPO for T2
-func T1BPOTypeForT2(bpoID int32) *models.ZipType {
+func T1BPOTypeForT2(bpoID int32) *sdem.ZipType {
 	t1Id, existsT1 := T2toT1[bpoID]
 	if existsT1 {
 		t1Bpo := Types[t1Id]
@@ -234,7 +243,7 @@ func T1BPOTypeForT2(bpoID int32) *models.ZipType {
 }
 
 //T1BPOForT2 T1 BPO for T2
-func T1BPOForT2(bpoID int32) *models.ZipBlueprint {
+func T1BPOForT2(bpoID int32) *sdem.ZipBlueprint {
 	t1Id, existsT1 := T2toT1[bpoID]
 	if existsT1 {
 		t1Bpo := Blueprints[t1Id]

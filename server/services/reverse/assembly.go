@@ -43,7 +43,8 @@ func calcRunTime(result *models.CnBlueprints) {
 		bpo := (*result)[i]
 		t := int64(0)
 		for _, r := range *bpo.Runs {
-			t = t + int64(r.Repeats)*static.ApplyTE(r.Qty*int64(static.MnfTime(bpo.Model.TypeID)), r.TE)
+			skills := static.Blueprints[bpo.Model.TypeID].Manufacturing.Skills
+			t = t + int64(r.Repeats)*static.ApplyTE(r.Qty*int64(static.MnfTime(bpo.Model.TypeID)), r.TE, skills)
 		}
 		(*result)[i].MnfTime = t
 	}
@@ -57,11 +58,6 @@ func calcSgtRunQty(result *models.CnBlueprints) {
 
 		oneMnfTime := float64(bpo.MnfTime) / float64(pQty)
 		onePQty := int64(math.Floor(float64(24*60*60) / oneMnfTime))
-		onePQty10 := int64(math.Floor(float64(onePQty)/10) * 10)
-
-		if float64(onePQty-onePQty10)*oneMnfTime < float64(4*60*60) {
-			onePQty = onePQty10
-		}
 
 		if int64(pQty/onePQty) == 0 {
 			(*result)[i].SgtRepeats = 1
@@ -72,6 +68,10 @@ func calcSgtRunQty(result *models.CnBlueprints) {
 		if int64(pQty/onePQty) == 0 {
 			(*result)[i].SgtRunQty = pQty
 		} else {
+			onePQty10 := int64(math.Floor(float64(onePQty)/10) * 10)
+			if float64(onePQty-onePQty10)*oneMnfTime < float64(4*60*60) {
+				onePQty = onePQty10
+			}
 			(*result)[i].SgtRunQty = onePQty
 		}
 
