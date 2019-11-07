@@ -30,7 +30,7 @@
       align="left"
       width="32" height="32"
       :data-clipboard-text="bpo.Model.TypeName"
-      :src="'https://imageserver.eveonline.com/Type/'+bpo.Model.TypeID+'_32.png'">
+      :src="'https://images.evetech.net/types/'+bpo.Model.TypeID+'/render?size=32'">
     <div class="name">
       <span class="oi oi-bar-chart pointer" v-on:click="OpenCharPopup($event, bpo.Model.TypeID)"></span>
       {{bpo.Model.TypeName}}
@@ -70,7 +70,7 @@
         <br>
         <img class="pointer copy-item" width="32" height="32"
         :data-clipboard-text="bpo.BlueprintTypeT1.Name"
-        :src="'https://imageserver.eveonline.com/Type/'+bpo.BlueprintTypeT1.ID+'_32.png'">
+        :src="'https://images.evetech.net/types/'+bpo.BlueprintTypeT1.ID+'/render?size=32'">
 
         {{bpo.BlueprintTypeT1.Name}}
         <br>
@@ -78,7 +78,7 @@
         <div v-for="d in bpo.T1Decryptors">
             <img class="pointer copy-item" width="32" height="32"
               :data-clipboard-text="d.Name"
-              :src="'https://imageserver.eveonline.com/Type/'+d.TypeID+'_32.png'">
+              :src="'https://images.evetech.net/types/'+d.TypeID+'/render?size=32'">
             <span class="oi oi-bar-chart pointer" v-on:click="OpenCharPopup($event, d.TypeID)"></span>
             {{d.Name}} 
             <span class="grayed">x</span> {{d.Quantity}}
