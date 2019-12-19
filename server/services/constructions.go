@@ -70,7 +70,12 @@ func bposOrder(db *gorm.DB) *gorm.DB {
 //ConstructionGet get
 func ConstructionGet(userID int64, cnID int64) (models.CnRecord, error) {
 	cn := models.Construction{}
-	errSel := db.DB.Preload("Bpos.Expenses").Preload("Runs").Preload("Bpos", bposOrder).Where("id = ? and user_id = ?", cnID, userID).First(&cn).Error
+
+	errSel := db.DB.Preload("Bpos.Expenses").
+		Preload("Runs").
+		Preload("Bpos", bposOrder).
+		Where("id = ? and user_id = ?", cnID, userID).
+		First(&cn).Error
 
 	var result models.CnRecord
 
@@ -81,6 +86,23 @@ func ConstructionGet(userID int64, cnID int64) (models.CnRecord, error) {
 	loadCn(&result, cn)
 
 	return result, nil
+}
+
+//ConstructionByType get
+func ConstructionByType(bpoTypeID int32) models.CnRecord {
+	cn := models.Construction{}
+	cn.Bpos = models.ConstructionBpos{
+		models.ConstructionBpo{
+			Construction: &cn,
+			TypeID:       bpoTypeID,
+		},
+	}
+
+	var result models.CnRecord
+
+	loadCn(&result, cn)
+
+	return result
 }
 
 //ConstructionSaveBonus save citadel bonuses
