@@ -58,6 +58,9 @@ func calcSgtRunQty(result *models.CnBlueprints) {
 
 		oneMnfTime := float64(bpo.MnfTime) / float64(pQty)
 		onePQty := int64(math.Floor(float64(24*60*60) / oneMnfTime))
+		if onePQty == 0 {
+			onePQty = 1
+		}
 
 		if int64(pQty/onePQty) == 0 {
 			(*result)[i].SgtRepeats = 1

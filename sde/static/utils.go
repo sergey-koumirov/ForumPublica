@@ -164,7 +164,9 @@ func T1CopyTime(bpoID int32) int32 {
 	t1Id, existsT1 := T2toT1[bpoID]
 	if existsT1 {
 		t1Bpo := Blueprints[t1Id]
-		return t1Bpo.Copying.Time
+		if t1Bpo.Copying != nil {
+			return t1Bpo.Copying.Time
+		}
 	}
 	return 0
 }

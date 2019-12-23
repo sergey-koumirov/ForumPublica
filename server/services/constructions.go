@@ -89,12 +89,15 @@ func ConstructionGet(userID int64, cnID int64) (models.CnRecord, error) {
 }
 
 //ConstructionByType get
-func ConstructionByType(bpoTypeID int32) models.CnRecord {
+func ConstructionByType(bpoTypeID int32, qty int64) models.CnRecord {
 	cn := models.Construction{}
 	cn.Bpos = models.ConstructionBpos{
 		models.ConstructionBpo{
 			Construction: &cn,
 			TypeID:       bpoTypeID,
+			Qty:          qty,
+			ME:           2,
+			TE:           4,
 		},
 	}
 
@@ -123,9 +126,15 @@ func ConstructionSaveBonus(userID int64, cnID int64, params map[string]string) {
 func loadCn(result *models.CnRecord, cn models.Construction) {
 	result.Model = cn
 
+	checkPriceFor := make(map[int32]int32)
+
 	result.Blueprints = make(models.CnBlueprints, 0)
 	for _, r := range cn.Bpos {
 		defaultME, _ := static.DefaultMeTe(r.TypeID)
+		checkPriceFor[static.ProductIDByBpoID(r.TypeID)] = 1
+		for _, d := range *static.T1DecryptorsForT2(r.TypeID) {
+			checkPriceFor[d.TypeID] = 1
+		}
 
 		result.Blueprints = append(
 			result.Blueprints,
@@ -150,6 +159,11 @@ func loadCn(result *models.CnRecord, cn models.Construction) {
 	for i, m := range result.Materials {
 		typeIds[i] = m.Model.ID
 	}
+
+	for k := range checkPriceFor {
+		typeIds = append(typeIds, k)
+	}
+
 	AppraisalUpdatePrices(typeIds)
 	for i, m := range result.Materials {
 		result.Materials[i].Price = GetDefaultPrice(m.Model.ID)

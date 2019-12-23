@@ -28,7 +28,7 @@ func auth(method string, accessToken string, url string, result interface{}) (ti
 
 func authRequest(method string, accessToken string, url string, payload string, result interface{}) (time.Time, int64, error) {
 
-	fmt.Println("API:", url)
+	// fmt.Println("API:", url)
 
 	expires := time.Now()
 	pages := int64(1)
