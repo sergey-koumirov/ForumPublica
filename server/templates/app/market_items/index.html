@@ -11,6 +11,7 @@
 
   <table class="table table-striped table-sm">
     <tr>
+      <th></th>
       <th><b>What</b><br>Where</th>
       <th>Statistics</th>
       <th>My Orders</th>
@@ -19,7 +20,10 @@
     </tr>
     <tr v-for="record in data.Records">
       <td>
-      <b>{{record.TypeName}}</b>
+        <img align="left" width="64" height="64" :src="'https://images.evetech.net/types/'+record.Model.TypeID+'/icon?size=64'">
+      </td>
+      <td>        
+        <b>{{record.TypeName}}</b>
         <div class="round-border pointer" v-on:click="OpenWhereModal(record.Model.ID)">
             <span class="oi oi-plus"></span>
             <span class="oi oi-map-marker"></span>

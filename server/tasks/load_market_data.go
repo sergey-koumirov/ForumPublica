@@ -17,9 +17,9 @@ func LoadMarketData(user models.User) error {
 	if len(mls) > 0 {
 		updatePublicMarketStructures(mls[0].Character)
 
-		regions := getRegionsForLocations(&mls)
+		tir := getTypesInRegions(&mls)
 
-		fmt.Println(regions)
+		fmt.Println(tir)
 
 		//todo region-[items]
 
@@ -34,7 +34,7 @@ func LoadMarketData(user models.User) error {
 
 type typesInRegions map[int64][]int32
 
-func getRegionsForLocations(locations *[]models.MarketLocation) typesInRegions {
+func getTypesInRegions(locations *[]models.MarketLocation) typesInRegions {
 	result := make(typesInRegions)
 
 	for _, location := range *locations {

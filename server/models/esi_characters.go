@@ -50,7 +50,7 @@ func (char *Character) GetESI() (esi.ESI, error) {
 		errRAT := result.RefreshAccessToken()
 		if errRAT != nil {
 			fmt.Println("[GetESI.errRAT]:", errRAT)
-			return esi.ESI{}, fmt.Errorf("Problem with API. Please relogin as %s.", char.Name)
+			return esi.ESI{}, fmt.Errorf("Problem with API. Please relogin as %s", char.Name)
 		}
 
 		char.TokAccessToken = result.AccessToken

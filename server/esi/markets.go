@@ -76,6 +76,8 @@ func (esi *ESI) MarketsOrdersAll(regionID int64, typeID int64, orderType string)
 		return result, err
 	}
 
+	// #todo check pages
+
 	result = append(result, (response.R)...)
 
 	sort.Sort(result)
