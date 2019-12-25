@@ -25,6 +25,11 @@ func AppSearchLocation(c *gin.Context) {
 	u := user(c)
 	cid, _ := strconv.ParseInt(c.Query("cid"), 10, 64)
 
-	temp := services.SearchLocation(u.ID, cid, c.Query("term"), c.Query("filter"))
-	c.JSON(http.StatusOK, temp)
+	temp, err := services.SearchLocation(u.ID, cid, c.Query("term"), c.Query("filter"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, temp)
+	}
+
 }

@@ -29,7 +29,7 @@ func (obj *ESI) RefreshAccessToken() error {
 	}
 	info, errVer := OAuthVerify(token.AccessToken)
 	if errVer != nil {
-		fmt.Println("RefreshAccessToken/OAuthVerify", errVer)
+		fmt.Println("RefreshAccessToken/OAuthVerify", errVer, token.AccessToken)
 		return errVer
 	}
 	obj.AccessToken = token.AccessToken

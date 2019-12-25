@@ -98,18 +98,23 @@ func (s SearchLocationSorter) Less(i, j int) bool {
 }
 
 //SearchLocation search
-func SearchLocation(userID int64, charID int64, term string, filter string) SearchLocationResult {
+func SearchLocation(userID int64, charID int64, term string, filter string) (SearchLocationResult, error) {
 
 	result := SearchLocationSorter{Term: strings.ToLower(term), Array: make(SearchLocationResult, 0)}
 
 	char := models.Character{ID: charID}
 	errDb := db.DB.Where("user_id=?", userID).Find(&char).Error
 	if errDb != nil {
-		fmt.Println("SearchLocation:", errDb)
-		return result.Array
+		fmt.Println("SearchLocation.errDb:", errDb)
+		return result.Array, errDb
 	}
 
-	api, _ := char.GetESI()
+	api, errESI := char.GetESI()
+	if errESI != nil {
+		fmt.Println("SearchLocation.errESI:", errESI)
+		return result.Array, errESI
+	}
+
 	var filters []string
 	if filter == "stations" {
 		filters = []string{"structure", "station"}
@@ -136,7 +141,7 @@ func SearchLocation(userID int64, charID int64, term string, filter string) Sear
 
 	sort.Sort(result)
 
-	return result.Array
+	return result.Array, nil
 }
 
 func addSolarSystems(ids []int64, result *SearchLocationSorter) {

@@ -31,14 +31,15 @@ Vue.component('location-select', {
             delay: 500,
             cache: false,
             source: function(term, suggest){
-                axios.get('/app/search/location?term='+encodeURIComponent(term)+'&filter='+vm.filter+'&cid='+vm.characterId)
+                axios.get('/app/search/location?term='+encodeURIComponent(term)+'&filter='+(vm.filter||'')+'&cid='+vm.characterId)
                     .then(function (r) {
                         if(!!r.data){
                             suggest(r.data);
                         }
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response);
+                        Toastify({text: error.response.data.error, close: true, duration: -1}).showToast();
                     });
             },
             renderItem: function (item, search){

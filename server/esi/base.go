@@ -6,6 +6,7 @@ import (
 	"crypto/rand"
 	b64 "encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -44,10 +45,12 @@ var (
 
 //OAuthTokenJSON model
 type OAuthTokenJSON struct {
-	AccessToken  string `json:"access_token"`
-	TokenType    string `json:"token_type"`
-	ExpiresIn    int64  `json:"expires_in"`
-	RefreshToken string `json:"refresh_token"`
+	AccessToken      string `json:"access_token"`
+	TokenType        string `json:"token_type"`
+	ExpiresIn        int64  `json:"expires_in"`
+	RefreshToken     string `json:"refresh_token"`
+	Error            string `json:"error"`
+	ErrorDescription string `json:"error_description"`
 }
 
 //OAuthVerifyJSON model
@@ -126,6 +129,10 @@ func OAuthToken(data u.Values) (OAuthTokenJSON, error) {
 	if err4 != nil {
 		fmt.Println("OAuthToken err4", err4)
 		return OAuthTokenJSON{}, err4
+	}
+
+	if result.Error != "" {
+		return OAuthTokenJSON{}, errors.New(result.ErrorDescription)
 	}
 
 	return result, nil

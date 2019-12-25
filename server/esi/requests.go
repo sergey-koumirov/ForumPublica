@@ -36,7 +36,7 @@ func authRequest(method string, accessToken string, url string, payload string, 
 	client := &http.Client{}
 	req, errReq := http.NewRequest(method, url, bytes.NewBufferString(payload))
 	if errReq != nil {
-		fmt.Println(errReq)
+		fmt.Println("[authRequest.errReq]", errReq)
 		return expires, pages, errReq
 	}
 
@@ -84,12 +84,13 @@ func authRequest(method string, accessToken string, url string, payload string, 
 
 	bodyBytes, errRead := ioutil.ReadAll(resp.Body)
 	if errRead != nil {
+		fmt.Println("[authRequest.errRead]", errRead)
 		return expires, pages, errRead
 	}
 
-	//fmt.Println( url )
-	//fmt.Println(string(bodyBytes))
-	//fmt.Println( "Status: ", resp.StatusCode )
+	// fmt.Println(url)
+	// fmt.Println(string(bodyBytes))
+	// fmt.Println("Status: ", resp.StatusCode)
 
 	if resp.StatusCode == 200 {
 		errUn := json.Unmarshal(bodyBytes, result)

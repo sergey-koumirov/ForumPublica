@@ -47,7 +47,12 @@ func (char *Character) GetESI() (esi.ESI, error) {
 	}
 
 	if result.IsAccessTokenExpired() {
-		result.RefreshAccessToken()
+		errRAT := result.RefreshAccessToken()
+		if errRAT != nil {
+			fmt.Println("[GetESI.errRAT]:", errRAT)
+			return esi.ESI{}, fmt.Errorf("Problem with API. Please relogin as %s.", char.Name)
+		}
+
 		char.TokAccessToken = result.AccessToken
 		char.VerExpiresOn = result.ExpiresOn
 		errUpd := db.DB.Model(&char).Updates(&char).Error

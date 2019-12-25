@@ -4,20 +4,19 @@ import (
 	"ForumPublica/sde/static"
 	"ForumPublica/server/services"
 	"fmt"
-	"time"
 )
 
 //TaskUpdatePrices updates prices using ESI API
 func TaskUpdatePrices() error {
-	fmt.Println("TaskUpdatePrices started", time.Now().Format("2006-01-02 15:04:05"))
-	fmt.Println("TaskUpdatePrices finished", time.Now().Format("2006-01-02 15:04:05"))
+	// fmt.Println("TaskUpdatePrices started", time.Now().Format("2006-01-02 15:04:05"))
+	// fmt.Println("TaskUpdatePrices finished", time.Now().Format("2006-01-02 15:04:05"))
 
 	for _, b := range static.Blueprints {
-		if static.IsT2BPO(b.BlueprintTypeID) {
+		if static.IsT2BPO(b.BlueprintTypeID) && static.Types[b.BlueprintTypeID].Published {
 
 			qtyTotal := int64(100000)
 
-			fmt.Printf("[%d] %s\n", b.BlueprintTypeID, static.Types[b.BlueprintTypeID].Name)
+			// fmt.Printf("[%d] %s\n", b.BlueprintTypeID, static.Types[b.BlueprintTypeID].Name)
 			result := services.ConstructionByType(b.BlueprintTypeID, qtyTotal)
 
 			mTotal := 0.0
@@ -36,8 +35,10 @@ func TaskUpdatePrices() error {
 			uPrice := (iTotal + mTotal) * 1.05 / float64(qtyTotal)
 			jPrice := services.GetDefaultPrice(static.ProductIDByBpoID(b.BlueprintTypeID))
 
-			if jPrice/uPrice > 2 {
+			if jPrice/uPrice > 3 {
 				fmt.Println("-----------------------------")
+				t := static.Types[b.BlueprintTypeID]
+				fmt.Printf("[%d] %s\n", b.BlueprintTypeID, t.Name)
 				fmt.Println("Qty:", qtyTotal)
 				fmt.Printf("Materials: %f\n", mTotal)
 				fmt.Printf("Invent: %f\n", iTotal)
@@ -46,7 +47,6 @@ func TaskUpdatePrices() error {
 				fmt.Printf("Unit price: %f\n", uPrice)
 				fmt.Printf("Jita price: %f\n", jPrice)
 				fmt.Printf("K: %f\n", jPrice/uPrice)
-				fmt.Println("-----------------------------")
 			}
 
 		}
