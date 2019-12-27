@@ -19,8 +19,13 @@ set variables in var.json by example
 
 # db & migrations (MySQL)
 
+
+`sudo mysql -u root`
+
 `create database publica;`
 
 `create user 'publica'@'localhost' identified by 'publica';`
 
 `grant all privileges on publica.* to 'publica'@'localhost';`
+
+`./migrate -source=file://server/migrations -database=mysql://$(cat server/vars.json | jq '.DBC') up`
