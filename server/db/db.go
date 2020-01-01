@@ -36,7 +36,7 @@ func Migrate() error {
 }
 
 //Connect connect to db
-func Connect() {
+func Connect() error {
 
 	var err error
 	DB, err = gorm.Open("mysql", config.Vars.DBC)
@@ -45,4 +45,6 @@ func Connect() {
 	if err != nil {
 		fmt.Println("Failed to connect database:", err)
 	}
+
+	return err
 }

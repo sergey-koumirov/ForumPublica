@@ -16,8 +16,8 @@ func main() {
 		return
 	}
 
-	db.Connect()
-	if db.DB == nil {
+	errDB := db.Connect()
+	if errDB != nil {
 		return
 	}
 
