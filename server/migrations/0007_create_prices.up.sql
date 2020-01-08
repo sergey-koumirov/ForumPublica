@@ -4,8 +4,8 @@ create table fp_prices(
   id int not null auto_increment primary key,
   type_id int not null,
   source varchar(32) not null,
-  buy_price decimal(13,2) not null,
-  sell_price decimal(13,2) not null,
+  buy_price decimal(18,2) not null,
+  sell_price decimal(18,2) not null,
   dt varchar(32) not null,
   market_volume bigint
 );
