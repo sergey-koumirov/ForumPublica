@@ -17,6 +17,9 @@ var (
 	//Types map with all types description
 	Types models.ZipTypes
 
+	//Groups map with all types description
+	Groups models.ZipGroups
+
 	//Blueprints map with all blueprints description
 	Blueprints models.ZipBlueprints
 
@@ -52,6 +55,7 @@ func LoadJSONs(fileName string, resetCache bool) {
 		saveYAML(SolarSystems, "./sde/cache/_solar_systems.yaml")
 		saveYAML(RegionsList, "./sde/cache/_regions_list.yaml")
 		saveYAML(Regions, "./sde/cache/_regions.yaml")
+		saveYAML(Groups, "./sde/cache/_groups.yaml")
 	} else {
 		loadYAML(&Types, "./sde/cache/_types.yaml")
 		loadYAML(&Blueprints, "./sde/cache/_blueprints.yaml")
@@ -61,6 +65,7 @@ func LoadJSONs(fileName string, resetCache bool) {
 		loadYAML(&SolarSystems, "./sde/cache/_solar_systems.yaml")
 		loadYAML(&RegionsList, "./sde/cache/_regions_list.yaml")
 		loadYAML(&Regions, "./sde/cache/_regions.yaml")
+		loadYAML(&Groups, "./sde/cache/_groups.yaml")
 	}
 
 }
@@ -116,6 +121,10 @@ func loadZip(fileName string) {
 		// fmt.Printf("%+v\n", f.FileHeader.Name)
 		if f.FileHeader.Name == "sde/fsd/typeIDs.yaml" {
 			Types = *service.ImportTypes(f)
+		}
+
+		if f.FileHeader.Name == "sde/fsd/groupIDs.yaml" {
+			Groups = *service.ImportGroups(f)
 		}
 
 		if f.FileHeader.Name == "sde/fsd/blueprints.yaml" {

@@ -62,3 +62,13 @@ type RawName struct {
 	ItemID   int64  `yaml:"itemID"`
 	ItemName string `yaml:"itemName"`
 }
+
+//RawGroup yaml-to-go model
+type RawGroup struct {
+	CategoryID int32             `yaml:"categoryID"`
+	Names      map[string]string `yaml:"name"`
+	Published  bool              `yaml:"published"`
+}
+
+//RawGroups json-to-go model
+type RawGroups map[int32]RawGroup

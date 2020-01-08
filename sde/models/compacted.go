@@ -13,6 +13,17 @@ type ZipType struct {
 //ZipTypes in-memory cache model
 type ZipTypes map[int32]ZipType
 
+//ZipGroup in-memory cache model
+type ZipGroup struct {
+	ID         int32
+	CategoryID int32
+	Name       string
+	Published  bool
+}
+
+//ZipGroups in-memory cache model
+type ZipGroups map[int32]ZipGroup
+
 //ZipBlueprint in-memory cache model
 type ZipBlueprint struct {
 	BlueprintTypeID    int32

@@ -36,17 +36,18 @@ func TaskUpdatePrices() error {
 			jPrice := services.GetDefaultPrice(static.ProductIDByBpoID(b.BlueprintTypeID))
 
 			if jPrice/uPrice > 3 {
-				fmt.Println("-----------------------------")
+				// fmt.Println("-----------------------------")
 				t := static.Types[b.BlueprintTypeID]
-				fmt.Printf("[%d] %s\n", b.BlueprintTypeID, t.Name)
-				fmt.Println("Qty:", qtyTotal)
-				fmt.Printf("Materials: %f\n", mTotal)
-				fmt.Printf("Invent: %f\n", iTotal)
-				fmt.Printf("Jobs: %f\n", (iTotal+mTotal)*0.02)
-				fmt.Printf("Taxes: %f\n", (iTotal+mTotal)*0.03)
-				fmt.Printf("Unit price: %f\n", uPrice)
-				fmt.Printf("Jita price: %f\n", jPrice)
-				fmt.Printf("K: %f\n", jPrice/uPrice)
+				g := static.Groups[t.GroupID]
+				fmt.Printf("[%d - %s] %s ___ %f\n", b.BlueprintTypeID, g.Name, t.Name, jPrice/uPrice)
+				// fmt.Println("Qty:", qtyTotal)
+				// fmt.Printf("Materials: %f\n", mTotal)
+				// fmt.Printf("Invent: %f\n", iTotal)
+				// fmt.Printf("Jobs: %f\n", (iTotal+mTotal)*0.02)
+				// fmt.Printf("Taxes: %f\n", (iTotal+mTotal)*0.03)
+				// fmt.Printf("Unit price: %f\n", uPrice)
+				// fmt.Printf("Jita price: %f\n", jPrice)
+				// fmt.Printf("K: %f\n", jPrice/uPrice)
 			}
 
 		}
