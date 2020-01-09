@@ -25,4 +25,4 @@ set variables in var.json by example
 
 `grant all privileges on publica.* to 'publica'@'localhost';`
 
-`./migrate -source=file://server/migrations -database=mysql://$(cat server/vars.json | jq '.DBC') up`
+`./migrate -source=file://server/migrations -database=mysql://$(cat server/vars.json | jq '.DBC' -r) up`

@@ -27,6 +27,8 @@ func LoadMarketData(user models.User) error {
 
 		//todo char-citadel
 
+		//todo load closed_order_volume qty
+
 	}
 
 	return nil
