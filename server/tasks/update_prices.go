@@ -14,7 +14,7 @@ func TaskUpdatePrices() error {
 	for _, b := range static.Blueprints {
 		if static.IsT2BPO(b.BlueprintTypeID) && static.Types[b.BlueprintTypeID].Published {
 
-			qtyTotal := int64(100000)
+			qtyTotal := int64(1000)
 
 			// fmt.Printf("[%d] %s\n", b.BlueprintTypeID, static.Types[b.BlueprintTypeID].Name)
 			result := services.ConstructionByType(b.BlueprintTypeID, qtyTotal)
@@ -48,6 +48,12 @@ func TaskUpdatePrices() error {
 				// fmt.Printf("Unit price: %f\n", uPrice)
 				// fmt.Printf("Jita price: %f\n", jPrice)
 				// fmt.Printf("K: %f\n", jPrice/uPrice)
+			}
+
+			if jPrice/uPrice < 0.75 {
+				t := static.Types[b.BlueprintTypeID]
+				g := static.Groups[t.GroupID]
+				fmt.Printf("                                     [%d - %s] %s ___ %f\n", b.BlueprintTypeID, g.Name, t.Name, jPrice/uPrice)
 			}
 
 		}
