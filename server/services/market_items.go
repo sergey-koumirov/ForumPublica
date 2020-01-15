@@ -13,7 +13,12 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 
 	scope := db.DB.Where("user_id = ?", userID)
 	scope.Model(&models.MarketItem{}).Count(&total)
-	scope.Preload("Locations.Character").Order("id desc").Limit(MIPerPage).Offset((page - 1) * MIPerPage).Find(&cns)
+	scope.Preload("Locations.Character").
+		Preload("Stores.Character").
+		Order("id desc").
+		Limit(MIPerPage).
+		Offset((page - 1) * MIPerPage).
+		Find(&cns)
 
 	result := models.MiList{
 		Page:       page,
@@ -38,10 +43,25 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 			)
 		}
 
+		stores := make([]models.MiStore, 0)
+		for _, s := range r.Stores {
+			stores = append(
+				stores,
+				models.MiStore{
+					ID:            s.ID,
+					Type:          s.LocationType,
+					Name:          LocationName(s.LocationID, s.LocationType),
+					CharacterName: s.Character.Name,
+					Qty:           s.StoreQty,
+				},
+			)
+		}
+
 		temp := models.MiRecord{
 			Model:     r,
 			TypeName:  static.Types[r.TypeID].Name,
 			Locations: locations,
+			Stores:    stores,
 		}
 		result.Records = append(result.Records, temp)
 	}

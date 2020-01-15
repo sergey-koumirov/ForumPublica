@@ -62,7 +62,7 @@ func getTypesInRegions(locations *[]models.MarketLocation) typesInRegions {
 	return result
 }
 
-func updatePublicMarketStructures(character models.Character) {
+func updatePublicMarketStructures(character *models.Character) {
 	api, _ := character.GetESI()
 	d, _ := api.UniverseStructures("market")
 

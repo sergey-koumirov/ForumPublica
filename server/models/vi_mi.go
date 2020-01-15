@@ -8,11 +8,21 @@ type MiLocation struct {
 	CharacterName string
 }
 
+//MiStore model
+type MiStore struct {
+	ID            int64
+	Type          string
+	Name          string
+	CharacterName string
+	Qty           int64
+}
+
 //MiRecord market item info for index page
 type MiRecord struct {
 	Model     MarketItem
 	TypeName  string
 	Locations []MiLocation
+	Stores    []MiStore
 }
 
 //MiList list of market item info for index page

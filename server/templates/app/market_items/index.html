@@ -13,9 +13,9 @@
     <tr>
       <th></th>
       <th><b>What</b><br>Where</th>
-      <th>Statistics</th>
-      <th>My Orders</th>
-      <th>90d Sells</th>
+      <th></th>
+      <th></th>
+      <th></th>
       <th></th>
     </tr>
     <tr v-for="record in data.Records">
@@ -29,11 +29,25 @@
             <span class="oi oi-map-marker"></span>
         </div>
 
+        <div class="round-border pointer" v-on:click="OpenStoreModal(record.Model.ID)">
+          <span class="oi oi-plus"></span>
+          <span class="oi oi-box"></span>
+        </div>
+
         <ul class="simple-list">
           <li v-for="location in record.Locations">
             <img class="icon-suggestion" width="16" height="16" :src="'/assets/images/'+location.Type+'.png'" />
             {{location.Name}} <span class="gray">{{location.CharacterName}}</span>
             <span class="oi oi-delete pointer" @click="DeleteMarketLocation(record.Model.ID, location.ID)"></span>
+          </li>
+        </ul>
+
+        <hr v-if="record.Stores.length>0">
+        <ul class="simple-list" v-if="record.Stores.length>0">
+          <li v-for="store in record.Stores">
+            <img class="icon-suggestion" width="16" height="16" :src="'/assets/images/'+store.Type+'.png'" />
+            {{store.Name}} [{{store.Qty | number}}] <span class="gray">{{store.CharacterName}}</span>
+            <span class="oi oi-delete pointer" @click="DeleteMarketStore(record.Model.ID, store.ID)"></span>
           </li>
         </ul>
 
@@ -49,6 +63,7 @@
 
   <% template "app/market_items/_add_modal.html" . %>
   <% template "app/market_items/_where_modal.html" . %>
+  <% template "app/market_items/_store_modal.html" . %>
 
 </div>
 

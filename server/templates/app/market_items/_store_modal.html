@@ -1,0 +1,30 @@
+<% define "app/market_items/_store_modal.html" %>
+<modal v-if="showStoreModal" @close="CloseStoreModal()">
+    <div slot="body">
+        
+        <div class="form-group">
+            <label>API Character</label>
+            <select class="form-control form-control-sm" v-model="storeModal.characterId">
+            <option value="">---None---</option>
+            <option v-for="option in data.Characters" v-bind:value="option.ID">
+                    {{ option.Name }}
+                </option>
+            </select>
+        </div>
+
+        <location-select label="Warehouse" 
+            :character-id="storeModal.characterId" 
+            filter="stations"
+            v-on:type-selected="StoreSelected"
+            v-on:type-reset="StoreReset"></location-select>
+
+    </div>
+    <div slot="footer">
+        <button class="btn btn-default btn-sm modal-default-button" @click="CloseStoreModal()">Close</button>
+        <button class="btn btn-primary btn-sm modal-default-button" 
+            @click="AddStore()" 
+            :disabled="storeModal.selectedLocationId==null">Add</button>
+    </div>
+</modal>
+    
+<% end %>

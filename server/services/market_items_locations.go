@@ -9,11 +9,9 @@ import (
 
 //LocationParams location params
 type LocationParams struct {
-	LocationID        int64
-	LocationType      string
-	StoreLocationID   int64
-	StoreLocationType string
-	CharacterID       int64
+	LocationID   int64
+	LocationType string
+	CharacterID  int64
 }
 
 //MarketItemsLocationsCreate create
@@ -27,12 +25,31 @@ func MarketItemsLocationsCreate(userID int64, marketItemID int64, params Locatio
 	}
 
 	new := models.MarketLocation{
-		MarketItemID:      marketItemID,
-		LocationID:        params.LocationID,
-		LocationType:      params.LocationType,
-		StoreLocationID:   params.StoreLocationID,
-		StoreLocationType: params.StoreLocationType,
-		EsiCharacterID:    params.CharacterID,
+		MarketItemID:   marketItemID,
+		LocationID:     params.LocationID,
+		LocationType:   params.LocationType,
+		EsiCharacterID: params.CharacterID,
+	}
+	db.DB.Create(&new)
+
+}
+
+//MarketItemsStoresCreate create
+func MarketItemsStoresCreate(userID int64, marketItemID int64, params LocationParams) {
+
+	mi := models.MarketItem{}
+	errDb1 := db.DB.Model(&models.MarketItem{}).Where("id = ? and user_id = ?", marketItemID, userID).Find(&mi).Error
+	if errDb1 != nil {
+		fmt.Println("MarketItemsLocationsCreate: errDb1 ", errDb1)
+		return
+	}
+
+	new := models.MarketStore{
+		MarketItemID:   marketItemID,
+		LocationID:     params.LocationID,
+		LocationType:   params.LocationType,
+		EsiCharacterID: params.CharacterID,
+		StoreQty:       0,
 	}
 	db.DB.Create(&new)
 
@@ -52,6 +69,22 @@ func MarketItemsLocationsDelete(userID int64, miID int64, lID int64) {
 		return
 	}
 	l.Delete()
+}
+
+//MarketItemsStoresDelete delete
+func MarketItemsStoresDelete(userID int64, miID int64, sID int64) {
+	mi := models.MarketItem{}
+	errSel := db.DB.Where("id = ? and user_id = ?", miID, userID).First(&mi).Error
+	if errSel != nil {
+		return
+	}
+
+	s := models.MarketStore{}
+	errL := db.DB.Where("id = ? and market_item_id = ?", sID, miID).First(&s).Error
+	if errL != nil {
+		return
+	}
+	s.Delete()
 }
 
 //LocationName get location name

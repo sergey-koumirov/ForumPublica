@@ -51,6 +51,7 @@ var marketItems = new Vue({
       data: {},
       showAddModal: false,
       showWhereModal: false,
+      showStoreModal: false,
       isLoading: false,
       addModal: {
         selectedTypeId: null,
@@ -60,8 +61,12 @@ var marketItems = new Vue({
         characterId: "",
         selectedLocationId: null,
         selectedLocationType: null,
-        selectedWarehouseId: null,
-        selectedWarehouseType: null,
+      },
+      storeModal: {
+        marketItemId: null,
+        characterId: "",
+        selectedLocationId: null,
+        selectedLocationType: null,        
       }
     },
 
@@ -82,8 +87,13 @@ var marketItems = new Vue({
       OpenWhereModal: function(marketItemId){
         this.whereModal.marketItemId = marketItemId;        
         this.whereModal.selectedLocationId = null;
-        this.whereModal.selectedWarehouseId = null;
         this.showWhereModal = true;
+      },
+
+      OpenStoreModal: function(marketItemId){
+        this.storeModal.marketItemId = marketItemId;        
+        this.storeModal.selectedLocationId = null;
+        this.showStoreModal = true;
       },
 
       CloseAddModal: function(){
@@ -92,6 +102,10 @@ var marketItems = new Vue({
 
       CloseWhereModal: function(){
         this.showWhereModal = false;
+      },
+
+      CloseStoreModal: function(){
+        this.showStoreModal = false;
       },
 
       TypeSelected: function(typeID){
@@ -109,34 +123,49 @@ var marketItems = new Vue({
       LocationReset: function(){
         this.whereModal.selectedLocationId = null;
       },
-      WarehouseSelected: function(id,text,type){
-        this.whereModal.selectedWarehouseId = id;
-        this.whereModal.selectedWarehouseType = type;
+
+      StoreSelected: function(id,text,type){
+        this.storeModal.selectedLocationId = id;
+        this.storeModal.selectedLocationType = type;
       },
-      WarehouseReset: function(){
-        this.whereModal.selectedWarehouseId = null;
+      StoreReset: function(){
+        this.storeModal.selectedLocationId = null;
       },
 
       AddWhere: function(){
-        //todo insert
         post(
           this, 
           '/app/market_item/'+this.whereModal.marketItemId+'/locations', 
           {
             LocationID: this.whereModal.selectedLocationId,
             LocationType: this.whereModal.selectedLocationType,
-            StoreLocationID: this.whereModal.selectedWarehouseId,
-            StoreLocationType: this.whereModal.selectedWarehouseType,
             CharacterID: this.whereModal.characterId,
           }
         );
         this.CloseWhereModal();
       },
 
+      AddStore: function(){
+        post(
+          this, 
+          '/app/market_item/'+this.storeModal.marketItemId+'/stores', 
+          {
+            LocationID: this.storeModal.selectedLocationId,
+            LocationType: this.storeModal.selectedLocationType,
+            CharacterID: this.storeModal.characterId,
+          }
+        );
+        this.CloseStoreModal();
+      },
+
+
       DeleteMarketLocation: function(miId, lId){
         del(this, '/app/market_item/'+miId+'/location/'+lId+'?page='+this.data.Page);
+      },
+      
+      DeleteMarketStore: function(miId, sId){
+        del(this, '/app/market_item/'+miId+'/store/'+sId+'?page='+this.data.Page);
       }
-
     },
 });
 
