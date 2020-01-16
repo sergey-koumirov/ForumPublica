@@ -19,7 +19,10 @@ func LoadMarketData(user models.User) error {
 
 		tir := getTypesInRegions(&mls)
 
-		fmt.Println(tir)
+		tis := getTypesInStructures(&mls)
+
+		fmt.Printf("%+v\n", tir)
+		fmt.Printf("%+v\n", tis)
 
 		//todo region-[items]
 
@@ -34,10 +37,34 @@ func LoadMarketData(user models.User) error {
 	return nil
 }
 
-type typesInRegions map[int64][]int32
+// ########################################################################################################################
 
-func getTypesInRegions(locations *[]models.MarketLocation) typesInRegions {
-	result := make(typesInRegions)
+type mapOfArrays map[int64][]int32
+
+func getTypesInStructures(locations *[]models.MarketLocation) mapOfArrays {
+	result := make(mapOfArrays)
+
+	for _, location := range *locations {
+
+		if location.LocationType == "structure" {
+			addToMapOfArrays(result, location.LocationID, location.MarketItem.TypeID)
+		}
+
+		if location.LocationType == "solar_system" {
+			structures := make([]models.Location, 0)
+			db.DB.Where("solar_system_id = ? and id > ?", location.LocationID, models.StationMaxID).Find(&structures)
+			for _, s := range structures {
+				addToMapOfArrays(result, s.ID, location.MarketItem.TypeID)
+			}
+		}
+
+	}
+
+	return result
+}
+
+func getTypesInRegions(locations *[]models.MarketLocation) mapOfArrays {
+	result := make(mapOfArrays)
 
 	for _, location := range *locations {
 		regionID := int64(0)
@@ -50,13 +77,7 @@ func getTypesInRegions(locations *[]models.MarketLocation) typesInRegions {
 			regionID = l.RegionID
 		}
 
-		temp, _ := result[regionID]
-
-		if utils.FindInt32(temp, location.MarketItem.TypeID) == -1 {
-			temp = append(temp, location.MarketItem.TypeID)
-		}
-
-		result[regionID] = temp
+		addToMapOfArrays(result, regionID, location.MarketItem.TypeID)
 	}
 
 	return result
@@ -78,4 +99,12 @@ func updatePublicMarketStructures(character *models.Character) {
 		}
 	}
 
+}
+
+func addToMapOfArrays(result mapOfArrays, lid int64, tid int32) {
+	temp, _ := result[lid]
+	if utils.FindInt32(temp, tid) == -1 {
+		temp = append(temp, tid)
+	}
+	result[lid] = temp
 }

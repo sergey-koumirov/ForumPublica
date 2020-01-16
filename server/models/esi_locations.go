@@ -1,5 +1,11 @@
 package models
 
+//StationMinID minimal possible station ID
+var StationMinID = int64(60_000_000)
+
+//StationMaxID maximum possible station ID
+var StationMaxID = int64(64_000_000)
+
 //Location location names
 type Location struct {
 	ID            int64  `gorm:"column:id;primary_key"`

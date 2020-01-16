@@ -12,7 +12,7 @@ import (
 //AddLocation add location to DB
 func AddLocation(api esi.ESI, id int64, name string, solarSystemID int64, regionID int64) models.Location {
 
-	if id >= 60000000 && id <= 64000000 && (solarSystemID == 0 || regionID == 0) {
+	if id >= models.StationMinID && id <= models.StationMaxID && (solarSystemID == 0 || regionID == 0) {
 		data, err := api.UniverseStations(id)
 		if err == nil {
 			solarSystemID = data.SystemID
@@ -22,7 +22,7 @@ func AddLocation(api esi.ESI, id int64, name string, solarSystemID int64, region
 		}
 	}
 
-	if id > 64000000 && (name == "" || solarSystemID == 0 || regionID == 0) {
+	if id > models.StationMaxID && (name == "" || solarSystemID == 0 || regionID == 0) {
 		data, err := api.UniverseStructure(id)
 		if err == nil {
 			name = data.Name
