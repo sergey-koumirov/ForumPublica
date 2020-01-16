@@ -10,6 +10,7 @@ type MarketItem struct {
 
 	Locations []MarketLocation `gorm:"foreignkey:MarketItemID"`
 	Stores    []MarketStore    `gorm:"foreignkey:MarketItemID"`
+	Datas     []MarketData     `gorm:"foreignkey:MarketLocationID"`
 }
 
 //TableName table name
@@ -25,6 +26,9 @@ func (m *MarketItem) Delete() {
 	for _, s := range m.Stores {
 		s.Delete()
 	}
+	for _, d := range m.Datas {
+		d.Delete()
+	}
 	db.DB.Delete(&m)
 }
 
@@ -36,7 +40,6 @@ type MarketLocation struct {
 	LocationID     int64  `gorm:"column:location_id"`
 	EsiCharacterID int64  `gorm:"column:esi_character_id"`
 
-	Datas      []MarketData `gorm:"foreignkey:MarketLocationID"`
 	MarketItem *MarketItem
 	Character  *Character `gorm:"foreignkey:EsiCharacterID"`
 }
@@ -48,9 +51,6 @@ func (m *MarketLocation) TableName() string {
 
 //Delete delete model and children
 func (m *MarketLocation) Delete() {
-	for _, d := range m.Datas {
-		d.Delete()
-	}
 	db.DB.Delete(&m)
 }
 
@@ -79,16 +79,16 @@ func (m *MarketStore) Delete() {
 
 //MarketData market data for market location
 type MarketData struct {
-	ID               int64   `gorm:"column:id;primary_key"`
-	MarketLocationID int64   `gorm:"column:market_location_id"`
-	Dt               string  `gorm:"column:dt"`
-	SellVol          int64   `gorm:"column:sell_vol"`
-	SellLowestPrice  float64 `gorm:"column:sell_lowest_price"`
-	BuyVol           int64   `gorm:"column:buy_vol"`
-	BuyHighestPrice  float64 `gorm:"column:buy_highest_price"`
-	LowerVol         int64   `gorm:"column:lower_vol"`
-	MyVol            int64   `gorm:"column:my_vol"`
-	GreaterVol       int64   `gorm:"column:greater_vol"`
+	ID              int64   `gorm:"column:id;primary_key"`
+	MarketItemID    int64   `gorm:"column:market_item_id"`
+	Dt              string  `gorm:"column:dt"`
+	SellVol         int64   `gorm:"column:sell_vol"`
+	SellLowestPrice float64 `gorm:"column:sell_lowest_price"`
+	BuyVol          int64   `gorm:"column:buy_vol"`
+	BuyHighestPrice float64 `gorm:"column:buy_highest_price"`
+	LowerVol        int64   `gorm:"column:lower_vol"`
+	MyVol           int64   `gorm:"column:my_vol"`
+	GreaterVol      int64   `gorm:"column:greater_vol"`
 
 	Screenshots []MarketScreenshot `gorm:"foreignkey:MarketLocationID"`
 }

@@ -2,7 +2,6 @@ package esi
 
 import (
 	"fmt"
-	"sort"
 	"time"
 )
 
@@ -17,7 +16,7 @@ type MarketsOrder struct {
 	Price        float64 `json:"price"`
 	Range        string  `json:"range"`
 	SystemID     int64   `json:"system_id"`
-	TypeID       int64   `json:"type_id"`
+	TypeID       int32   `json:"type_id"`
 	VolumeRemain int64   `json:"volume_remain"`
 	VolumeTotal  int64   `json:"volume_total"`
 }
@@ -43,7 +42,7 @@ type MarketsOrdersResponse struct {
 }
 
 //MarketsOrders ESI /markets/{region_id}/orders/
-func (esi *ESI) MarketsOrders(regionID int64, typeID int64, orderType string, page int64) (*MarketsOrdersResponse, error) {
+func (esi *ESI) MarketsOrders(regionID int64, typeID int32, orderType string, page int64) (*MarketsOrdersResponse, error) {
 	url := fmt.Sprintf("%s/markets/%d/orders/?page=%d", ESIRootURL, regionID, page)
 
 	if typeID > 0 {
@@ -66,21 +65,65 @@ func (esi *ESI) MarketsOrders(regionID int64, typeID int64, orderType string, pa
 	return &result, nil
 }
 
-//MarketsOrdersAll all orders sorted
-func (esi *ESI) MarketsOrdersAll(regionID int64, typeID int64, orderType string) (MarketsOrdersArray, error) {
+//MarketsOrdersAll all orders
+func (esi *ESI) MarketsOrdersAll(regionID int64, typeID int32, orderType string) (MarketsOrdersArray, error) {
 
 	result := make(MarketsOrdersArray, 0)
-	response, err := esi.MarketsOrders(regionID, typeID, orderType, 1)
-
-	if err != nil {
-		return result, err
+	response, err1 := esi.MarketsOrders(regionID, typeID, orderType, 1)
+	if err1 != nil {
+		return result, err1
 	}
 
-	// #todo check pages
+	result = append(result, (response.R)...)
+	for i := int64(2); i <= response.Pages; i++ {
+		response, err2 := esi.MarketsOrders(regionID, typeID, orderType, i)
+		if err2 != nil {
+			return result, err2
+		}
+		result = append(result, (response.R)...)
+	}
+
+	// sort.Sort(result)
+	return result, nil
+}
+
+//MarketsStructures ESI /markets/structures/{structure_id}/
+func (esi *ESI) MarketsStructures(structureID int64, page int64) (*MarketsOrdersResponse, error) {
+	url := fmt.Sprintf("%s/markets/structures/%d/?page=%d", ESIRootURL, structureID, page)
+
+	records := make(MarketsOrdersArray, 0)
+	expires, pages, err := get(url, &records)
+	if err != nil {
+		return nil, err
+	}
+
+	result := MarketsOrdersResponse{}
+	result.R = records
+	result.Pages = pages
+	result.Expires = expires
+
+	return &result, nil
+}
+
+//MarketsStructuresAll all orders
+func (esi *ESI) MarketsStructuresAll(structureID int64) (MarketsOrdersArray, error) {
+
+	result := make(MarketsOrdersArray, 0)
+	response, err1 := esi.MarketsStructures(structureID, 1)
+	if err1 != nil {
+		return result, err1
+	}
 
 	result = append(result, (response.R)...)
+	for i := int64(2); i <= response.Pages; i++ {
+		response, err2 := esi.MarketsStructures(structureID, i)
+		if err2 != nil {
+			return result, err2
+		}
+		result = append(result, (response.R)...)
+	}
 
-	sort.Sort(result)
+	// sort.Sort(result)
 	return result, nil
 }
 
