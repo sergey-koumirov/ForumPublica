@@ -139,7 +139,7 @@ func ApplyTEBonus(seconds int64, te int32, bonus1 float64, bonus2 float64, space
 //ProductIDByBpoID get product id ny bpo id
 func ProductIDByBpoID(bpoID int32) int32 {
 	bpo := Blueprints[bpoID]
-	if bpo.Manufacturing != nil {
+	if bpo.Manufacturing != nil && len(bpo.Manufacturing.Products) > 0 {
 		return bpo.Manufacturing.Products[0].TypeID
 	}
 	return 0

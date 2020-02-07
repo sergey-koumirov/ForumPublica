@@ -3,20 +3,28 @@ package tasks
 import (
 	"ForumPublica/sde/static"
 	"ForumPublica/server/services"
+	"ForumPublica/server/utils"
 	"fmt"
+	"time"
 )
 
 //TaskUpdatePrices updates prices using ESI API
 func TaskUpdatePrices() error {
-	// fmt.Println("TaskUpdatePrices started", time.Now().Format("2006-01-02 15:04:05"))
-	// fmt.Println("TaskUpdatePrices finished", time.Now().Format("2006-01-02 15:04:05"))
+	fmt.Println("TaskUpdatePrices started", time.Now().Format("2006-01-02 15:04:05"))
+	above := make([]string, 0)
+	below := make([]string, 0)
 
 	for _, b := range static.Blueprints {
-		if static.IsT2BPO(b.BlueprintTypeID) && static.Types[b.BlueprintTypeID].Published {
+		t := static.Types[b.BlueprintTypeID]
+		product := static.ProductByBpoID(b.BlueprintTypeID)
+
+		if static.IsT2BPO(b.BlueprintTypeID) &&
+			static.Types[b.BlueprintTypeID].Published &&
+			utils.FindInt32([]int32{1707, 1708, 973}, t.GroupID) == -1 &&
+			utils.FindInt32([]int32{}, product.GroupID) == -1 {
 
 			qtyTotal := int64(1000)
 
-			// fmt.Printf("[%d] %s\n", b.BlueprintTypeID, static.Types[b.BlueprintTypeID].Name)
 			result := services.ConstructionByType(b.BlueprintTypeID, qtyTotal)
 
 			mTotal := 0.0
@@ -37,28 +45,34 @@ func TaskUpdatePrices() error {
 
 			if jPrice/uPrice > 3 {
 				// fmt.Println("-----------------------------")
-				t := static.Types[b.BlueprintTypeID]
 				g := static.Groups[t.GroupID]
-				fmt.Printf("[%d - %s] %s ___ %f\n", b.BlueprintTypeID, g.Name, t.Name, jPrice/uPrice)
-				// fmt.Println("Qty:", qtyTotal)
-				// fmt.Printf("Materials: %f\n", mTotal)
-				// fmt.Printf("Invent: %f\n", iTotal)
-				// fmt.Printf("Jobs: %f\n", (iTotal+mTotal)*0.02)
-				// fmt.Printf("Taxes: %f\n", (iTotal+mTotal)*0.03)
-				// fmt.Printf("Unit price: %f\n", uPrice)
-				// fmt.Printf("Jita price: %f\n", jPrice)
-				// fmt.Printf("K: %f\n", jPrice/uPrice)
+				above = append(above, fmt.Sprintf("%10d | %-34s | %-60s | %6.2f", b.BlueprintTypeID, g.Name, t.Name, jPrice/uPrice))
 			}
 
-			if jPrice/uPrice < 0.75 {
+			if jPrice/uPrice < 0.75 && utils.FindInt32([]int32{166, 722, 725, 726, 727, 787, 1994}, t.GroupID) == -1 {
 				t := static.Types[b.BlueprintTypeID]
 				g := static.Groups[t.GroupID]
-				fmt.Printf("                                     [%d - %s] %s ___ %f\n", b.BlueprintTypeID, g.Name, t.Name, jPrice/uPrice)
+				below = append(below, fmt.Sprintf("%10d | %-34s | %-60s | %6.2f", b.BlueprintTypeID, g.Name, t.Name, jPrice/uPrice))
 			}
 
 		}
 
 	}
+
+	fmt.Println()
+	fmt.Println("-----------ABOVE---------------")
+	for _, s := range above {
+		fmt.Println(s)
+	}
+	fmt.Println()
+
+	fmt.Println("-----------BELOW---------------")
+	for _, s := range below {
+		fmt.Println(s)
+	}
+	fmt.Println()
+
+	fmt.Println("TaskUpdatePrices finished", time.Now().Format("2006-01-02 15:04:05"))
 
 	return nil
 }
