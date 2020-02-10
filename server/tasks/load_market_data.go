@@ -12,83 +12,126 @@ import (
 )
 
 //LoadMarketData updates prices using ESI API
-func LoadMarketData(user models.User) error {
-	mls := make([]models.MarketLocation, 0)
-	db.DB.Preload("MarketItem").Preload("Character").Find(&mls)
+func LoadMarketData() error {
+	fmt.Println("LoadMarketData started", time.Now().Format("2006-01-02 15:04:05"))
 
-	if len(mls) > 0 {
-		updatePublicMarketStructures(mls[0].Character)
+	mrkLocs := make([]models.MarketLocation, 0)
+	db.DB.Preload("MarketItem").Preload("Character").Find(&mrkLocs)
+
+	if len(mrkLocs) > 0 {
+		updatePublicMarketStructures(mrkLocs[0].Character)
 
 		dt := time.Now().UTC().Format("2006-01-02 15:04:05")
 
 		orders := make(map[int64]esi.MarketsOrdersArray)
 
-		loadOrdersFromRegions(&mls, orders)
-		loadOrdersFromStructures(&mls, orders)
+		loadOrdersFromRegions(&mrkLocs, orders)
+		loadOrdersFromStructures(&mrkLocs, orders)
 
 		marketItems := make([]models.MarketItem, 0)
-		db.DB.Preload("Locations.Character").Find(&marketItems)
+		db.DB.Preload("Locations.Character").Preload("Stores.Character").Find(&marketItems)
 
-		charOrdersCache := make(map[int64][]int64)
+		charOrdersCache := preloadCharOrders(marketItems)
+		charItemsCache := preloadCharItems(marketItems)
 
 		for _, mi := range marketItems {
-
-			preloadCharOrders(charOrdersCache, mi)
-
-			createMarketData(mi, dt, orders[mi.ID])
+			createMarketData(mi, dt, orders[mi.ID], charOrdersCache)
+			updateMarketStores(mi, charItemsCache)
 		}
-
-		for miid, oo := range orders {
-			fmt.Printf("%d:\n", miid)
-			for _, o := range oo {
-				fmt.Printf("    %+v\n", o)
-			}
-		}
-
-		//todo region-[items]
-
-		//todo load public market citadels
-
-		//todo load closed_order_volume qty
-
 	}
+	fmt.Println("LoadMarketData finished", time.Now().Format("2006-01-02 15:04:05"))
 
 	return nil
 }
 
 // ########################################################################################################################
 
+type itemsByChar map[int64]esi.ItemsByLocation
+
+func preloadCharItems(mis []models.MarketItem) itemsByChar {
+	chars := make(map[int64]models.Character)
+	for _, mi := range mis {
+		for _, store := range mi.Stores {
+			chars[store.EsiCharacterID] = *store.Character
+		}
+	}
+
+	result := make(itemsByChar)
+
+	for _, char := range chars {
+		api, _ := char.GetESI()
+		d, err := api.CharactersAssetsTypeIdsByLocationID(char.ID)
+		if err != nil {
+			fmt.Println("preloadCharItems: ", err, char)
+		} else {
+			result[char.ID] = d
+		}
+	}
+
+	return result
+}
+
+func updateMarketStores(mi models.MarketItem, items itemsByChar) {
+	for _, store := range mi.Stores {
+		charItems, exChar := items[store.EsiCharacterID]
+		if exChar {
+			locItems, exLoc := charItems[store.LocationID]
+			if exLoc {
+				qty, exType := locItems[mi.TypeID]
+				if exType {
+					store.StoreQty = qty
+				} else {
+					store.StoreQty = 0
+				}
+				err := db.DB.Save(&store).Error
+				if err != nil {
+					fmt.Println("updateMarketStores: ", err)
+				}
+			}
+		}
+	}
+}
+
 type mapOfArrays map[int64][]int32
 
-func preloadCharOrders(charOrdersCache map[int64][]int64, mi models.MarketItem) {
-	temp := charOrdersCache[mi.ID]
+func preloadCharOrders(mis []models.MarketItem) map[int64][]int64 {
+	charOrdersCache := make(map[int64][]int64)
+
 	chars := make(map[int64]models.Character)
-	for _, location := range mi.Locations {
-		chars[location.Character.ID] = *location.Character
+	for _, mi := range mis {
+		for _, location := range mi.Locations {
+			chars[location.Character.ID] = *location.Character
+		}
 	}
 
 	for cid, char := range chars {
 		api, _ := char.GetESI()
 		r, _ := api.CharactersOrders(cid)
-
-		for _, order := range r.R {
-			temp = append(temp, order.OrderID)
-			// todo cache by char
+		charOrdersCache[char.ID] = make([]int64, len(r.R))
+		for i, order := range r.R {
+			charOrdersCache[char.ID][i] = order.OrderID
 		}
-
 	}
 
-	charOrdersCache[mi.ID] = temp
+	return charOrdersCache
 }
 
-func createMarketData(mi models.MarketItem, dt string, orders esi.MarketsOrdersArray) {
+func createMarketData(mi models.MarketItem, dt string, orders esi.MarketsOrdersArray, charOrdersCache map[int64][]int64) {
 
 	var (
 		sellVol         int64
 		sellLowestPrice float64
 		buyVol          int64
 		buyHighestPrice float64
+		myVol           int64
 	)
+
+	charIds := make([]int64, 0)
+	for _, location := range mi.Locations {
+		if utils.FindInt64(charIds, location.Character.ID) == -1 {
+			charIds = append(charIds, location.Character.ID)
+		}
+	}
 
 	for _, order := range orders {
 		if !order.IsBuyOrder {
@@ -96,6 +139,18 @@ func createMarketData(mi models.MarketItem, dt string, orders esi.MarketsOrdersA
 			if sellLowestPrice > order.Price || sellLowestPrice == 0 {
 				sellLowestPrice = order.Price
 			}
+
+			isMy := false
+			for _, cid := range charIds {
+				if utils.FindInt64(charOrdersCache[cid], order.OrderID) > -1 {
+					isMy = true
+					break
+				}
+			}
+			if isMy {
+				myVol = myVol + order.VolumeRemain
+			}
+
 		} else {
 			buyVol = buyVol + order.VolumeRemain
 			if buyHighestPrice < order.Price {
@@ -104,18 +159,41 @@ func createMarketData(mi models.MarketItem, dt string, orders esi.MarketsOrdersA
 		}
 	}
 
-	data := models.MarketData{
+	dataPoint := models.MarketData{
 		MarketItemID:    mi.ID,
 		Dt:              dt,
 		SellVol:         sellVol,
 		SellLowestPrice: sellLowestPrice,
 		BuyVol:          buyVol,
 		BuyHighestPrice: buyHighestPrice,
-		LowerVol:        0,
-		MyVol:           0,
-		GreaterVol:      0,
+		MyVol:           myVol,
 	}
-	db.DB.Create(&data)
+	errDb := db.DB.Create(&dataPoint).Error
+	if errDb != nil {
+		fmt.Println("createMarketData: ", errDb)
+	}
+
+	for _, order := range orders {
+		if !order.IsBuyOrder {
+
+			isMy := false
+			for _, cid := range charIds {
+				if utils.FindInt64(charOrdersCache[cid], order.OrderID) > -1 {
+					isMy = true
+					break
+				}
+			}
+
+			screenPoint := models.MarketScreenshot{
+				MarketDataID: dataPoint.ID,
+				Vol:          order.VolumeRemain,
+				Price:        order.Price,
+				IsMy:         isMy,
+			}
+			db.DB.Create(&screenPoint)
+		}
+	}
+
 }
 
 func loadOrdersFromStructures(locations *[]models.MarketLocation, result map[int64]esi.MarketsOrdersArray) {

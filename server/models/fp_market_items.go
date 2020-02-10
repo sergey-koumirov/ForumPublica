@@ -86,9 +86,7 @@ type MarketData struct {
 	SellLowestPrice float64 `gorm:"column:sell_lowest_price"`
 	BuyVol          int64   `gorm:"column:buy_vol"`
 	BuyHighestPrice float64 `gorm:"column:buy_highest_price"`
-	LowerVol        int64   `gorm:"column:lower_vol"`
 	MyVol           int64   `gorm:"column:my_vol"`
-	GreaterVol      int64   `gorm:"column:greater_vol"`
 
 	Screenshots []MarketScreenshot `gorm:"foreignkey:MarketLocationID"`
 }
@@ -112,6 +110,7 @@ type MarketScreenshot struct {
 	MarketDataID int64   `gorm:"column:market_data_id"`
 	Vol          int64   `gorm:"column:vol"`
 	Price        float64 `gorm:"column:price"`
+	IsMy         bool    `gorm:"column:is_my"`
 }
 
 //TableName table name

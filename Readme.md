@@ -30,4 +30,4 @@ set variables in var.json by example
 # thanks
 
 to JetBrains for IDE
-https://www.jetbrains.com/
+https://www.jetbrains.com/go/
