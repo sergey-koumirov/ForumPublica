@@ -81,7 +81,7 @@ func main() {
 
 	routes.AddAppRoutes(r)
 
-	toolbox.AddTask("update_prices", toolbox.NewTask("update_prices", "0 22 14 * * *", tasks.TaskUpdatePrices))
+	toolbox.AddTask("update_prices", toolbox.NewTask("update_prices", "0 0 2,6,10,14,18,22 * * *", tasks.LoadMarketData))
 	toolbox.StartTask()
 	defer toolbox.StopTask()
 

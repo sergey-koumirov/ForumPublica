@@ -16,12 +16,12 @@
       <th>Where / Store</th>
       <th>Lowest / My price</th>
       <th>Market / Store Qty</th>
-      <th></th>
+      <th width="33%">Sold last 90d</th>
       <th></th>
     </tr>
     <tr v-for="record in data.Records">
       <td>
-        <img align="left" width="64" height="64" :src="'https://images.evetech.net/types/'+record.TypeID+'/icon?size=64'">
+        <img align="left" width="48" height="48" :src="'https://images.evetech.net/types/'+record.TypeID+'/icon?size=64'">
       </td>
       <td>
         <b>{{record.TypeName}}</b>
@@ -73,7 +73,13 @@
         </div>
       </td>
 
-      <td></td>
+      <td>
+
+        VALUE + GRAPH
+
+      </td>
+
+
       <td class="text-right">
         <a :href="`/app/market_item/${record.ModelID}/delete`"><span class="oi oi-delete"></span></a>
       </td>
