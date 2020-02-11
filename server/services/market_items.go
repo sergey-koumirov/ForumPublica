@@ -4,7 +4,6 @@ import (
 	"ForumPublica/sde/static"
 	"ForumPublica/server/db"
 	"ForumPublica/server/models"
-	"fmt"
 )
 
 //MarketItemsList list
@@ -13,7 +12,6 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 	marketItems, total := loadMarketItems(userID, page)
 
 	marketDataMap := loadMarketData(marketItems)
-	fmt.Println(marketDataMap)
 
 	result := models.MiList{
 		Page:       page,
@@ -28,7 +26,7 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 
 		locations := loadLocations(r)
 
-		stores := loadStores(r)
+		stores, storeVol := loadStores(r)
 
 		md, _ := marketDataMap[r.ID]
 
@@ -37,6 +35,8 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 			TypeID:      r.TypeID,
 			TypeName:    static.Types[r.TypeID].Name,
 			MyPrice:     md.MyLowestPrice,
+			MyVol:       md.MyVol,
+			StoreVol:    storeVol,
 			LowestPrice: md.SellLowestPrice,
 			Locations:   locations,
 			Stores:      stores,
@@ -80,8 +80,9 @@ func loadMarketData(marketItems []models.MarketItem) map[int64]models.MarketData
 	return result
 }
 
-func loadStores(r models.MarketItem) []models.MiStore {
+func loadStores(r models.MarketItem) ([]models.MiStore, int64) {
 	stores := make([]models.MiStore, 0)
+	storeVol := int64(0)
 	for _, s := range r.Stores {
 		stores = append(
 			stores,
@@ -93,8 +94,9 @@ func loadStores(r models.MarketItem) []models.MiStore {
 				Qty:           s.StoreQty,
 			},
 		)
+		storeVol = storeVol + s.StoreQty
 	}
-	return stores
+	return stores, storeVol
 }
 
 func loadLocations(r models.MarketItem) []models.MiLocation {

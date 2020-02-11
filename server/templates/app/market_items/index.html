@@ -14,7 +14,7 @@
       <th></th>
       <th><b>What</b></th>
       <th>Where / Store</th>
-      <th>My / Lowest price</th>
+      <th>Lowest / My price</th>
       <th>Market / Store Qty</th>
       <th></th>
       <th></th>
@@ -36,6 +36,7 @@
           <span class="oi oi-box"></span>
         </div>
       </td>
+
       <td>
         <ul class="simple-list">
           <li v-for="location in record.Locations">
@@ -44,7 +45,6 @@
             <span class="oi oi-delete pointer" @click="DeleteMarketLocation(record.TypeID, location.ID)"></span>
           </li>
         </ul>
-
         <hr class="divider" v-if="record.Stores.length>0">
         <ul class="simple-list" v-if="record.Stores.length>0">
           <li v-for="store in record.Stores">
@@ -53,17 +53,26 @@
             <span class="oi oi-delete pointer" @click="DeleteMarketStore(record.ModelID, store.ID)"></span>
           </li>
         </ul>
-
       </td>
+
       <td class="text-right">
-        <div class="gray-square">
-          <span v-if="record.MyPrice>0">{{record.MyPrice | float}}</span>
-        </div>
         <div class="gray-square" v-bind:class="{ 'orange-square': record.LowestPrice < record.MyPrice }">
           <span>{{record.LowestPrice | float}}</span>
         </div>
+        <div class="gray-square">
+          <span v-if="record.MyPrice>0">{{record.MyPrice | float}}</span>
+        </div>
       </td>
-      <td></td>
+
+      <td class="text-right">
+        <div class="gray-square">
+          <span v-if="record.MyVol>0">{{record.MyVol | number}}</span>
+        </div>
+        <div class="gray-square">
+          <span v-if="record.StoreVol>0">{{record.StoreVol | number}}</span>
+        </div>
+      </td>
+
       <td></td>
       <td class="text-right">
         <a :href="`/app/market_item/${record.ModelID}/delete`"><span class="oi oi-delete"></span></a>

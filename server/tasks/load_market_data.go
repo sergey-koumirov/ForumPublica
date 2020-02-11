@@ -233,9 +233,20 @@ func loadOrdersFromRegions(locations *[]models.MarketLocation, result map[int64]
 					for _, l := range *locations {
 						if order.TypeID == l.MarketItem.TypeID && (l.LocationType == "solar_system" && order.SystemID == l.LocationID ||
 							l.LocationType == "station" && order.LocationID == l.LocationID) {
+
 							temp := result[l.MarketItem.ID]
-							temp = append(temp, order)
-							result[l.MarketItem.ID] = temp
+							added := false
+							for _, t := range temp {
+								if t.OrderID == order.OrderID {
+									added = true
+									break
+								}
+							}
+							if !added {
+								temp = append(temp, order)
+								result[l.MarketItem.ID] = temp
+							}
+
 						}
 					}
 				}

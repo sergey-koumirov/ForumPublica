@@ -23,6 +23,8 @@ type MiRecord struct {
 	TypeID      int32
 	TypeName    string
 	MyPrice     float64
+	MyVol       int64
+	StoreVol    int64
 	LowestPrice float64
 	Locations   []MiLocation
 	Stores      []MiStore

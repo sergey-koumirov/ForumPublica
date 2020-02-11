@@ -83,11 +83,11 @@ func (esi *ESI) CharactersAssetsTypeIdsByLocationID(characterId int64) (ItemsByL
 			parent, exists := childParent[pid]
 			if !exists {
 				if pid == v.LocationId || v.LocationFlag == "Hangar" || v.LocationFlag == "Unlocked" {
-					_, exLoc := result[v.LocationId]
+					_, exLoc := result[pid]
 					if !exLoc {
-						result[v.LocationId] = make(QtyByType)
+						result[pid] = make(QtyByType)
 					}
-					result[v.LocationId][v.TypeId] = result[v.LocationId][v.TypeId] + v.Quantity
+					result[pid][v.TypeId] = result[pid][v.TypeId] + v.Quantity
 				}
 				break
 			} else {
