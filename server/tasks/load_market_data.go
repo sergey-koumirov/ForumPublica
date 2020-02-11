@@ -124,6 +124,7 @@ func createMarketData(mi models.MarketItem, dt string, orders esi.MarketsOrdersA
 		buyVol          int64
 		buyHighestPrice float64
 		myVol           int64
+		myLowestPrice   float64
 	)
 
 	charIds := make([]int64, 0)
@@ -149,6 +150,9 @@ func createMarketData(mi models.MarketItem, dt string, orders esi.MarketsOrdersA
 			}
 			if isMy {
 				myVol = myVol + order.VolumeRemain
+				if myLowestPrice > order.Price || myLowestPrice == 0 {
+					myLowestPrice = order.Price
+				}
 			}
 
 		} else {
@@ -167,6 +171,7 @@ func createMarketData(mi models.MarketItem, dt string, orders esi.MarketsOrdersA
 		BuyVol:          buyVol,
 		BuyHighestPrice: buyHighestPrice,
 		MyVol:           myVol,
+		MyLowestPrice:   myLowestPrice,
 	}
 	errDb := db.DB.Create(&dataPoint).Error
 	if errDb != nil {

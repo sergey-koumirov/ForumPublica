@@ -14,6 +14,7 @@ func AppMarketItems(c *gin.Context) {
 	p := page(c)
 
 	c.Keys["MarketItems"] = services.MarketItemsList(u.ID, p)
+	c.Keys["Title"] = "Market Items"
 
 	c.HTML(http.StatusOK, "app/market_items/index.html", c.Keys)
 }

@@ -523,3 +523,19 @@ ul.simple-list {
   margin: 0;
   padding: 0;
 }
+
+hr.divider{
+    margin: 0;
+}
+
+.gray-square{
+    border: 1px solid #dddddd;
+    margin: 2px;
+    min-height: 18px;
+}
+
+.orange-square{
+    border: 1px solid #dd9900;
+    color: #dd9900;
+    font-weight: bold;
+}

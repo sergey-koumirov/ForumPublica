@@ -12,51 +12,61 @@
   <table class="table table-striped table-sm">
     <tr>
       <th></th>
-      <th><b>What</b><br>Where</th>
-      <th></th>
-      <th></th>
+      <th><b>What</b></th>
+      <th>Where / Store</th>
+      <th>My / Lowest price</th>
+      <th>Market / Store Qty</th>
       <th></th>
       <th></th>
     </tr>
     <tr v-for="record in data.Records">
       <td>
-        <img align="left" width="64" height="64" :src="'https://images.evetech.net/types/'+record.Model.TypeID+'/icon?size=64'">
+        <img align="left" width="64" height="64" :src="'https://images.evetech.net/types/'+record.TypeID+'/icon?size=64'">
       </td>
-      <td>        
+      <td>
         <b>{{record.TypeName}}</b>
-        <div class="round-border pointer" v-on:click="OpenWhereModal(record.Model.ID)">
-            <span class="oi oi-plus"></span>
-            <span class="oi oi-map-marker"></span>
+        <br/>
+        <div class="round-border pointer" v-on:click="OpenWhereModal(record.ModelID)">
+          <span class="oi oi-plus"></span>
+          <span class="oi oi-map-marker"></span>
         </div>
 
-        <div class="round-border pointer" v-on:click="OpenStoreModal(record.Model.ID)">
+        <div class="round-border pointer" v-on:click="OpenStoreModal(record.ModelID)">
           <span class="oi oi-plus"></span>
           <span class="oi oi-box"></span>
         </div>
-
+      </td>
+      <td>
         <ul class="simple-list">
           <li v-for="location in record.Locations">
             <img class="icon-suggestion" width="16" height="16" :src="'/assets/images/'+location.Type+'.png'" />
             {{location.Name}} <span class="gray">{{location.CharacterName}}</span>
-            <span class="oi oi-delete pointer" @click="DeleteMarketLocation(record.Model.ID, location.ID)"></span>
+            <span class="oi oi-delete pointer" @click="DeleteMarketLocation(record.TypeID, location.ID)"></span>
           </li>
         </ul>
 
-        <hr v-if="record.Stores.length>0">
+        <hr class="divider" v-if="record.Stores.length>0">
         <ul class="simple-list" v-if="record.Stores.length>0">
           <li v-for="store in record.Stores">
             <img class="icon-suggestion" width="16" height="16" :src="'/assets/images/'+store.Type+'.png'" />
             {{store.Name}} [{{store.Qty | number}}] <span class="gray">{{store.CharacterName}}</span>
-            <span class="oi oi-delete pointer" @click="DeleteMarketStore(record.Model.ID, store.ID)"></span>
+            <span class="oi oi-delete pointer" @click="DeleteMarketStore(record.ModelID, store.ID)"></span>
           </li>
         </ul>
 
       </td>
-      <td></td>
+      <td class="text-right">
+        <div class="gray-square">
+          <span v-if="record.MyPrice>0">{{record.MyPrice | float}}</span>
+        </div>
+        <div class="gray-square" v-bind:class="{ 'orange-square': record.LowestPrice < record.MyPrice }">
+          <span>{{record.LowestPrice | float}}</span>
+        </div>
+      </td>
       <td></td>
       <td></td>
       <td class="text-right">
-        <a :href="`/app/market_item/${record.Model.ID}/delete`"><span class="oi oi-delete"></span></a>
+        <a :href="`/app/market_item/${record.ModelID}/delete`"><span class="oi oi-delete"></span></a>
       </td>
     </tr>
   </table>

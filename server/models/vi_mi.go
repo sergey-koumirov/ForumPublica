@@ -19,10 +19,13 @@ type MiStore struct {
 
 //MiRecord market item info for index page
 type MiRecord struct {
-	Model     MarketItem
-	TypeName  string
-	Locations []MiLocation
-	Stores    []MiStore
+	ModelID     int64
+	TypeID      int32
+	TypeName    string
+	MyPrice     float64
+	LowestPrice float64
+	Locations   []MiLocation
+	Stores      []MiStore
 }
 
 //MiList list of market item info for index page

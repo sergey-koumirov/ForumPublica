@@ -87,6 +87,7 @@ type MarketData struct {
 	BuyVol          int64   `gorm:"column:buy_vol"`
 	BuyHighestPrice float64 `gorm:"column:buy_highest_price"`
 	MyVol           int64   `gorm:"column:my_vol"`
+	MyLowestPrice   float64 `gorm:"column:my_lowest_price"`
 
 	Screenshots []MarketScreenshot `gorm:"foreignkey:MarketLocationID"`
 }
