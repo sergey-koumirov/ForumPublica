@@ -26,6 +26,7 @@ type MiRecord struct {
 	MyVol       int64
 	StoreVol    int64
 	LowestPrice float64
+	UnitPrice   float64
 	Locations   []MiLocation
 	Stores      []MiStore
 }

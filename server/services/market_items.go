@@ -30,6 +30,13 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 
 		md, _ := marketDataMap[r.ID]
 
+		unitPrice := float64(0)
+		bpoID, bpoEx := static.BpoIDByTypeID[r.TypeID]
+		if bpoEx {
+			bpo := static.Blueprints[bpoID]
+			unitPrice = UnitPrice(bpo)
+		}
+
 		temp := models.MiRecord{
 			ModelID:     r.ID,
 			TypeID:      r.TypeID,
@@ -38,6 +45,7 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 			MyVol:       md.MyVol,
 			StoreVol:    storeVol,
 			LowestPrice: md.SellLowestPrice,
+			UnitPrice:   unitPrice,
 			Locations:   locations,
 			Stores:      stores,
 		}

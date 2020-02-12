@@ -132,8 +132,12 @@ func loadCn(result *models.CnRecord, cn models.Construction) {
 	for _, r := range cn.Bpos {
 		defaultME, _ := static.DefaultMeTe(r.TypeID)
 		checkPriceFor[static.ProductIDByBpoID(r.TypeID)] = 1
-		for _, d := range *static.T1DecryptorsForT2(r.TypeID) {
-			checkPriceFor[d.TypeID] = 1
+
+		decryptors := static.T1DecryptorsForT2(r.TypeID)
+		if decryptors != nil {
+			for _, d := range *decryptors {
+				checkPriceFor[d.TypeID] = 1
+			}
 		}
 
 		result.Blueprints = append(

@@ -8,8 +8,8 @@ import (
 	"time"
 )
 
-//TaskUpdatePrices updates prices using ESI API
-func TaskUpdatePrices() error {
+//TaskCheckT2 updates prices using ESI API
+func TaskCheckT2() error {
 	fmt.Println("TaskUpdatePrices started", time.Now().Format("2006-01-02 15:04:05"))
 	above := make([]string, 0)
 	below := make([]string, 0)
@@ -23,24 +23,7 @@ func TaskUpdatePrices() error {
 			utils.FindInt32([]int32{1707, 1708, 973}, t.GroupID) == -1 &&
 			utils.FindInt32([]int32{}, product.GroupID) == -1 {
 
-			qtyTotal := int64(1000)
-
-			result := services.ConstructionByType(b.BlueprintTypeID, qtyTotal)
-
-			mTotal := 0.0
-
-			for _, m := range result.Materials {
-				mTotal = mTotal + float64(m.Qty)*m.Price
-			}
-
-			iTotal := 0.0
-			for _, b := range result.Blueprints {
-				for _, d := range *b.T1Decryptors {
-					iTotal = iTotal + float64(b.InventCnt)*float64(d.Quantity)*services.GetDefaultPrice(d.TypeID)
-				}
-			}
-
-			uPrice := (iTotal + mTotal) * 1.05 / float64(qtyTotal)
+			uPrice := services.UnitPrice(b)
 			jPrice := services.GetDefaultPrice(static.ProductIDByBpoID(b.BlueprintTypeID))
 
 			if jPrice/uPrice > 3 {

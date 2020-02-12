@@ -1,6 +1,7 @@
 package services
 
 import (
+	sdemodels "ForumPublica/sde/models"
 	"ForumPublica/server/db"
 	"ForumPublica/server/models"
 	"ForumPublica/server/utils"
@@ -88,4 +89,32 @@ func UpsertPrice(typeID int32, source string, buy float64, sell float64, volume 
 			fmt.Println(err2)
 		}
 	}
+}
+
+//UnitPrice unit price if materials are bought in Jita
+func UnitPrice(b sdemodels.ZipBlueprint) float64 {
+	qtyTotal := int64(1000)
+
+	result := ConstructionByType(b.BlueprintTypeID, qtyTotal)
+
+	mTotal := 0.0
+
+	for _, m := range result.Materials {
+		mTotal = mTotal + float64(m.Qty)*m.Price
+	}
+
+	iTotal := 0.0
+	for _, b := range result.Blueprints {
+
+		decryptors := b.T1Decryptors
+		if decryptors != nil {
+			for _, d := range *decryptors {
+				iTotal = iTotal + float64(b.InventCnt)*float64(d.Quantity)*GetDefaultPrice(d.TypeID)
+			}
+		}
+
+	}
+
+	uPrice := (iTotal + mTotal) * 1.05 / float64(qtyTotal)
+	return uPrice
 }

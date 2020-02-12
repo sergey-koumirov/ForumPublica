@@ -528,14 +528,20 @@ hr.divider{
     margin: 0;
 }
 
-.gray-square{
+.market-items .gray-square{
     border: 1px solid #dddddd;
     margin: 2px;
+    padding-right: 2px;
     min-height: 20px;
+    font-family: monospace;
 }
 
-.orange-square{
+.market-items .orange-square{
     border: 1px solid #dd9900;
     color: #dd9900;
     font-weight: bold;
+}
+
+.market-items .gray-gray-square{
+    color: #aaaaaa;
 }

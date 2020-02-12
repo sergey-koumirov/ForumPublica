@@ -1,6 +1,6 @@
 <% define "app/market_items/index.html" %>
 <% template "base_head" .%>
-<div id="market-items" market-items="<% .MarketItems | Marshal %>" v-cloak>
+<div id="market-items" class="market-items" market-items="<% .MarketItems | Marshal %>" v-cloak>
 
   <h5>
     Market
@@ -14,7 +14,7 @@
       <th></th>
       <th><b>What</b></th>
       <th>Where / Store</th>
-      <th>Lowest / My price</th>
+      <th>Lowest / My / Unit price</th>
       <th>Market / Store Qty</th>
       <th width="33%">Sold last 90d</th>
       <th></th>
@@ -57,10 +57,13 @@
 
       <td class="text-right">
         <div class="gray-square" v-bind:class="{ 'orange-square': record.LowestPrice < record.MyPrice }">
-          <span>{{record.LowestPrice | float}}</span>
+          <span v-if="record.LowestPrice>0">{{record.LowestPrice | float}}</span>
         </div>
         <div class="gray-square">
           <span v-if="record.MyPrice>0">{{record.MyPrice | float}}</span>
+        </div>
+        <div class="gray-square gray-gray-square">
+          <span v-if="record.UnitPrice>0">{{record.UnitPrice | float}}</span>
         </div>
       </td>
 
@@ -68,7 +71,7 @@
         <div class="gray-square">
           <span v-if="record.MyVol>0">{{record.MyVol | number}}</span>
         </div>
-        <div class="gray-square">
+        <div class="gray-square gray-gray-square">
           <span v-if="record.StoreVol>0">{{record.StoreVol | number}}</span>
         </div>
       </td>

@@ -14,17 +14,14 @@ func AdminJobs(c *gin.Context) {
 }
 
 //AdminJobsUpdatePrices start update tasks job
-func AdminJobsUpdatePrices(c *gin.Context) {
-
-	tasks.TaskUpdatePrices()
-
+func AdminJobsCheckT2(c *gin.Context) {
+	tasks.TaskCheckT2()
 	c.Redirect(http.StatusTemporaryRedirect, "/admin/jobs")
 }
 
 //AdminJobsTestMarket start test market job
-func AdminJobsTestMarket(c *gin.Context) {
-	u := user(c)
-	tasks.TaskTestMarket(u)
+func AdminJobsLoadTransactions(c *gin.Context) {
+	tasks.TaskLoadTransactions()
 	c.Redirect(http.StatusTemporaryRedirect, "/admin/jobs")
 }
 

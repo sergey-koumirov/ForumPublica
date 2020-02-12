@@ -40,6 +40,7 @@ var (
 		"esi-ui.open_window.v1",
 		"esi-universe.read_structures.v1",
 		"esi-markets.read_character_orders.v1",
+		"esi-wallet.read_character_wallet.v1",
 	}
 )
 
