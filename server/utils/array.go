@@ -55,3 +55,16 @@ func sortIfNeeded(a []int64) []int64 {
 	sortutil.Int64s(s)
 	return s
 }
+
+func InBatchesInt64(input []int64, chunkSize int64) [][]int64 {
+	var divided [][]int64
+	inputSize := int64(len(input))
+	for i := int64(0); i < inputSize; i += chunkSize {
+		end := i + chunkSize
+		if end > inputSize {
+			end = inputSize
+		}
+		divided = append(divided, input[i:end])
+	}
+	return divided
+}
