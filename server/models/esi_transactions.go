@@ -16,6 +16,7 @@ type Transaction struct {
 
 	Character  *Character  `gorm:"foreignkey:EsiCharacterID"`
 	ClientName *ClientName `gorm:"foreignkey:ClientID"`
+	Location   *Location   `gorm:"foreignkey:LocationID"`
 }
 
 //TableName transaction model table name

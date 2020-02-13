@@ -20,3 +20,14 @@ func CharsByUserID(userID int64) []models.CharIDName {
 
 	return result
 }
+
+//CharIDsByUserID char ids by user id
+func CharIDsByUserID(userID int64) []int64 {
+	charIDs := make([]int64, 0)
+	errDb := db.DB.Model(&models.Character{}).Where("user_id=?", userID).Pluck("id", &charIDs).Error
+	if errDb != nil {
+		return charIDs
+	}
+
+	return charIDs
+}

@@ -1,0 +1,55 @@
+<% define "app/transactions/index.html" %>
+<% template "base_head" .%>
+<div id="transactions" class="transactions" transactions="<% .Transactions | Marshal %>" v-cloak>
+
+  <h5>
+    Transactions
+  </h5>
+
+  <pagination :total="data.Total" :current="data.Page" :pp="data.PerPage"></pagination>
+
+  <table class="table table-striped table-sm">
+    <tr>
+      <th></th>
+      <th class="text-center">Date / <span class="tech-info">[ID] Char</span></th>
+      <th class="text-center"><b>What</b></th>
+      <th class="text-center">Qty</th>
+      <th class="text-center">Price</th>
+      <th class="text-center">Client</th>
+      <th class="text-center">Location</th>
+    </tr>
+    <tr v-for="record in data.Records">
+
+      <td><img align="left" width="32" height="32" :src="'https://images.evetech.net/types/'+record.TypeID+'/icon?size=32'"></td>
+
+      <td>
+        <span class="no-padding">{{record.Dt}}</span>
+        <br/>
+        <span class="tech-info">[{{record.ModelID}}] {{record.CharacterName}}</span>
+      </td>
+
+      <td>{{record.TypeName}}</td>
+
+      <td class="text-right">{{record.Quantity | number}}</td>
+
+      <td class="text-right padding-right" v-bind:class="{ 'red': record.IsBuy, 'green': !record.IsBuy }">{{record.Price | float}}</td>
+
+      <td>{{record.ClientName}}</td>
+
+      <td>{{record.LocationName}}</td>
+
+    </tr>
+  </table>
+
+  <pagination :total="data.Total" :current="data.Page" :pp="data.PerPage"></pagination>
+
+</div>
+
+<script src="/assets/js/vue.js"></script>
+<script src="/assets/js/component.pagination.js"></script>
+<script src="/assets/js/vue.filters.js"></script>
+<script src="/assets/js/controller.transactions.js"></script>
+
+
+<% template "base_foot" %>
+<% end %>

@@ -4,4 +4,5 @@ package services
 var (
 	PerPage   int64 = 20
 	MIPerPage int64 = 20
+	TrPerPage int64 = 100
 )

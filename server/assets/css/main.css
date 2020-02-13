@@ -545,3 +545,31 @@ hr.divider{
 .market-items .gray-gray-square{
     color: #aaaaaa;
 }
+
+
+.transactions table td{
+    vertical-align: middle;
+}
+
+.transactions table td{
+    line-height: 1.1;
+}
+
+.transactions span.tech-info{
+    font-size: 8px;
+    color: #aaaaaa;
+}
+
+.transactions td.red{
+    color: #ff0707;
+    font-weight: bold;
+}
+
+.transactions td.green{
+    color: #28a745;
+    font-weight: bold;
+}
+
+.transactions td.padding-right{
+    padding-right: 12px;
+}

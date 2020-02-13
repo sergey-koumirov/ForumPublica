@@ -104,7 +104,7 @@ func processBatch(r *esi.CharactersWalletTransactionsResponse, char models.Chara
 					ID:   name.ID,
 					Name: name.Name,
 				}
-				errCr := db.DB.Create(&temp)
+				errCr := db.DB.Create(&temp).Error
 				if errCr != nil {
 					fmt.Println("TaskLoadTransactions.errCr:", errCr)
 				}
