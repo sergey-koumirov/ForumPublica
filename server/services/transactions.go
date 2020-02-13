@@ -21,6 +21,16 @@ func TransactionsList(userID int64, page int64) models.TrList {
 
 	for _, r := range transactions {
 
+		if r.Location == nil {
+			var test int64
+			db.DB.Model(models.Location{}).Where("id = ?", r.LocationID).Count(&test)
+			if test == 0 {
+				api, _ := r.Character.GetESI()
+				temp := AddLocation(api, r.LocationID, "", 0, 0)
+				r.Location = &temp
+			}
+		}
+
 		temp := models.TrRecord{
 			ModelID:       r.ID,
 			TypeID:        r.TypeID,
@@ -32,6 +42,8 @@ func TransactionsList(userID int64, page int64) models.TrList {
 			IsBuy:         r.IsBuy,
 			ClientName:    r.ClientName.Name,
 			LocationName:  r.Location.Name,
+			ImageURL:      ImageUrl(r.TypeID),
+			InSummary:     false,
 		}
 		result.Records = append(result.Records, temp)
 	}

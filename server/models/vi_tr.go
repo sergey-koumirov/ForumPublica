@@ -12,6 +12,8 @@ type TrRecord struct {
 	IsBuy         bool
 	ClientName    string
 	LocationName  string
+	ImageURL      string
+	InSummary     bool
 }
 
 //TrList list of transaction info for index page

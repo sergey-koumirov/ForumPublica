@@ -7,7 +7,7 @@ var transactions = new Vue({
     },
 
     created: function () {
-      // new Clipboard('.copy-item');
+      new Clipboard('.copy-item');
     },
 
     beforeMount: function () {
@@ -15,6 +15,21 @@ var transactions = new Vue({
     },
 
     methods: {
+        toggleSummary: (record)=>{
+            record.InSummary = record.InSummary ?  false : true;
+        },
+    },
+
+    computed: {
+        summary: function(){
+            var result = 0;
+            this.data.Records.forEach((el)=>{
+                if(el.InSummary){
+                    result = result + el.Quantity * el.Price;
+                }
+            });
+            return result;
+        },
     },
 });
 

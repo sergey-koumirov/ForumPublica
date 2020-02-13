@@ -560,16 +560,35 @@ hr.divider{
     color: #aaaaaa;
 }
 
-.transactions td.red{
+.transactions span.small{
+    font-size: 10px;
+}
+
+.transactions .red{
     color: #ff0707;
     font-weight: bold;
 }
 
-.transactions td.green{
+.transactions .green{
     color: #28a745;
     font-weight: bold;
 }
 
-.transactions td.padding-right{
+.transactions .padding-right{
     padding-right: 12px;
+}
+
+.transactions .over-all {
+    position: fixed;
+    right: 40px;
+    top: 40px;
+    width: 200px;
+    border: 1px solid #1f8dd6;
+    text-align: right;
+    background: #ffffff;
+}
+
+.transactions td.orange-square{
+    border: 1px solid #dd9900;
+    color: #dd9900;
 }

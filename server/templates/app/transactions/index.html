@@ -8,19 +8,25 @@
 
   <pagination :total="data.Total" :current="data.Page" :pp="data.PerPage"></pagination>
 
+  <div class="over-all" v-if="summary > 0">
+    <span class="padding-right">{{ summary | float}}</span>
+    <span :data-clipboard-text="summary" class="oi oi-share-boxed pointer copy-item"></span>
+  </div>
+
   <table class="table table-striped table-sm">
     <tr>
       <th></th>
       <th class="text-center">Date / <span class="tech-info">[ID] Char</span></th>
       <th class="text-center"><b>What</b></th>
-      <th class="text-center">Qty</th>
-      <th class="text-center">Price</th>
+      <th class="text-center">
+        Qty*Price
+      </th>
       <th class="text-center">Client</th>
       <th class="text-center">Location</th>
     </tr>
     <tr v-for="record in data.Records">
 
-      <td><img align="left" width="32" height="32" :src="'https://images.evetech.net/types/'+record.TypeID+'/icon?size=32'"></td>
+      <td><img align="left" width="32" height="32" :src="record.ImageURL+'?size=32'"></td>
 
       <td>
         <span class="no-padding">{{record.Dt}}</span>
@@ -30,9 +36,13 @@
 
       <td>{{record.TypeName}}</td>
 
-      <td class="text-right">{{record.Quantity | number}}</td>
-
-      <td class="text-right padding-right" v-bind:class="{ 'red': record.IsBuy, 'green': !record.IsBuy }">{{record.Price | float}}</td>
+      <td class="text-right padding-right" v-on:click="toggleSummary(record)" :class="{ 'orange-square': record.InSummary}">
+        <span class="small">{{record.Quantity | number}}</span>
+        <span class="tech-info">*</span>
+        <span class="small">{{record.Price | float}}</span>
+        <span class="tech-info">=</span>
+        <span :class="{ 'red': record.IsBuy, 'green': !record.IsBuy }">{{record.Price * record.Quantity | float}}</span>
+      </td>
 
       <td>{{record.ClientName}}</td>
 
