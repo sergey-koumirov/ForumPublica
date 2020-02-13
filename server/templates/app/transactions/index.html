@@ -9,6 +9,7 @@
   <pagination :total="data.Total" :current="data.Page" :pp="data.PerPage"></pagination>
 
   <div class="over-all" v-if="summary > 0">
+    <span class="oi oi-delete pointer" v-on:click="resetSummary()"></span>
     <span class="padding-right">{{ summary | float}}</span>
     <span :data-clipboard-text="summary" class="oi oi-share-boxed pointer copy-item"></span>
   </div>

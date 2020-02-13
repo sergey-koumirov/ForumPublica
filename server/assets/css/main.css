@@ -588,6 +588,12 @@ hr.divider{
     background: #ffffff;
 }
 
+.transactions .over-all .oi-delete{
+    float: left;
+    margin-top: 3px;
+    margin-left: 3px;
+}
+
 .transactions td.orange-square{
     border: 1px solid #dd9900;
     color: #dd9900;

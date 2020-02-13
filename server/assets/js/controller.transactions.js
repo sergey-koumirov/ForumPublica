@@ -18,6 +18,11 @@ var transactions = new Vue({
         toggleSummary: (record)=>{
             record.InSummary = record.InSummary ?  false : true;
         },
+        resetSummary: function(){
+            this.data.Records.forEach((el)=>{
+                el.InSummary = false;
+            });
+        },
     },
 
     computed: {
