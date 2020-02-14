@@ -1,5 +1,17 @@
 package models
 
+type Tr90dSummary struct {
+	Total int64
+	R     []Tr90d
+}
+
+//Tr90d 90 day data
+type Tr90d struct {
+	Id int64  `gorm:"column:id"`
+	D  string `gorm:"column:d"`
+	Q  int64  `gorm:"column:q"`
+}
+
 //TrRecord transaction info for index page
 type TrRecord struct {
 	ModelID       int64

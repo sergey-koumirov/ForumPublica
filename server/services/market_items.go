@@ -4,6 +4,8 @@ import (
 	"ForumPublica/sde/static"
 	"ForumPublica/server/db"
 	"ForumPublica/server/models"
+	"fmt"
+	"time"
 )
 
 //MarketItemsList list
@@ -12,6 +14,8 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 	marketItems, total := loadMarketItems(userID, page)
 
 	marketDataMap := loadMarketData(marketItems)
+
+	d90 := loadD90(marketItems)
 
 	result := models.MiList{
 		Page:       page,
@@ -44,6 +48,8 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 			MyPrice:     md.MyLowestPrice,
 			MyVol:       md.MyVol,
 			StoreVol:    storeVol,
+			D90Vol:      d90[r.ID].Total,
+			D90Data:     d90[r.ID].R,
 			LowestPrice: md.SellLowestPrice,
 			UnitPrice:   unitPrice,
 			Locations:   locations,
@@ -53,6 +59,89 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 	}
 
 	return result
+}
+
+var loadD90Sql = `
+select mio.id, d.date as d, ifnull(x.q,0) as q
+  from fp_market_items mio
+         inner join sys_dates d
+         left join (
+			  select mi.id,
+					 substring(t.dt, 1, 10) as d,
+					 sum(quantity) as q
+				from esi_transactions t
+					   inner join esi_locations l on t.location_id = l.id
+					   inner join fp_market_items mi on mi.id in (
+						select mix.id
+							from fp_market_items mix,
+								fp_market_locations milx
+							where mix.type_id = t.type_id
+							and milx.market_item_id = mix.id
+							and milx.esi_character_id = t.esi_character_id
+							and (
+								milx.location_type = 'system' and l.solar_system_id = milx.location_id
+							or
+							milx.location_type in ('station','structure') and t.location_id = milx.location_id
+							)
+						)
+				where t.dt > '%s'
+				  and t.esi_character_id in (?)
+				  and t.type_id in (?)
+				  and t.is_buy = 0
+				group by mi.id, substring(t.dt, 1, 10)
+        ) x on x.d = d.date and mio.id = x.id 
+  where d.date between '%s' and '%s'
+    and mio.id in (?)
+  order by mio.id, d.date`
+
+func loadD90(marketItems []models.MarketItem) map[int64]models.Tr90dSummary {
+
+	miIds := make([]int64, 0)
+	charIdsMap := make(map[int64]int32)
+	typeIdsMap := make(map[int32]int32)
+	for _, mi := range marketItems {
+		miIds = append(miIds, mi.ID)
+		typeIdsMap[mi.TypeID] = 1
+		for _, loc := range mi.Locations {
+			charIdsMap[loc.EsiCharacterID] = 1
+		}
+	}
+
+	charIds := make([]int64, 0)
+	for k := range charIdsMap {
+		charIds = append(charIds, k)
+	}
+
+	typeIds := make([]int32, 0)
+	for k := range typeIdsMap {
+		typeIds = append(typeIds, k)
+	}
+
+	minus90dFull := time.Now().AddDate(0, 0, -90).Format("2006-01-02 15:04:05")
+	minus90d := time.Now().AddDate(0, 0, -90).Format("2006-01-02")
+	minus0d := time.Now().Format("2006-01-02")
+
+	rawSql := fmt.Sprintf(loadD90Sql, minus90dFull, minus90d, minus0d)
+
+	rows, errRaw := db.DB.Raw(rawSql, charIds, typeIds, miIds).Rows()
+	defer rows.Close()
+
+	if errRaw != nil {
+		fmt.Println("loadD90", errRaw)
+	}
+
+	records := make(map[int64]models.Tr90dSummary)
+	for rows.Next() {
+		temp := models.Tr90d{}
+		db.DB.ScanRows(rows, &temp)
+
+		v, _ := records[temp.Id]
+		v.R = append(v.R, temp)
+		v.Total = v.Total + temp.Q
+		records[temp.Id] = v
+	}
+
+	return records
 }
 
 func loadMarketData(marketItems []models.MarketItem) map[int64]models.MarketData {
@@ -69,7 +158,7 @@ func loadMarketData(marketItems []models.MarketItem) map[int64]models.MarketData
 			"select d.*, ROW_NUMBER() OVER w AS 'row_number' from fp_market_data d where d.market_item_id in (?) " +
 			"window w as (partition by d.market_item_id order by dt desc)) x where x.row_number=1"
 
-		rows, _ := db.DB.Model(&models.MarketData{}).Raw(sql, ids).Rows()
+		rows, _ := db.DB.Raw(sql, ids).Rows()
 		defer rows.Close()
 
 		records := make([]models.MarketData, 0)
