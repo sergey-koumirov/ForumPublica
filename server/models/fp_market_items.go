@@ -20,12 +20,17 @@ func (m *MarketItem) TableName() string {
 
 //Delete delete model and children
 func (m *MarketItem) Delete() {
+	db.DB.Model(&m).Related(&m.Locations)
 	for _, l := range m.Locations {
 		l.Delete()
 	}
+
+	db.DB.Model(&m).Related(&m.Stores)
 	for _, s := range m.Stores {
 		s.Delete()
 	}
+
+	db.DB.Model(&m).Related(&m.Datas)
 	for _, d := range m.Datas {
 		d.Delete()
 	}
@@ -99,6 +104,7 @@ func (m *MarketData) TableName() string {
 
 //Delete delete model and children
 func (m *MarketData) Delete() {
+	db.DB.Model(&m).Related(&m.Screenshots)
 	for _, d := range m.Screenshots {
 		d.Delete()
 	}

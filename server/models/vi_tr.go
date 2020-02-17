@@ -7,7 +7,7 @@ type Tr90dSummary struct {
 
 //Tr90d 90 day data
 type Tr90d struct {
-	Id int64  `gorm:"column:id"`
+	Id int64  `gorm:"column:id" json:"-"`
 	D  string `gorm:"column:d"`
 	Q  int64  `gorm:"column:q"`
 }

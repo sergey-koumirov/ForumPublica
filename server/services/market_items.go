@@ -12,9 +12,7 @@ import (
 func MarketItemsList(userID int64, page int64) models.MiList {
 
 	marketItems, total := loadMarketItems(userID, page)
-
-	marketDataMap := loadMarketData(marketItems)
-
+	marketDataMap, mdHist := loadMarketData(marketItems)
 	d90 := loadD90(marketItems)
 
 	result := models.MiList{
@@ -27,18 +25,16 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 	result.Records = make([]models.MiRecord, 0)
 
 	for _, r := range marketItems {
-
 		locations := loadLocations(r)
-
 		stores, storeVol := loadStores(r)
-
 		md, _ := marketDataMap[r.ID]
-
 		unitPrice := float64(0)
+		bottomPrice := float64(0)
 		bpoID, bpoEx := static.BpoIDByTypeID[r.TypeID]
 		if bpoEx {
 			bpo := static.Blueprints[bpoID]
 			unitPrice = UnitPrice(bpo)
+			bottomPrice = getBottomPrice(bpoID)
 		}
 
 		temp := models.MiRecord{
@@ -51,13 +47,35 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 			D90Vol:      d90[r.ID].Total,
 			D90Data:     d90[r.ID].R,
 			LowestPrice: md.SellLowestPrice,
+			LowestHist:  mdHist[r.ID],
 			UnitPrice:   unitPrice,
+			BottomPrice: bottomPrice,
 			Locations:   locations,
 			Stores:      stores,
 		}
 		result.Records = append(result.Records, temp)
 	}
 
+	return result
+}
+
+var bottomPriceSql = `
+select sum(e.exvalue) / b.qty as price
+  from fp_constructions c,
+       fp_construction_bpos b,
+       fp_construction_expenses e
+  where c.id = b.construction_id
+    and b.id = e.construction_bpo_id
+    and b.type_id = ?
+  group by c.id, b.id
+  order by c.id desc
+  limit 1`
+
+func getBottomPrice(typeID int32) float64 {
+	result := float64(0)
+	rows, _ := db.DB.Raw(bottomPriceSql, typeID).Rows()
+	rows.Next()
+	rows.Scan(&result)
 	return result
 }
 
@@ -144,8 +162,28 @@ func loadD90(marketItems []models.MarketItem) map[int64]models.Tr90dSummary {
 	return records
 }
 
-func loadMarketData(marketItems []models.MarketItem) map[int64]models.MarketData {
+var sqlMdLast = `
+select x.* 
+  from(
+    select d.*, ROW_NUMBER() OVER w AS 'row_number' 
+      from fp_market_data d 
+      where d.market_item_id in (?) 
+      window w as (partition by d.market_item_id order by dt desc)
+  ) x 
+  where x.row_number=1`
+
+var sqlMdHist = `
+select mi.id, d.dt, d.sell_lowest_price as price
+  from fp_market_data d,
+       fp_market_items mi
+  where mi.id = d.market_item_id
+    and d.sell_lowest_price>0
+    and mi.id in (?)
+  order by mi.id, mi.type_id, d.dt, d.sell_lowest_price`
+
+func loadMarketData(marketItems []models.MarketItem) (map[int64]models.MarketData, map[int64][]models.MiHist) {
 	result := make(map[int64]models.MarketData)
+	hist := make(map[int64][]models.MiHist)
 
 	if len(marketItems) > 0 {
 
@@ -154,15 +192,13 @@ func loadMarketData(marketItems []models.MarketItem) map[int64]models.MarketData
 			ids[i] = el.ID
 		}
 
-		sql := "select x.* from(" +
-			"select d.*, ROW_NUMBER() OVER w AS 'row_number' from fp_market_data d where d.market_item_id in (?) " +
-			"window w as (partition by d.market_item_id order by dt desc)) x where x.row_number=1"
-
-		rows, _ := db.DB.Raw(sql, ids).Rows()
+		rows, errRaw := db.DB.Raw(sqlMdLast, ids).Rows()
 		defer rows.Close()
+		if errRaw != nil {
+			fmt.Println("loadMarketData:", errRaw)
+		}
 
 		records := make([]models.MarketData, 0)
-
 		for rows.Next() {
 			temp := models.MarketData{}
 			db.DB.ScanRows(rows, &temp)
@@ -172,9 +208,27 @@ func loadMarketData(marketItems []models.MarketItem) map[int64]models.MarketData
 		for _, record := range records {
 			result[record.MarketItemID] = record
 		}
+
+		rows, errHist := db.DB.Raw(sqlMdHist, ids).Rows()
+		defer rows.Close()
+		if errHist != nil {
+			fmt.Println("loadMarketData.errHist:", errHist)
+		}
+
+		recordsHist := make([]models.MiHist, 0)
+		for rows.Next() {
+			temp := models.MiHist{}
+			db.DB.ScanRows(rows, &temp)
+			recordsHist = append(recordsHist, temp)
+		}
+
+		for _, record := range recordsHist {
+			hist[record.ID] = append(hist[record.ID], record)
+		}
+
 	}
 
-	return result
+	return result, hist
 }
 
 func loadStores(r models.MarketItem) ([]models.MiStore, int64) {

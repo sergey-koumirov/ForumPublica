@@ -1,5 +1,12 @@
 package models
 
+//MiHist model
+type MiHist struct {
+	ID    int64 `json:"-"`
+	Dt    string
+	Price float64
+}
+
 //MiLocation model
 type MiLocation struct {
 	ID            int64
@@ -28,7 +35,9 @@ type MiRecord struct {
 	D90Vol      int64
 	D90Data     []Tr90d
 	LowestPrice float64
+	LowestHist  []MiHist
 	UnitPrice   float64
+	BottomPrice float64
 	Locations   []MiLocation
 	Stores      []MiStore
 }

@@ -16,7 +16,8 @@
       <th>Where / Store</th>
       <th>Lowest / My / Unit price</th>
       <th>90d / Market / Store Qty</th>
-      <th width="33%">Sold last 90d</th>
+      <th>Sold last 90d</th>
+      <th>Lowest Price History</th>
       <th></th>
     </tr>
     <tr v-for="record in data.Records">
@@ -83,6 +84,9 @@
         <barchart :data="record.D90Data"></barchart>
       </td>
 
+      <td>
+        <price-chart :data="record.LowestHist" :bottom="record.BottomPrice"></price-chart>
+      </td>
 
       <td class="text-right">
         <a :href="`/app/market_item/${record.ModelID}/delete`"><span class="oi oi-delete"></span></a>
@@ -104,6 +108,7 @@
 <script src="/assets/js/component.location-select.js"></script>
 <script src="/assets/js/component.pagination.js"></script>
 <script src="/assets/js/component.barchart.js"></script>
+<script src="/assets/js/component.price-chart.js"></script>
 <script src="/assets/js/vue.filters.js"></script>
 <script src="/assets/js/controller.market_items.js"></script>
 
