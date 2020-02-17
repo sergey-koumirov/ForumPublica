@@ -1,5 +1,13 @@
 package models
 
+//MiMarketVolume model
+type MiMarketVolume struct {
+	MarketItemID int64
+	Dt           string
+	Vol          int64
+	IsMy         bool
+}
+
 //MiHist model
 type MiHist struct {
 	ID    int64 `json:"-"`

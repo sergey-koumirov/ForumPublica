@@ -1,5 +1,6 @@
 package models
 
+//Tr90dSummary
 type Tr90dSummary struct {
 	Total int64
 	R     []Tr90d

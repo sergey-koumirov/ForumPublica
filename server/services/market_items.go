@@ -12,7 +12,14 @@ import (
 func MarketItemsList(userID int64, page int64) models.MiList {
 
 	marketItems, total := loadMarketItems(userID, page)
-	marketDataMap, mdHist := loadMarketData(marketItems)
+
+	miIDs := make([]int64, len(marketItems))
+	for i, el := range marketItems {
+		miIDs[i] = el.ID
+	}
+
+	loadMarketVolumes(miIDs)
+	marketDataMap, mdHist := loadMarketData(miIDs)
 	d90 := loadD90(marketItems)
 
 	result := models.MiList{
@@ -57,6 +64,86 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 	}
 
 	return result
+}
+
+var marketVolumesSql = `           
+select d.market_item_id,
+ 	   d.dt,
+	   s.vol,
+	   s.is_my
+  from fp_market_data d,
+       fp_market_screenshots s
+  where d.id = s.market_data_id
+	and d.dt > ?
+	and d.market_item_id in (?)
+  order by d.market_item_id, d.dt, s.price, s.id`
+
+func loadMarketVolumes(miIDs []int64) {
+
+	minus90d := time.Now().AddDate(0, 0, -90).Format("2006-01-02")
+
+	rows, errRaw := db.DB.Raw(marketVolumesSql, minus90d, miIDs).Rows()
+	defer rows.Close()
+	if errRaw != nil {
+		fmt.Println("loadMarketVolumes", errRaw)
+	}
+
+	records := make(map[int64][]models.MiMarketVolume)
+	for rows.Next() {
+		temp := models.MiMarketVolume{}
+		db.DB.ScanRows(rows, &temp)
+		records[temp.MarketItemID] = append(records[temp.MarketItemID], temp)
+	}
+
+	by_date := make(map[int64][][]models.MiMarketVolume)
+	for k, vv := range records {
+		index := 0
+		for i := 1; i < len(vv); i++ {
+			if vv[i-1].Dt != vv[i].Dt {
+				by_date[k] = append(by_date[k], vv[index:i])
+				index = i
+			} else if i == len(vv)-1 {
+				by_date[k] = append(by_date[k], vv[index:i+1])
+			}
+		}
+	}
+
+	compacted := make(map[int64][][]models.MiMarketVolume)
+	for k, vv := range by_date {
+		for _, vd := range vv {
+			temp := make([]models.MiMarketVolume, 0)
+			tempVol := int64(0)
+			for i := 1; i < len(vd); i++ {
+				tempVol = tempVol + vd[i-1].Vol
+				if vd[i-1].IsMy != vd[i].IsMy {
+					tempCompact := models.MiMarketVolume{
+						MarketItemID: k,
+						Dt:           vd[i-1].Dt,
+						Vol:          tempVol,
+						IsMy:         vd[i-1].IsMy,
+					}
+					temp = append(temp, tempCompact)
+				} else if i == len(vd)-1 {
+					tempCompact := models.MiMarketVolume{
+						MarketItemID: k,
+						Dt:           vd[i].Dt,
+						Vol:          tempVol + vd[i].Vol,
+						IsMy:         vd[i].IsMy,
+					}
+					temp = append(temp, tempCompact)
+				}
+			}
+			compacted[k] = append(compacted[k], temp)
+		}
+	}
+
+	for k, vv := range compacted {
+		fmt.Println(k)
+		for _, v := range vv {
+			fmt.Printf("  %+v\n", v)
+		}
+	}
+
 }
 
 var bottomPriceSql = `
@@ -181,18 +268,12 @@ select mi.id, d.dt, d.sell_lowest_price as price
     and mi.id in (?)
   order by mi.id, mi.type_id, d.dt, d.sell_lowest_price`
 
-func loadMarketData(marketItems []models.MarketItem) (map[int64]models.MarketData, map[int64][]models.MiHist) {
+func loadMarketData(miIDs []int64) (map[int64]models.MarketData, map[int64][]models.MiHist) {
 	result := make(map[int64]models.MarketData)
 	hist := make(map[int64][]models.MiHist)
 
-	if len(marketItems) > 0 {
-
-		ids := make([]int64, len(marketItems))
-		for i, el := range marketItems {
-			ids[i] = el.ID
-		}
-
-		rows, errRaw := db.DB.Raw(sqlMdLast, ids).Rows()
+	if len(miIDs) > 0 {
+		rows, errRaw := db.DB.Raw(sqlMdLast, miIDs).Rows()
 		defer rows.Close()
 		if errRaw != nil {
 			fmt.Println("loadMarketData:", errRaw)
@@ -209,7 +290,7 @@ func loadMarketData(marketItems []models.MarketItem) (map[int64]models.MarketDat
 			result[record.MarketItemID] = record
 		}
 
-		rows, errHist := db.DB.Raw(sqlMdHist, ids).Rows()
+		rows, errHist := db.DB.Raw(sqlMdHist, miIDs).Rows()
 		defer rows.Close()
 		if errHist != nil {
 			fmt.Println("loadMarketData.errHist:", errHist)
