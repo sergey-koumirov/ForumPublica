@@ -88,6 +88,7 @@ func loadMarketVolumes(miIDs []int64) {
 		fmt.Println("loadMarketVolumes", errRaw)
 	}
 
+	//load from DB
 	records := make(map[int64][]models.MiMarketVolume)
 	for rows.Next() {
 		temp := models.MiMarketVolume{}
@@ -95,6 +96,7 @@ func loadMarketVolumes(miIDs []int64) {
 		records[temp.MarketItemID] = append(records[temp.MarketItemID], temp)
 	}
 
+	//group by MarketItemID and make array of arrays by Dt
 	by_date := make(map[int64][][]models.MiMarketVolume)
 	for k, vv := range records {
 		index := 0
@@ -108,6 +110,7 @@ func loadMarketVolumes(miIDs []int64) {
 		}
 	}
 
+	//compact arrays into "my"/"not my" ranges
 	compacted := make(map[int64][][]models.MiMarketVolume)
 	for k, vv := range by_date {
 		for _, vd := range vv {
@@ -134,6 +137,31 @@ func loadMarketVolumes(miIDs []int64) {
 				}
 			}
 			compacted[k] = append(compacted[k], temp)
+		}
+	}
+
+	//align compacted arrays
+	for k, vv := range compacted {
+		firstSame := true
+		for i := 1; i < len(vv); i++ {
+			if vv[i-1][0].IsMy != vv[i][0].IsMy {
+				firstSame = false
+			}
+		}
+		if !firstSame {
+			for i := 0; i < len(vv); i++ {
+				if vv[i][0].IsMy {
+					compacted[k][i] = append(
+						[]models.MiMarketVolume{models.MiMarketVolume{
+							MarketItemID: k,
+							Dt:           vv[i][0].Dt,
+							Vol:          0,
+							IsMy:         false,
+						}},
+						compacted[k][i]...,
+					)
+				}
+			}
 		}
 	}
 
