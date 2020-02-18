@@ -76,6 +76,8 @@ var marketItems = new Vue({
 
     beforeMount: function () {
         this.data = JSON.parse(this.$el.attributes['market-items'].value);
+
+        console.log(this.data.Records[0].VolumeHist);
     },
 
     methods: {

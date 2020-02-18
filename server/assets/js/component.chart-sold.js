@@ -1,6 +1,5 @@
-Vue.component('barchart', {
-    template:
-        '<div class="barchart"></div>',
+Vue.component('chart-sold', {
+    template: '<div class="chart-sold"></div>',
 
     props: ['data'],
 

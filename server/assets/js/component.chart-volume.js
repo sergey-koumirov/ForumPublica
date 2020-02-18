@@ -1,8 +1,7 @@
-Vue.component('price-chart', {
-    template:
-        '<div class="price-chart"></div>',
+Vue.component('chart-volume', {
+    template: '<div class="price-volume"></div>',
 
-    props: ['data', 'bottom'],
+    props: ['data'],
 
     data: function () {
       return {

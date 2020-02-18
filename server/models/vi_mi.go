@@ -1,9 +1,15 @@
 package models
 
-//MiMarketVolume model
-type MiMarketVolume struct {
-	MarketItemID int64
-	Dt           string
+//type MiVolumes model
+type MiVolumes struct {
+	Dt string
+	VV []MiVolume
+}
+
+//MiVolume model
+type MiVolume struct {
+	MarketItemID int64  `json:"-"`
+	Dt           string `json:"-"`
 	Vol          int64
 	IsMy         bool
 }
@@ -48,6 +54,7 @@ type MiRecord struct {
 	BottomPrice float64
 	Locations   []MiLocation
 	Stores      []MiStore
+	VolumeHist  []MiVolumes
 }
 
 //MiList list of market item info for index page

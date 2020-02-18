@@ -18,7 +18,7 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 		miIDs[i] = el.ID
 	}
 
-	loadMarketVolumes(miIDs)
+	volumes := loadMarketVolumes(miIDs)
 	marketDataMap, mdHist := loadMarketData(miIDs)
 	d90 := loadD90(marketItems)
 
@@ -59,6 +59,7 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 			BottomPrice: bottomPrice,
 			Locations:   locations,
 			Stores:      stores,
+			VolumeHist:  volumes[r.ID],
 		}
 		result.Records = append(result.Records, temp)
 	}
@@ -78,7 +79,7 @@ select d.market_item_id,
 	and d.market_item_id in (?)
   order by d.market_item_id, d.dt, s.price, s.id`
 
-func loadMarketVolumes(miIDs []int64) {
+func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 
 	minus90d := time.Now().AddDate(0, 0, -90).Format("2006-01-02")
 
@@ -89,15 +90,15 @@ func loadMarketVolumes(miIDs []int64) {
 	}
 
 	//load from DB
-	records := make(map[int64][]models.MiMarketVolume)
+	records := make(map[int64][]models.MiVolume)
 	for rows.Next() {
-		temp := models.MiMarketVolume{}
+		temp := models.MiVolume{}
 		db.DB.ScanRows(rows, &temp)
 		records[temp.MarketItemID] = append(records[temp.MarketItemID], temp)
 	}
 
 	//group by MarketItemID and make array of arrays by Dt
-	by_date := make(map[int64][][]models.MiMarketVolume)
+	by_date := make(map[int64][][]models.MiVolume)
 	for k, vv := range records {
 		index := 0
 		for i := 1; i < len(vv); i++ {
@@ -111,23 +112,24 @@ func loadMarketVolumes(miIDs []int64) {
 	}
 
 	//compact arrays into "my"/"not my" ranges
-	compacted := make(map[int64][][]models.MiMarketVolume)
+	compacted := make(map[int64][][]models.MiVolume)
 	for k, vv := range by_date {
 		for _, vd := range vv {
-			temp := make([]models.MiMarketVolume, 0)
+			temp := make([]models.MiVolume, 0)
 			tempVol := int64(0)
 			for i := 1; i < len(vd); i++ {
 				tempVol = tempVol + vd[i-1].Vol
 				if vd[i-1].IsMy != vd[i].IsMy {
-					tempCompact := models.MiMarketVolume{
+					tempCompact := models.MiVolume{
 						MarketItemID: k,
 						Dt:           vd[i-1].Dt,
 						Vol:          tempVol,
 						IsMy:         vd[i-1].IsMy,
 					}
 					temp = append(temp, tempCompact)
+					tempVol = 0
 				} else if i == len(vd)-1 {
-					tempCompact := models.MiMarketVolume{
+					tempCompact := models.MiVolume{
 						MarketItemID: k,
 						Dt:           vd[i].Dt,
 						Vol:          tempVol + vd[i].Vol,
@@ -152,7 +154,7 @@ func loadMarketVolumes(miIDs []int64) {
 			for i := 0; i < len(vv); i++ {
 				if vv[i][0].IsMy {
 					compacted[k][i] = append(
-						[]models.MiMarketVolume{models.MiMarketVolume{
+						[]models.MiVolume{models.MiVolume{
 							MarketItemID: k,
 							Dt:           vv[i][0].Dt,
 							Vol:          0,
@@ -165,12 +167,41 @@ func loadMarketVolumes(miIDs []int64) {
 		}
 	}
 
+	//for k, vv := range compacted {
+	//	fmt.Println(k)
+	//	for _, v := range vv {
+	//		fmt.Printf("  %+v\n", v)
+	//	}
+	//}
+
+	result := make(map[int64][]models.MiVolumes)
 	for k, vv := range compacted {
-		fmt.Println(k)
-		for _, v := range vv {
-			fmt.Printf("  %+v\n", v)
+
+		maxLen := 0
+		maxIndex := -1
+		for i, v := range vv {
+			if maxLen < len(v) {
+				maxLen = len(v)
+				maxIndex = i
+			}
 		}
+
+		temp := make([]models.MiVolumes, 0)
+		for _, v := range vv {
+			if len(v) < maxLen {
+				for i := len(v); i < maxLen; i++ {
+					v = append(v, models.MiVolume{Vol: 0, IsMy: vv[maxIndex][i].IsMy})
+				}
+			}
+			temp = append(temp, models.MiVolumes{
+				Dt: v[0].Dt,
+				VV: v,
+			})
+		}
+
+		result[k] = temp
 	}
+	return result
 
 }
 

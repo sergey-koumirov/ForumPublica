@@ -81,11 +81,15 @@
       </td>
 
       <td>
-        <barchart :data="record.D90Data"></barchart>
+        <chart-sold :data="record.D90Data"></chart-sold>
       </td>
 
       <td>
-        <price-chart :data="record.LowestHist" :bottom="record.BottomPrice"></price-chart>
+        <chart-price :data="record.LowestHist" :bottom="record.BottomPrice"></chart-price>
+      </td>
+
+      <td>
+        {{record.VolumeHist}}
       </td>
 
       <td class="text-right">
@@ -107,8 +111,9 @@
 <script src="/assets/js/component.type-select.js"></script>
 <script src="/assets/js/component.location-select.js"></script>
 <script src="/assets/js/component.pagination.js"></script>
-<script src="/assets/js/component.barchart.js"></script>
-<script src="/assets/js/component.price-chart.js"></script>
+<script src="/assets/js/component.chart-sold.js"></script>
+<script src="/assets/js/component.chart-price.js"></script>
+<script src="/assets/js/component.chart-volume.js"></script>
 <script src="/assets/js/vue.filters.js"></script>
 <script src="/assets/js/controller.market_items.js"></script>
 
