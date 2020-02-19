@@ -15,9 +15,9 @@
       <th><b>What</b></th>
       <th>Where / Store</th>
       <th>Lowest / My / Unit price</th>
+      <th>Lowest Price History</th>
       <th>90d / Market / Store Qty</th>
       <th>Sold last 90d</th>
-      <th>Lowest Price History</th>
       <th></th>
       <th></th>
     </tr>
@@ -69,11 +69,15 @@
         </div>
       </td>
 
+      <td>
+        <chart-price :data="record.LowestHist" :bottom="record.BottomPrice"></chart-price>
+      </td>
+
       <td class="text-right">
         <div class="gray-square">
           <span v-if="record.D90Vol>0">{{record.D90Vol | number}}</span>
         </div>
-        <div class="gray-square">
+        <div class="gray-square" :class="{ 'orange-square': record.MyVol == 0 }">
           <span v-if="record.MyVol>0">{{record.MyVol | number}}</span>
         </div>
         <div class="gray-square gray-gray-square">
@@ -83,10 +87,6 @@
 
       <td>
         <chart-sold :data="record.D90Data"></chart-sold>
-      </td>
-
-      <td>
-        <chart-price :data="record.LowestHist" :bottom="record.BottomPrice"></chart-price>
       </td>
 
       <td>

@@ -220,6 +220,7 @@ select sum(e.exvalue) / b.qty as price
 func getBottomPrice(typeID int32) float64 {
 	result := float64(0)
 	rows, _ := db.DB.Raw(bottomPriceSql, typeID).Rows()
+	defer rows.Close()
 	rows.Next()
 	rows.Scan(&result)
 	return result

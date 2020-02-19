@@ -540,6 +540,7 @@ hr.divider{
     border: 1px solid #dd9900;
     color: #dd9900;
     font-weight: bold;
+    background: rgba(255,255,240,128);
 }
 
 .market-items .gray-gray-square{
