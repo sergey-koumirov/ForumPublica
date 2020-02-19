@@ -59,7 +59,7 @@ Vue.component('location-select', {
                 vm.selected.type = item.getAttribute('data-type');
 
                 vm.$emit(
-                    'type-selected', 
+                    'location-selected',
                     vm.selected.id,
                     vm.selected.text,   
                     vm.selected.type,   
@@ -79,8 +79,8 @@ Vue.component('location-select', {
             };
             
             this.$emit(
-                'type-reset'   
+                'location-reset'
             );
         },
       },
-})
+});

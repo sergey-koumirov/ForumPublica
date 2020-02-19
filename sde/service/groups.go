@@ -26,7 +26,7 @@ func ImportGroups(f *zip.File) *models.ZipGroups {
 		fmt.Println("Unmarshal:", unmErr)
 		return nil
 	}
-	//todo insert to db
+
 	result := make(models.ZipGroups)
 
 	for key, value := range jsonData {

@@ -24,6 +24,7 @@ type MiHist struct {
 //MiLocation model
 type MiLocation struct {
 	ID            int64
+	LocationID    int64
 	Type          string
 	Name          string
 	CharacterName string

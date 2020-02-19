@@ -12,11 +12,21 @@
             </select>
         </div>
 
+        <div class="form-group">
+            <label>Used Locations</label>
+            <select class="form-control form-control-sm" @change="onUsedStoreChange($event)">
+                <option value="">---None---</option>
+                <option v-for="option in usedStores" v-bind:value="option.LocationID">
+                    {{ option.Name }}
+                </option>
+            </select>
+        </div>
+
         <location-select label="Warehouse" 
             :character-id="storeModal.characterId" 
             filter="stations"
-            v-on:type-selected="StoreSelected"
-            v-on:type-reset="StoreReset"></location-select>
+            v-on:location-selected="StoreSelected"
+            v-on:location-reset="StoreReset"></location-select>
 
     </div>
     <div slot="footer">

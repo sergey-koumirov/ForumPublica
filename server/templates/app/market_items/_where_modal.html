@@ -12,16 +12,20 @@
             </select>
         </div>
 
+        <div class="form-group">
+            <label>Used Locations</label>
+            <select class="form-control form-control-sm" @change="onUsedLocationChange($event)">
+                <option value="">---None---</option>
+                <option v-for="option in usedLocations" v-bind:value="option.LocationID">
+                    {{ option.Name }}
+                </option>
+            </select>
+        </div>
+
         <location-select label="Where" 
             :character-id="whereModal.characterId" 
-            v-on:type-selected="LocationSelected"
-            v-on:type-reset="LocationReset"></location-select>
-
-        <!-- <location-select label="Warehouse" 
-            :character-id="whereModal.characterId" 
-            filter="stations" 
-            v-on:type-selected="WarehouseSelected"
-            v-on:type-reset="WarehouseReset"></location-select> -->
+            v-on:location-selected="LocationSelected"
+            v-on:location-reset="LocationReset"></location-select>
 
     </div>
     <div slot="footer">

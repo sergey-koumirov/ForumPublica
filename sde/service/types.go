@@ -26,7 +26,7 @@ func ImportTypes(f *zip.File) *models.ZipTypes {
 		fmt.Println("Unmarshal:", unmErr)
 		return nil
 	}
-	//todo insert to db
+
 	result := make(models.ZipTypes)
 
 	for key, value := range jsonData {

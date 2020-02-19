@@ -49,6 +49,8 @@ var marketItems = new Vue({
 
     data: {
       data: {},
+      usedLocations:[],
+      usedStores:[],
       showAddModal: false,
       showWhereModal: false,
       showStoreModal: false,
@@ -76,8 +78,19 @@ var marketItems = new Vue({
 
     beforeMount: function () {
         this.data = JSON.parse(this.$el.attributes['market-items'].value);
+        this.data.Records.forEach((record)=>{
+            record.Locations.forEach((location)=>{
 
-        console.log(this.data.Records[0].VolumeHist);
+                if( !this.usedLocations.find((el)=>{return el.LocationID == location.LocationID}) ){
+                    this.usedLocations.push(location);
+                }
+
+                if( (location.Type=='station' || location.Type=='structure') && !this.usedStores.find((el)=>{return el.LocationID == location.LocationID}) ){
+                    this.usedStores.push(location);
+                }
+
+            });
+        });
     },
 
     methods: {
@@ -122,6 +135,27 @@ var marketItems = new Vue({
         this.whereModal.selectedLocationId = id;
         this.whereModal.selectedLocationType = type;
       },
+
+      onUsedLocationChange: function(event){
+          var l = this.usedLocations.find((el)=>{return el.LocationID == event.target.value});
+          if(!!l){
+              this.whereModal.selectedLocationId = l.LocationID;
+              this.whereModal.selectedLocationType = l.Type;
+          }else{
+              this.LocationReset();
+          }
+      },
+
+      onUsedStoreChange: function(event){
+          var l = this.usedStores.find((el)=>{return el.LocationID == event.target.value});
+          if(!!l){
+              this.storeModal.selectedLocationId = l.LocationID;
+              this.storeModal.selectedLocationType = l.Type;
+          }else{
+              this.StoreReset();
+          }
+      },
+
       LocationReset: function(){
         this.whereModal.selectedLocationId = null;
       },

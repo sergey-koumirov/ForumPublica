@@ -87,7 +87,7 @@ func (p *Pagination) getUrl(page int64, text string) string {
 		delete(params, "page")
 		strParam := ""
 		for k, v := range params {
-			strParam = strParam + "&" + k + "=" + v[0] // TODO
+			strParam = strParam + "&" + k + "=" + v[0]
 		}
 
 		href := baseUrl.Host + "?page=" + strPage + strParam

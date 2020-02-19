@@ -398,6 +398,7 @@ func loadLocations(r models.MarketItem) []models.MiLocation {
 			locations,
 			models.MiLocation{
 				ID:            l.ID,
+				LocationID:    l.LocationID,
 				Type:          l.LocationType,
 				Name:          LocationName(l.LocationID, l.LocationType),
 				CharacterName: l.Character.Name,
