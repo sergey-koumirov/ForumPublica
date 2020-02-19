@@ -2,4 +2,4 @@
  - construction title
  - construction list BPO names
  - volumes graph (30 days?)
- - add location/store: combox for recently used locations
+ - market warning qty
