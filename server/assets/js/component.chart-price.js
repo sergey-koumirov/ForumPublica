@@ -1,6 +1,6 @@
 Vue.component('chart-price', {
     template: '<div class="chart-price"></div>',
-    props: ['data', 'bottom'],
+    props: ['data', 'bottom', 'unit'],
 
     data: function () {
       return {
@@ -77,6 +77,16 @@ Vue.component('chart-price', {
                 .style("fill", "none")
                 .style("stroke", "#b369a2")
                 .style("stroke-dasharray", "2 4");
+        }
+
+        if(!!this.unit && this.unit>0){
+            svg.append("path")
+                .datum([{Dt: ago90, Price: this.unit},{Dt: today, Price: this.unit}])
+                .attr("class", "line")
+                .attr("d", valueline)
+                .style("fill", "none")
+                .style("stroke", "#b3b3b3")
+                .style("stroke-dasharray", "1 6");
         }
 
     },

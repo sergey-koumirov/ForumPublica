@@ -5,6 +5,7 @@ import (
 	"ForumPublica/server/db"
 	"ForumPublica/server/models"
 	"fmt"
+	"sort"
 	"time"
 )
 
@@ -421,6 +422,14 @@ func loadMarketItems(userID int64, page int64) ([]models.MarketItem, int64) {
 		Limit(MIPerPage).
 		Offset((page - 1) * MIPerPage).
 		Find(&marketItems)
+
+	sort.SliceStable(
+		marketItems,
+		func(i, j int) bool {
+			return static.Types[marketItems[i].TypeID].Name < static.Types[marketItems[j].TypeID].Name
+		},
+	)
+
 	return marketItems, total
 }
 

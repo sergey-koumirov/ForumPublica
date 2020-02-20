@@ -11,12 +11,12 @@
 
   <table class="table table-striped table-sm">
     <tr>
-      <th></th>
+      <th>[{{data.Total | number}}]</th>
       <th><b>What</b></th>
       <th>Where / Store</th>
-      <th>Lowest / My / Unit price</th>
+      <th>My / Lowest / Unit price</th>
       <th>Lowest Price History</th>
-      <th>90d / Market / Store Qty</th>
+      <th>Market / Store Qty / 90d </th>
       <th>Sold last 90d</th>
       <th></th>
       <th></th>
@@ -58,11 +58,11 @@
       </td>
 
       <td class="text-right">
-        <div class="gray-square" :class="{ 'orange-square': record.LowestPrice < record.MyPrice }">
-          <span v-if="record.LowestPrice>0">{{record.LowestPrice | float}}</span>
+        <div :class="{ 'orange-square': record.LowestPrice < record.MyPrice || record.MyPrice==0, 'green-square': record.LowestPrice >= record.MyPrice && record.MyPrice>0 }">
+          <span v-if="record.MyPrice>0">{{record.MyPrice | float}}</span>
         </div>
         <div class="gray-square">
-          <span v-if="record.MyPrice>0">{{record.MyPrice | float}}</span>
+          <span v-if="record.LowestPrice>0">{{record.LowestPrice | float}}</span>
         </div>
         <div class="gray-square gray-gray-square">
           <span v-if="record.UnitPrice>0">{{record.UnitPrice | float}}</span>
@@ -70,18 +70,18 @@
       </td>
 
       <td>
-        <chart-price :data="record.LowestHist" :bottom="record.BottomPrice"></chart-price>
+        <chart-price :data="record.LowestHist" :bottom="record.BottomPrice" :unit="record.UnitPrice"></chart-price>
       </td>
 
       <td class="text-right">
-        <div class="gray-square">
-          <span v-if="record.D90Vol>0">{{record.D90Vol | number}}</span>
-        </div>
-        <div class="gray-square" :class="{ 'orange-square': record.MyVol == 0 }">
+        <div :class="{ 'orange-square': record.MyVol == 0, 'green-square': record.MyVol > 0 }">
           <span v-if="record.MyVol>0">{{record.MyVol | number}}</span>
         </div>
-        <div class="gray-square gray-gray-square">
+        <div class="gray-square">
           <span v-if="record.StoreVol>0">{{record.StoreVol | number}}</span>
+        </div>
+        <div class="gray-square gray-gray-square">
+          <span v-if="record.D90Vol>0">{{record.D90Vol | number}}</span>
         </div>
       </td>
 

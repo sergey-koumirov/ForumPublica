@@ -538,9 +538,24 @@ hr.divider{
 
 .market-items .orange-square{
     border: 1px solid #dd9900;
+    margin: 2px;
+    padding-right: 2px;
     color: #dd9900;
+    min-height: 20px;
+    font-family: monospace;
     font-weight: bold;
     background: rgba(255,255,240,128);
+}
+
+.market-items .green-square{
+    border: 1px solid #6e996e;
+    margin: 2px;
+    padding-right: 2px;
+    color: #6e996e;
+    min-height: 20px;
+    font-family: monospace;
+    font-weight: bold;
+    background: rgba(250,255,250,128);
 }
 
 .market-items .gray-gray-square{

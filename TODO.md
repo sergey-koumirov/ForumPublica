@@ -3,3 +3,5 @@
  - construction list BPO names
  - volumes graph (30 days?)
  - market warning qty
+ - over/under price index page
+ - google counter
