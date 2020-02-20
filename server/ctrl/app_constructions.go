@@ -19,6 +19,7 @@ func AppConstructions(c *gin.Context) {
 
 	c.Keys["constructions"] = list
 	c.Keys["p"] = utils.NewPagination(list.Total, services.PerPage, p, "/app/constructions")
+	c.Keys["Title"] = "Constructions"
 
 	c.HTML(http.StatusOK, "app/constructions/index.html", c.Keys)
 }
@@ -46,6 +47,7 @@ func AppConstructionsShow(c *gin.Context) {
 
 	c.Keys["construction"] = cn
 	c.Keys["chars"] = services.CharsByUserID(u.ID)
+	c.Keys["Title"] = fmt.Sprintf("[%d] Construction", cn.Model.ID)
 
 	c.HTML(http.StatusOK, "app/constructions/show.html", c.Keys)
 }

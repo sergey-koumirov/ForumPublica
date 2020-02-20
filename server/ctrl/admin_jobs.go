@@ -10,6 +10,7 @@ import (
 
 //AdminJobs page with buttons to start any async job
 func AdminJobs(c *gin.Context) {
+	c.Keys["Title"] = "Admin: Jobs"
 	c.HTML(http.StatusOK, "admin/jobs.html", c.Keys)
 }
 

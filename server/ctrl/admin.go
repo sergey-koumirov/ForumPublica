@@ -8,5 +8,6 @@ import (
 
 //AdminIndex index
 func AdminIndex(c *gin.Context) {
+	c.Keys["Title"] = "Admin: Index"
 	c.HTML(http.StatusOK, "admin/index.html", c.Keys)
 }
