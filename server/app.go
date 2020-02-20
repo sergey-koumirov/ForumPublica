@@ -83,6 +83,7 @@ func main() {
 
 	toolbox.AddTask("load_market_data", toolbox.NewTask("load_market_data", "0 30 */4 * * *", tasks.LoadMarketData))
 	toolbox.AddTask("load_transactions", toolbox.NewTask("load_transactions", "0 32 */2 * * *", tasks.TaskLoadTransactions))
+	toolbox.AddTask("load_deviations", toolbox.NewTask("load_deviations", "0 34 0 * * *", tasks.TaskCheckT2))
 	toolbox.StartTask()
 	defer toolbox.StopTask()
 
