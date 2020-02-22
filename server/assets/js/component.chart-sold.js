@@ -35,6 +35,7 @@ Vue.component('chart-sold', {
             .tickFormat((domain,number)=>{return ""});
 
         svg.append("g")
+            .style("font", "8px mono")
             .attr("transform", "translate(0,"+height+")")
             .call(xAxis);
 
@@ -45,6 +46,7 @@ Vue.component('chart-sold', {
         var yAxis = d3.axisLeft(y).ticks(3);
 
         svg.append("g")
+            .style("font", "8px mono")
             .call(yAxis);
 
         svg.selectAll("mybar")

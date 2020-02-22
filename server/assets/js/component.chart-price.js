@@ -47,6 +47,7 @@ Vue.component('chart-price', {
                 .ticks(d3.utcMonth.every(1));
 
         svg.append("g")
+            .style("font", "8px mono")
             .attr("transform", "translate(0,"+height+")")
             .call(xAxis);
 
@@ -56,6 +57,7 @@ Vue.component('chart-price', {
             yAxis = d3.axisLeft(y).ticks(3);
 
         svg.append("g")
+            .style("font", "8px mono")
             .call(yAxis);
 
         var valueline = d3.line()

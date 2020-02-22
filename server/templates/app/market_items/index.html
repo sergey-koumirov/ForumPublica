@@ -21,7 +21,9 @@
       <th class="text-center">Lowest Price History</th>
       <th class="text-center">Market / Store Qty / 90d </th>
       <th class="text-center">Sold last 90d</th>
-      <th></th>
+      <th class="text-center">
+        Market volume 90d: <span class="my">My</span> / <span class="not-my">Not My</span>
+      </th>
       <th></th>
     </tr>
     <tr v-for="record in data.Records">
@@ -91,6 +93,7 @@
       </td>
 
       <td>
+        <chart-volume :data="record.VolumeHist"></chart-volume>
       </td>
 
       <td class="text-right">

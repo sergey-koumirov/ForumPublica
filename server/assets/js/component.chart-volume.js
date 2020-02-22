@@ -17,7 +17,6 @@ Vue.component('chart-volume', {
         var height = 60,
             width = 180,
             marginLeft = 60,
-            maxPrice = d3.max(this.data, function(d){return d.Price}),
             today = new Date(),
             ago90 = new Date();
 
@@ -30,9 +29,20 @@ Vue.component('chart-volume', {
         ago90.setMinutes(0);
         ago90.setSeconds(0);
 
-        if(maxPrice==0){
-            return;
+        var series = d3.stack()
+                       .keys( Array.from(Array( this.data[0].VV.length ).keys()) )
+                       .value( (d,key)=>{return d.VV[key].Vol} )(this.data),
+            last = series[series.length-1],
+            maxVol = d3.max(last, (el)=>{ return el[1]});
+
+        for(var i=0; i<series.length; i++){
+            var l = series[i].length;
+            for(var j=0; j<l; j++){
+                series[i][j].push( new Date(this.data[j].Dt) );
+            }
         }
+
+        let colors = this.data[0].VV.map( (el)=>{ return el.IsMy ? '#28a745' : '#f7a588'; } );
 
         var svg = d3.select(this.$el)
                     .append("svg")
@@ -53,33 +63,23 @@ Vue.component('chart-volume', {
 
         var y = d3.scaleLinear()
                   .range([height, 0])
-                  .domain([0, maxPrice]),
+                  .domain([0, maxVol]),
             yAxis = d3.axisLeft(y).ticks(3);
 
         svg.append("g")
             .call(yAxis);
 
-        var valueline = d3.line()
-            .x(function(d) { return x( new Date(d.Dt) ); })
-            .y(function(d) { return y( d.Price ); });
+        var area = d3.area()
+                     .x( (d) => {return x(d[2]) } )
+                     .y0( (d) => {return y(d[0]) } )
+                     .y1( (d) => {return y(d[1]) } );
 
-        svg.append("path")
-            .data([this.data])
-            .attr("class", "line")
-            .attr("d", valueline)
-            .style("fill", "none")
-            .style("stroke", "#69b3a2");
-
-        if(!!this.bottom && this.bottom>0){
-            svg.append("path")
-                .datum([{Dt: ago90, Price: this.bottom},{Dt: today, Price: this.bottom}])
-                .attr("class", "line")
-                .attr("d", valueline)
-                .style("fill", "none")
-                .style("stroke", "#b369a2")
-                .style("stroke-dasharray", "2 4");
-        }
-
+        svg.append("g")
+            .selectAll("path")
+            .data(series)
+            .join("path")
+              .attr("fill", ({index}) => { return colors[index]; })
+              .attr("d", area);
 
     },
 

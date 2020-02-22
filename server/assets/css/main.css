@@ -562,6 +562,14 @@ hr.divider{
     color: #aaaaaa;
 }
 
+.market-items .my{
+    color: #28a745;
+}
+
+.market-items .not-my{
+    color: #f7a588;
+}
+
 .transactions table td{
     vertical-align: middle;
 }
