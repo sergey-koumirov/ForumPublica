@@ -14,7 +14,7 @@ Vue.component('chart-price', {
         }
 
         var height = 60,
-            width = 180,
+            width = 260,
             marginLeft = 60,
             maxPrice = d3.max(this.data, function(d){return d.Price}),
             today = new Date(),

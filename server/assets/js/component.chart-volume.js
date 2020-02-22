@@ -15,7 +15,7 @@ Vue.component('chart-volume', {
         }
 
         var height = 60,
-            width = 180,
+            width = 260,
             marginLeft = 60,
             today = new Date(),
             ago90 = new Date();
@@ -58,6 +58,7 @@ Vue.component('chart-volume', {
                 .ticks(d3.utcMonth.every(1));
 
         svg.append("g")
+            .style("font", "8px mono")
             .attr("transform", "translate(0,"+height+")")
             .call(xAxis);
 
@@ -67,6 +68,7 @@ Vue.component('chart-volume', {
             yAxis = d3.axisLeft(y).ticks(3);
 
         svg.append("g")
+            .style("font", "8px mono")
             .call(yAxis);
 
         var area = d3.area()

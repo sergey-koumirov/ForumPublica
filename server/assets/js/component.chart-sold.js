@@ -10,7 +10,7 @@ Vue.component('chart-sold', {
 
     mounted: function () {
         var height = 60,
-            width = 180,
+            width = 260,
             marginLeft = 30,
             maxQ = d3.max(this.data, function(d){return d.Q});
 
