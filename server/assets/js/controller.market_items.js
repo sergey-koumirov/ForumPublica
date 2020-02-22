@@ -48,6 +48,7 @@ var marketItems = new Vue({
     el: '#market-items',
 
     data: {
+      chars: [],
       data: {},
       usedLocations:[],
       usedStores:[],
@@ -77,6 +78,7 @@ var marketItems = new Vue({
     },
 
     beforeMount: function () {
+        this.chars = JSON.parse(this.$el.attributes['chars'].value);
         this.data = JSON.parse(this.$el.attributes['market-items'].value);
         this.data.Records.forEach((record)=>{
             record.Locations.forEach((location)=>{
@@ -201,7 +203,12 @@ var marketItems = new Vue({
       
       DeleteMarketStore: function(miId, sId){
         del(this, '/app/market_item/'+miId+'/store/'+sId+'?page='+this.data.Page);
-      }
+      },
+
+      OpenCharPopup: function($event, typeId){
+        this.$root.$emit('open-market', typeId, $event.pageX, $event.pageY)
+        this.HighlightRow($event);
+      },
     },
 });
 

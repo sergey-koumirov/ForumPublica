@@ -114,8 +114,8 @@ func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 
 	//compact arrays into "my"/"not my" ranges
 	compacted := make(map[int64][][]models.MiVolume)
-	for k, vv := range by_date {
-		for _, vd := range vv {
+	for k, valuesForMI := range by_date {
+		for _, vd := range valuesForMI {
 			temp := make([]models.MiVolume, 0)
 			tempVol := int64(0)
 			for i := 1; i < len(vd); i++ {
@@ -129,7 +129,9 @@ func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 					}
 					temp = append(temp, tempCompact)
 					tempVol = 0
-				} else if i == len(vd)-1 {
+				}
+
+				if i == len(vd)-1 {
 					tempCompact := models.MiVolume{
 						MarketItemID: k,
 						Dt:           vd[i].Dt,
@@ -167,13 +169,6 @@ func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 			}
 		}
 	}
-
-	//for k, vv := range compacted {
-	//	fmt.Println(k)
-	//	for _, v := range vv {
-	//		fmt.Printf("  %+v\n", v)
-	//	}
-	//}
 
 	result := make(map[int64][]models.MiVolumes)
 	for k, vv := range compacted {

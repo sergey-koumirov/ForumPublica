@@ -1,6 +1,6 @@
 <% define "app/market_items/index.html" %>
 <% template "base_head" .%>
-<div id="market-items" class="market-items" market-items="<% .MarketItems | Marshal %>" v-cloak>
+<div id="market-items" class="market-items" market-items="<% .MarketItems | Marshal %>" chars="<% .chars | Marshal %>" v-cloak>
 
   <h5>
     Market
@@ -41,7 +41,10 @@
           <span class="oi oi-box"></span>
         </div>
 
+        <span class="oi oi-bar-chart pointer" v-on:click="OpenCharPopup($event, record.TypeID)"></span>
+
         <b>{{record.TypeName}}</b>
+        <span class="gray">[{{record.TypeID}}]</span>
 
         <ul class="simple-list">
           <li v-for="location in record.Locations">
@@ -102,6 +105,8 @@
     </tr>
   </table>
 
+  <open-market v-bind:chars="chars"></open-market>
+
   <% template "app/market_items/_add_modal.html" . %>
   <% template "app/market_items/_where_modal.html" . %>
   <% template "app/market_items/_store_modal.html" . %>
@@ -118,6 +123,7 @@
 <script src="/assets/js/component.chart-sold.js"></script>
 <script src="/assets/js/component.chart-price.js"></script>
 <script src="/assets/js/component.chart-volume.js"></script>
+<script src="/assets/js/component.open-market.js"></script>
 <script src="/assets/js/vue.filters.js"></script>
 <script src="/assets/js/controller.market_items.js"></script>
 

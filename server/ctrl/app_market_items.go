@@ -15,6 +15,7 @@ func AppMarketItems(c *gin.Context) {
 
 	c.Keys["MarketItems"] = services.MarketItemsList(u.ID, p)
 	c.Keys["Title"] = "Market Items"
+	c.Keys["chars"] = services.CharsByUserID(u.ID)
 
 	c.HTML(http.StatusOK, "app/market_items/index.html", c.Keys)
 }
