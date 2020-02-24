@@ -15,7 +15,7 @@ Vue.component('chart-volume', {
         }
 
         var height = 60,
-            width = 260,
+            width = 420,
             marginLeft = 60,
             today = new Date(),
             ago90 = new Date();
