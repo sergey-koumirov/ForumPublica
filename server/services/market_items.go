@@ -82,7 +82,7 @@ select d.market_item_id,
 
 func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 
-	minus90d := time.Now().AddDate(0, 0, -90).Format("2006-01-02")
+	minus90d := time.Now().AddDate(0, 0, -30).Format("2006-01-02")
 
 	rows, errRaw := db.DB.Raw(marketVolumesSql, minus90d, miIDs).Rows()
 	defer rows.Close()
@@ -141,6 +141,17 @@ func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 					temp = append(temp, tempCompact)
 				}
 			}
+
+			if len(vd) == 1 {
+				tempCompact := models.MiVolume{
+					MarketItemID: k,
+					Dt:           vd[0].Dt,
+					Vol:          tempVol + vd[0].Vol,
+					IsMy:         vd[0].IsMy,
+				}
+				temp = append(temp, tempCompact)
+			}
+
 			compacted[k] = append(compacted[k], temp)
 		}
 	}
@@ -149,13 +160,13 @@ func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 	for k, vv := range compacted {
 		firstSame := true
 		for i := 1; i < len(vv); i++ {
-			if vv[i-1][0].IsMy != vv[i][0].IsMy {
+			if len(vv[i-1]) > 0 && len(vv[i]) > 0 && vv[i-1][0].IsMy != vv[i][0].IsMy {
 				firstSame = false
 			}
 		}
 		if !firstSame {
 			for i := 0; i < len(vv); i++ {
-				if vv[i][0].IsMy {
+				if len(vv[i]) > 0 && vv[i][0].IsMy {
 					compacted[k][i] = append(
 						[]models.MiVolume{models.MiVolume{
 							MarketItemID: k,

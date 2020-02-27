@@ -24,7 +24,7 @@ Vue.component('chart-volume', {
         today.setMinutes(59);
         today.setSeconds(59);
 
-        ago90.setDate( today.getDate()-90 )
+        ago90.setDate( today.getDate()-30 )
         ago90.setHours(0);
         ago90.setMinutes(0);
         ago90.setSeconds(0);
