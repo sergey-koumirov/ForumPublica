@@ -507,7 +507,7 @@ table.sap td.paused{
 }
 
 .icon-suggestion {
-  margin-top: -5px;
+  /*margin-top: -5px;*/
   margin-right: 4px;
 }
 
@@ -626,3 +626,13 @@ pre{
     margin: 0;
 }
 
+.grid-container {
+    display: grid;
+    grid-template-columns: 18px auto 1fr 16px;
+    grid-column-gap: 2px;
+}
+
+.shortened{
+    white-space: nowrap;
+    overflow-x: hidden;
+}

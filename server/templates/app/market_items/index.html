@@ -46,21 +46,26 @@
         <b>{{record.TypeName}}</b>
         <span class="gray">[{{record.TypeID}}]</span>
 
-        <ul class="simple-list">
-          <li v-for="location in record.Locations">
+        <div class="grid-container">
+          <template v-for="location in record.Locations">
             <img class="icon-suggestion" width="16" height="16" :src="'/assets/images/'+location.Type+'.png'" />
-            <span class="gray">{{location.CharacterName}}</span> {{location.Name}}
+            <span class="gray">{{location.CharacterName}}</span>
+            <span class="shortened">{{location.Name}}</span>
             <span class="oi oi-delete pointer" @click="DeleteMarketLocation(record.TypeID, location.ID)"></span>
-          </li>
-        </ul>
+          </template>
+        </div>
+
         <hr class="divider" v-if="record.Stores.length>0">
-        <ul class="simple-list" v-if="record.Stores.length>0">
-          <li v-for="store in record.Stores">
+
+        <div class="grid-container" v-if="record.Stores.length>0">
+          <template v-for="store in record.Stores">
             <img class="icon-suggestion" width="16" height="16" :src="'/assets/images/'+store.Type+'.png'" />
-            <span class="gray">{{store.CharacterName}}</span> {{store.Name}} [{{store.Qty | number}}]
+            <span class="gray">{{store.CharacterName}}</span>
+            <span class="shortened">{{store.Name}} [{{store.Qty | number}}]</span>
             <span class="oi oi-delete pointer" @click="DeleteMarketStore(record.ModelID, store.ID)"></span>
-          </li>
-        </ul>
+          </template>
+        </div>
+
       </td>
 
       <td class="text-right">
