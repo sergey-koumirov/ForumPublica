@@ -26,3 +26,11 @@ func Marshal(v interface{}) template.JS {
 func TypeName(id int32) string {
 	return static.Types[id].Name
 }
+
+func FormatFloat(in float64) string {
+	return RenderFloat("# ###.##", in)
+}
+
+func FormatInt(in int64) string {
+	return RenderFloat("# ###.", float64(in))
+}

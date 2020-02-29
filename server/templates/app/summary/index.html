@@ -1,0 +1,90 @@
+<% define "app/summary/index.html" %>
+<% template "base_head" .%>
+<div id="transactions" class="transactions">
+
+  <h5>
+    Summary 30d
+  </h5>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4 offset-sm-2">
+
+        <table class="table table-striped table-sm">
+          <tr>
+            <th></th>
+            <th></th>
+            <th class="text-right"><% .Summary.Total | FormatFloat %></th>
+          </tr>
+          <% range $index, $s := .Summary.ByType %>
+          <tr>
+            <td><% $s.TypeName %></td>
+            <td class="text-right"><% $s.TotalQty | FormatInt %></td>
+            <td class="text-right"><% $s.TotalValue | FormatFloat %></td>
+          </tr>
+          <% end %>
+        </table>
+
+        <div id="chart-sold"></div>
+
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<script src="/assets/js/d3.v5.min.js"></script>
+<script>
+  var data = <% .Summary.ByDate | Marshal %>;
+
+  var height = 300,
+      width = 800,
+      marginLeft = 100,
+      maxQ = d3.max(data, function(d){return d.TotalValue});
+
+  var svg = d3.select('#chart-sold')
+          .append("svg")
+          .attr("width", width+marginLeft)
+          .attr("height", height+50)
+          .append("g")
+          .attr("transform", "translate("+marginLeft+",5)");
+
+  var x = d3.scaleBand()
+          .range([0, width])
+          .domain(data.map(function(d) { return d.Dt; }))
+          .padding(0.2);
+
+  var xAxis = d3.axisBottom(x)
+          .tickValues(x.domain().filter(function(d,i){ return !(i % 7);  }));
+
+  svg.append("g")
+          .style("font", "8px mono")
+          .attr("transform", "translate(0,"+height+")")
+          .call(xAxis);
+
+  var y = d3.scaleLinear()
+          .range([height, 0])
+          .domain([0, maxQ]);
+
+  var yAxis = d3.axisLeft(y).ticks(3);
+
+  svg.append("g")
+          .style("font", "8px mono")
+          .call(yAxis);
+
+  svg.selectAll("mybar")
+          .data(data)
+          .enter()
+          .append("rect")
+          .attr("x", function(d) { return x(d.Dt); })
+          .attr("y", function(d) { return y(d.TotalValue); })
+          .attr("width", function(d) { return x.bandwidth() })
+          .attr("height", function(d) { return height - y(d.TotalValue); })
+          .style("fill", "#69b3a2")
+
+</script>
+
+<% template "base_foot" %>
+<% end %>

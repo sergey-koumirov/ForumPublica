@@ -20,6 +20,7 @@ func AppChars(c *gin.Context) {
 	db.DB.Preload("Skills", skillsOrder).Where("user_id = ?", u.ID).Order("name").Find(&chars)
 
 	c.Keys["chars"] = chars
+	c.Keys["Title"] = "Characters"
 
 	c.HTML(http.StatusOK, "app/chars.html", c.Keys)
 }

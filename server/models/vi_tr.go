@@ -1,6 +1,27 @@
 package models
 
-//Tr90dSummary
+//TrByType model
+type TrByType struct {
+	TypeID     int32
+	TypeName   string
+	TotalQty   int64
+	TotalValue float64
+}
+
+//TrByDay model
+type TrByDate struct {
+	Dt         string
+	TotalValue float64
+}
+
+//TrSummary model
+type TrSummary struct {
+	Total  float64
+	ByDate []TrByDate
+	ByType []TrByType
+}
+
+//Tr90dSummary model
 type Tr90dSummary struct {
 	Total int64
 	R     []Tr90d

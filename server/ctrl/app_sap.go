@@ -13,6 +13,7 @@ func AppSAP(c *gin.Context) {
 	chars := services.CharJobsList(u.ID)
 	c.Keys["chars"] = chars
 	c.Keys["timeout"] = services.GetTimeout(services.JOBS, 5)
+	c.Keys["Title"] = "Science & Production"
 	c.HTML(http.StatusOK, "app/sap/index.html", c.Keys)
 }
 
