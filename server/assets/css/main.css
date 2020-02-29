@@ -626,9 +626,15 @@ pre{
     margin: 0;
 }
 
-.grid-container {
+.location-grid {
     display: grid;
     grid-template-columns: 18px auto 1fr 16px;
+    grid-column-gap: 2px;
+}
+
+.item-name-grid {
+    display: grid;
+    grid-template-columns: 38px 38px 18px 1fr auto;
     grid-column-gap: 2px;
 }
 

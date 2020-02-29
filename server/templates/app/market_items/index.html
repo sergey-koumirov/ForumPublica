@@ -19,7 +19,11 @@
       </th>
       <th class="text-center">My / Lowest / Unit price</th>
       <th class="text-center">Lowest Price History</th>
-      <th class="text-center">Market / Store Qty / 90d </th>
+      <th class="text-center">
+        Market / Store Qty / 90d
+        <a href="/app/market_items/sync_qty"><span class="oi oi-reload"></span></a>
+
+      </th>
       <th class="text-center">Sold last 90d</th>
       <th class="text-center">
         Market volume 90d: <span class="my">My</span> / <span class="not-my">Not My</span>
@@ -31,22 +35,25 @@
         <img align="left" width="48" height="48" :src="'https://images.evetech.net/types/'+record.TypeID+'/icon?size=64'">
       </td>
       <td>
-        <div class="round-border pointer" v-on:click="OpenWhereModal(record.ModelID)" title="Add sell location">
-          <span class="oi oi-plus"></span>
-          <span class="oi oi-map-marker"></span>
+        <div class="item-name-grid">
+          <div class="round-border pointer" v-on:click="OpenWhereModal(record.ModelID)" title="Add sell location">
+            <span class="oi oi-plus"></span>
+            <span class="oi oi-map-marker"></span>
+          </div>
+
+          <div class="round-border pointer" v-on:click="OpenStoreModal(record.ModelID)" title="Add warehouse location">
+            <span class="oi oi-plus"></span>
+            <span class="oi oi-box"></span>
+          </div>
+
+          <span class="oi oi-bar-chart pointer" v-on:click="OpenCharPopup($event, record.TypeID)"></span>
+
+          <b class="shortened">{{record.TypeName}}</b>
+
+          <span class="gray">[{{record.TypeID}}]</span>
         </div>
 
-        <div class="round-border pointer" v-on:click="OpenStoreModal(record.ModelID)" title="Add warehouse location">
-          <span class="oi oi-plus"></span>
-          <span class="oi oi-box"></span>
-        </div>
-
-        <span class="oi oi-bar-chart pointer" v-on:click="OpenCharPopup($event, record.TypeID)"></span>
-
-        <b>{{record.TypeName}}</b>
-        <span class="gray">[{{record.TypeID}}]</span>
-
-        <div class="grid-container">
+        <div class="location-grid">
           <template v-for="location in record.Locations">
             <img class="icon-suggestion" width="16" height="16" :src="'/assets/images/'+location.Type+'.png'" />
             <span class="gray">{{location.CharacterName}}</span>
@@ -57,7 +64,7 @@
 
         <hr class="divider" v-if="record.Stores.length>0">
 
-        <div class="grid-container" v-if="record.Stores.length>0">
+        <div class="location-grid" v-if="record.Stores.length>0">
           <template v-for="store in record.Stores">
             <img class="icon-suggestion" width="16" height="16" :src="'/assets/images/'+store.Type+'.png'" />
             <span class="gray">{{store.CharacterName}}</span>

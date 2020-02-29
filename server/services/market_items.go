@@ -76,6 +76,7 @@ select d.market_item_id,
   from fp_market_data d,
        fp_market_screenshots s
   where d.id = s.market_data_id
+    and d.technical=0
 	and d.dt > ?
 	and d.market_item_id in (?)
   order by d.market_item_id, d.dt, s.price, s.id`
@@ -321,7 +322,7 @@ select x.*
   from(
     select d.*, ROW_NUMBER() OVER w AS 'row_number' 
       from fp_market_data d 
-      where d.market_item_id in (?) 
+      where d.market_item_id in (?)
       window w as (partition by d.market_item_id order by dt desc)
   ) x 
   where x.row_number=1`

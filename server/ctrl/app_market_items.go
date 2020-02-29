@@ -2,6 +2,7 @@ package ctrl
 
 import (
 	"ForumPublica/server/services"
+	"ForumPublica/server/tasks"
 	"net/http"
 	"strconv"
 
@@ -43,5 +44,12 @@ func AppMarketItemsDelete(c *gin.Context) {
 	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	services.MarketItemsDelete(u.ID, id)
 
+	c.Redirect(http.StatusTemporaryRedirect, "/app/market_items")
+}
+
+//AppMarketItemsSyncQty sync qty
+func AppMarketItemsSyncQty(c *gin.Context) {
+	u := user(c)
+	tasks.LoadMarketDataForUser(u.ID)
 	c.Redirect(http.StatusTemporaryRedirect, "/app/market_items")
 }

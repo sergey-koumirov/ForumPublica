@@ -14,9 +14,25 @@ import (
 //LoadMarketData updates prices using ESI API
 func LoadMarketData() error {
 	fmt.Println("LoadMarketData started", time.Now().Format("2006-01-02 15:04:05"))
+	loadMarketData(0, false)
+	fmt.Println("LoadMarketData finished", time.Now().Format("2006-01-02 15:04:05"))
 
+	return nil
+}
+
+func LoadMarketDataForUser(userID int64) {
+	loadMarketData(userID, true)
+}
+
+// ########################################################################################################################
+
+func loadMarketData(userID int64, technical bool) {
 	mrkLocs := make([]models.MarketLocation, 0)
-	db.DB.Preload("MarketItem").Preload("Character").Find(&mrkLocs)
+	scopeLocs := db.DB.Preload("MarketItem").Preload("Character")
+	if userID > 0 {
+		scopeLocs = scopeLocs.Where("fp_market_locations.market_item_id in (select fp_market_items.id from fp_market_items where fp_market_items.user_id=?)", userID)
+	}
+	scopeLocs.Find(&mrkLocs)
 
 	if len(mrkLocs) > 0 {
 		updatePublicMarketStructures(mrkLocs[0].Character)
@@ -29,22 +45,21 @@ func LoadMarketData() error {
 		loadOrdersFromStructures(&mrkLocs, orders)
 
 		marketItems := make([]models.MarketItem, 0)
-		db.DB.Preload("Locations.Character").Preload("Stores.Character").Find(&marketItems)
+		scopeMI := db.DB.Preload("Locations.Character").Preload("Stores.Character")
+		if userID > 0 {
+			scopeMI = scopeMI.Where("fp_market_items.user_id=?", userID)
+		}
+		scopeMI.Find(&marketItems)
 
 		charOrdersCache := preloadCharOrders(marketItems)
 		charItemsCache := preloadCharItems(marketItems)
 
 		for _, mi := range marketItems {
-			createMarketData(mi, dt, orders[mi.ID], charOrdersCache)
+			createMarketData(mi, dt, orders[mi.ID], charOrdersCache, technical)
 			updateMarketStores(mi, charItemsCache)
 		}
 	}
-	fmt.Println("LoadMarketData finished", time.Now().Format("2006-01-02 15:04:05"))
-
-	return nil
 }
-
-// ########################################################################################################################
 
 type itemsByChar map[int64]esi.ItemsByLocation
 
@@ -116,7 +131,7 @@ func preloadCharOrders(mis []models.MarketItem) map[int64][]int64 {
 	return charOrdersCache
 }
 
-func createMarketData(mi models.MarketItem, dt string, orders esi.MarketsOrdersArray, charOrdersCache map[int64][]int64) {
+func createMarketData(mi models.MarketItem, dt string, orders esi.MarketsOrdersArray, charOrdersCache map[int64][]int64, technical bool) {
 
 	var (
 		sellVol         int64
@@ -172,30 +187,33 @@ func createMarketData(mi models.MarketItem, dt string, orders esi.MarketsOrdersA
 		BuyHighestPrice: buyHighestPrice,
 		MyVol:           myVol,
 		MyLowestPrice:   myLowestPrice,
+		Technical:       technical,
 	}
 	errDb := db.DB.Create(&dataPoint).Error
 	if errDb != nil {
 		fmt.Println("createMarketData: ", errDb)
 	}
 
-	for _, order := range orders {
-		if !order.IsBuyOrder {
+	if !technical {
+		for _, order := range orders {
+			if !order.IsBuyOrder {
 
-			isMy := false
-			for _, cid := range charIds {
-				if utils.FindInt64(charOrdersCache[cid], order.OrderID) > -1 {
-					isMy = true
-					break
+				isMy := false
+				for _, cid := range charIds {
+					if utils.FindInt64(charOrdersCache[cid], order.OrderID) > -1 {
+						isMy = true
+						break
+					}
 				}
-			}
 
-			screenPoint := models.MarketScreenshot{
-				MarketDataID: dataPoint.ID,
-				Vol:          order.VolumeRemain,
-				Price:        order.Price,
-				IsMy:         isMy,
+				screenPoint := models.MarketScreenshot{
+					MarketDataID: dataPoint.ID,
+					Vol:          order.VolumeRemain,
+					Price:        order.Price,
+					IsMy:         isMy,
+				}
+				db.DB.Create(&screenPoint)
 			}
-			db.DB.Create(&screenPoint)
 		}
 	}
 
