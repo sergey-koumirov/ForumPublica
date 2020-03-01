@@ -23,7 +23,7 @@ select d.date as d, sum(t.quantity * t.unit_price) as v
   order by d.date`
 
 var sqlByType = `
-select t.type_id, count(t.quantity) as q, sum(t.quantity * t.unit_price) as v
+select t.type_id, sum(t.quantity) as q, sum(t.quantity * t.unit_price) as v
   from esi_transactions t
   where t.dt >= ?
     and t.is_buy=0
