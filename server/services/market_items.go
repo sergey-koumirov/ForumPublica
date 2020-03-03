@@ -167,13 +167,13 @@ func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 		}
 		if !firstSame {
 			for i := 0; i < len(vv); i++ {
-				if len(vv[i]) > 0 && vv[i][0].IsMy {
+				if len(vv[i]) > 0 && !vv[i][0].IsMy {
 					compacted[k][i] = append(
 						[]models.MiVolume{models.MiVolume{
 							MarketItemID: k,
 							Dt:           vv[i][0].Dt,
 							Vol:          0,
-							IsMy:         false,
+							IsMy:         true,
 						}},
 						compacted[k][i]...,
 					)
