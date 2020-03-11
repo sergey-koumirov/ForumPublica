@@ -13,7 +13,7 @@
 
         <table class="table table-striped table-sm">
           <tr>
-            <th></th>
+            <th>30 days</th>
             <th></th>
             <th class="text-right"><% .Summary.Total | FormatFloat %></th>
           </tr>
@@ -26,10 +26,35 @@
           <% end %>
         </table>
 
+      </div>
+
+      <div class="col-sm-4">
+        <table class="table table-striped table-sm">
+          <tr>
+            <th>24 hours</th>
+            <th></th>
+            <th class="text-right"><% .Summary.Total1d | FormatFloat %></th>
+          </tr>
+          <% range $index, $s := .Summary.ByType1d %>
+          <tr>
+            <td><% $s.TypeName %></td>
+            <td class="text-right"><% $s.TotalQty | FormatInt %></td>
+            <td class="text-right"><% $s.TotalValue | FormatFloat %></td>
+          </tr>
+          <% end %>
+        </table>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-4 offset-sm-2">
+
         <div id="chart-sold"></div>
 
       </div>
     </div>
+
   </div>
 
 

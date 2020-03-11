@@ -16,9 +16,11 @@ type TrByDate struct {
 
 //TrSummary model
 type TrSummary struct {
-	Total  float64
-	ByDate []TrByDate
-	ByType []TrByType
+	Total    float64
+	Total1d  float64
+	ByDate   []TrByDate
+	ByType   []TrByType
+	ByType1d []TrByType
 }
 
 //Tr90dSummary model
