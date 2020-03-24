@@ -642,3 +642,11 @@ pre{
     white-space: nowrap;
     overflow-x: hidden;
 }
+
+.grid line{
+    stroke: #ffcccc;
+}
+
+.grid path{
+    stroke: #ffffff;
+}

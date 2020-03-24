@@ -99,6 +99,10 @@
           .style("font", "8px mono")
           .call(yAxis);
 
+  svg.append("g")
+          .attr("class", "grid")
+          .call( yAxis.tickSize(-width, 0, 0).tickFormat("") );
+
   svg.selectAll("mybar")
           .data(data)
           .enter()
@@ -107,7 +111,7 @@
           .attr("y", function(d) { return y(d.TotalValue); })
           .attr("width", function(d) { return x.bandwidth() })
           .attr("height", function(d) { return height - y(d.TotalValue); })
-          .style("fill", "#69b3a2")
+          .style("fill", "#69b3a2");
 
 </script>
 
