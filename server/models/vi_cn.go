@@ -23,6 +23,7 @@ type CnBlueprint struct {
 	SgtRunQty       int64
 	SgtRepeats      int64
 	HasRuns         bool
+	UnitCost        float64
 	BlueprintTypeT1 *sdem.ZipType
 	T1Decryptors    *static.TypeIDQuantityNameList
 }

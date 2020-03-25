@@ -638,6 +638,12 @@ pre{
     grid-column-gap: 2px;
 }
 
+.cn-list-grid {
+    display: grid;
+    grid-template-columns: 100px 20px 300px 100px;
+    grid-column-gap: 2px;
+}
+
 .shortened{
     white-space: nowrap;
     overflow-x: hidden;

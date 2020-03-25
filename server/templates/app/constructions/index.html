@@ -11,7 +11,7 @@
 <table class="table table-striped table-sm">
   <tr>
     <th>ID</th>
-    <th>BPOs</th>
+    <th class="text-center">BPOs (Qty x Name Unit Cost)</th>
     <th></th>
   </tr>
   <% range $index, $cn := .constructions.Records %>
@@ -25,7 +25,14 @@
     <td>
       <ul class="list-group">
         <% range $i, $b := $cn.Blueprints %>
-        <li class="list-group-item list-group-item-sm"><% $b.Model.Qty %> <span class="grayed">x</span> <% $b.Model.TypeName %></li>
+        <li class="list-group-item list-group-item-sm cn-list-grid">
+
+          <span class="text-right"><% $b.Model.Qty | FormatInt %></span>
+          <span class="grayed text-center">x</span>
+          <span><% $b.Model.TypeName %></span>
+          <span class="text-right"><% $b.UnitCost | FormatFloat %></span>
+
+        </li>
         <% end %>
       </ul>
     </td>

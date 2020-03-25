@@ -17,7 +17,12 @@ func ConstructionsList(userID int64, page int64) models.CnList {
 
 	scope := db.DB.Where("user_id = ?", userID)
 	scope.Model(&models.Construction{}).Count(&total)
-	scope.Preload("Bpos").Order("id desc").Limit(PerPage).Offset((page - 1) * PerPage).Find(&cns)
+
+	scope.Preload("Bpos.Expenses").
+		Order("id desc").
+		Limit(PerPage).
+		Offset((page - 1) * PerPage).
+		Find(&cns)
 
 	result := models.CnList{Page: page, Total: total}
 	result.Records = make([]models.CnRecord, 0)
@@ -25,7 +30,23 @@ func ConstructionsList(userID int64, page int64) models.CnList {
 
 		bpos := make(models.CnBlueprints, 0)
 		for _, b := range r.Bpos {
-			bpos = append(bpos, models.CnBlueprint{Model: b})
+
+			unitCost := float64(0)
+			if b.Qty > 0 {
+				sum := float64(0)
+				for _, exp := range b.Expenses {
+					sum = sum + exp.ExValue
+				}
+				unitCost = sum / float64(b.Qty)
+			}
+
+			bpos = append(
+				bpos,
+				models.CnBlueprint{
+					Model:    b,
+					UnitCost: unitCost,
+				},
+			)
 		}
 
 		temp := models.CnRecord{
