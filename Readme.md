@@ -27,6 +27,8 @@ set variables in var.json by example
 
 `./migrate -source=file://server/migrations -database=mysql://$(cat server/vars.json | jq '.DBC' -r) up`
 
+`mysql -upublica -ppublica publica < publica.dump`
+
 # thanks
 
 to JetBrains for IDE

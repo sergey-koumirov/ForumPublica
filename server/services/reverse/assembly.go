@@ -54,10 +54,17 @@ func calcSgtRunQty(result *models.CnBlueprints) {
 	for i := range *result {
 		bpo := (*result)[i]
 
+		if bpo.IsT2 {
+			t2Runs := static.T2Runs(bpo.Model.TypeID)
+			(*result)[i].SgtRunQty = t2Runs
+			(*result)[i].SgtRepeats = bpo.Model.Qty / t2Runs
+			continue
+		}
+
 		pQty := int64(math.Ceil(float64(bpo.Model.Qty) / float64(bpo.PortionSize)))
 
 		oneMnfTime := float64(bpo.MnfTime) / float64(pQty)
-		onePQty := int64(math.Floor(float64(24*60*60) / oneMnfTime))
+		onePQty := int64(math.Floor(float64(23*60*60-30) / oneMnfTime))
 		if onePQty == 0 {
 			onePQty = 1
 		}
