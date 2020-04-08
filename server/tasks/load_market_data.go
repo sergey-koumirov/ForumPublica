@@ -57,8 +57,32 @@ func loadMarketData(userID int64, technical bool) {
 		for _, mi := range marketItems {
 			createMarketData(mi, dt, orders[mi.ID], charOrdersCache, technical)
 			updateMarketStores(mi, charItemsCache)
+			updateExpirations(mi, charOrdersCache)
 		}
 	}
+}
+
+func updateExpirations(mi models.MarketItem, charOrdersCache map[int64]esi.CharacterMarketOrders) {
+
+	for _, loc := range mi.Locations {
+
+		orders := charOrdersCache[loc.EsiCharacterID]
+
+		earliest := ""
+
+		for _, order := range orders {
+			temp := models.Location{ID: order.LocationID}
+			db.DB.Find(&temp)
+			if order.TypeID == mi.TypeID && (loc.LocationType == "solar_system" && temp.SolarSystemID == loc.LocationID || order.LocationID == loc.LocationID) {
+				test := order.Issued.AddDate(0, 0, order.Duration).Format("2006-01-02 15:04:05")
+				if earliest == "" || test < earliest {
+					earliest = test
+				}
+			}
+		}
+		db.DB.Model(&loc).Update("expiration", earliest)
+	}
+
 }
 
 type itemsByChar map[int64]esi.ItemsByLocation
@@ -109,8 +133,8 @@ func updateMarketStores(mi models.MarketItem, items itemsByChar) {
 
 type mapOfArrays map[int64][]int32
 
-func preloadCharOrders(mis []models.MarketItem) map[int64][]int64 {
-	charOrdersCache := make(map[int64][]int64)
+func preloadCharOrders(mis []models.MarketItem) map[int64]esi.CharacterMarketOrders {
+	charOrdersCache := make(map[int64]esi.CharacterMarketOrders)
 
 	chars := make(map[int64]models.Character)
 	for _, mi := range mis {
@@ -122,16 +146,16 @@ func preloadCharOrders(mis []models.MarketItem) map[int64][]int64 {
 	for cid, char := range chars {
 		api, _ := char.GetESI()
 		r, _ := api.CharactersOrders(cid)
-		charOrdersCache[char.ID] = make([]int64, len(r.R))
+		charOrdersCache[char.ID] = make(esi.CharacterMarketOrders, len(r.R))
 		for i, order := range r.R {
-			charOrdersCache[char.ID][i] = order.OrderID
+			charOrdersCache[char.ID][i] = order
 		}
 	}
 
 	return charOrdersCache
 }
 
-func createMarketData(mi models.MarketItem, dt string, orders esi.MarketsOrdersArray, charOrdersCache map[int64][]int64, technical bool) {
+func createMarketData(mi models.MarketItem, dt string, orders esi.MarketsOrdersArray, charOrdersCache map[int64]esi.CharacterMarketOrders, technical bool) {
 
 	var (
 		sellVol         int64
@@ -158,9 +182,11 @@ func createMarketData(mi models.MarketItem, dt string, orders esi.MarketsOrdersA
 
 			isMy := false
 			for _, cid := range charIds {
-				if utils.FindInt64(charOrdersCache[cid], order.OrderID) > -1 {
-					isMy = true
-					break
+				for _, r := range charOrdersCache[cid] {
+					if r.OrderID == order.OrderID {
+						isMy = true
+						break
+					}
 				}
 			}
 			if isMy {
@@ -200,9 +226,11 @@ func createMarketData(mi models.MarketItem, dt string, orders esi.MarketsOrdersA
 
 				isMy := false
 				for _, cid := range charIds {
-					if utils.FindInt64(charOrdersCache[cid], order.OrderID) > -1 {
-						isMy = true
-						break
+					for _, r := range charOrdersCache[cid] {
+						if r.OrderID == order.OrderID {
+							isMy = true
+							break
+						}
 					}
 				}
 

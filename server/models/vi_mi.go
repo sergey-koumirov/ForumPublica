@@ -28,6 +28,8 @@ type MiLocation struct {
 	Type          string
 	Name          string
 	CharacterName string
+	Expiration    string
+	OrderExpired  bool
 }
 
 //MiStore model
@@ -56,6 +58,7 @@ type MiRecord struct {
 	Locations   []MiLocation
 	Stores      []MiStore
 	VolumeHist  []MiVolumes
+	Warnings    map[string]bool
 }
 
 //MiList list of market item info for index page

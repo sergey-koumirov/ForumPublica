@@ -17,6 +17,10 @@ table td, table th{
   color: #ffc107;
 }
 
+.oi.oi-warning{
+    color: #ff0707;
+}
+
 .grayed .oi{
   color: #d0d1a7;
 }

@@ -131,7 +131,7 @@ func (esi *ESI) MarketsStructuresAll(structureID int64) (MarketsOrdersArray, err
 type CharacterMarketOrder struct {
 	Duration int `json:"duration"`
 	// Escrow        float64   `json:"escrow"`
-	// IsBuyOrder    bool      `json:"is_buy_order"`
+	IsBuyOrder    bool      `json:"is_buy_order"`
 	IsCorporation bool      `json:"is_corporation"`
 	Issued        time.Time `json:"issued"`
 	LocationID    int64     `json:"location_id"`
@@ -141,7 +141,7 @@ type CharacterMarketOrder struct {
 	Range    string  `json:"range"`
 	RegionID int64   `json:"region_id"`
 	// State         string    `json:"state"`
-	TypeID       int64 `json:"type_id"`
+	TypeID       int32 `json:"type_id"`
 	VolumeRemain int64 `json:"volume_remain"`
 	VolumeTotal  int64 `json:"volume_total"`
 }

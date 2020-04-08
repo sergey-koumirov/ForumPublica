@@ -44,6 +44,7 @@ type MarketLocation struct {
 	LocationType   string `gorm:"column:location_type"`
 	LocationID     int64  `gorm:"column:location_id"`
 	EsiCharacterID int64  `gorm:"column:esi_character_id"`
+	Expiration     string `gorm:"column:expiration"`
 
 	MarketItem *MarketItem
 	Character  *Character `gorm:"foreignkey:EsiCharacterID"`

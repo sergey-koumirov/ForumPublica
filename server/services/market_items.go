@@ -4,6 +4,7 @@ import (
 	"ForumPublica/sde/static"
 	"ForumPublica/server/db"
 	"ForumPublica/server/models"
+	"ForumPublica/server/utils"
 	"fmt"
 	"sort"
 	"time"
@@ -62,10 +63,40 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 			Stores:      stores,
 			VolumeHist:  volumes[r.ID],
 		}
+
+		warningsForMarketItem(&temp)
+
 		result.Records = append(result.Records, temp)
 	}
 
 	return result
+}
+
+func warningsForMarketItem(mir *models.MiRecord) {
+	result := make(map[string]bool)
+
+	result["MarketQty"] = false
+	if mir.MyVol == 0 {
+		result["MarketQty"] = true
+	}
+
+	result["StoreQty"] = false
+	if mir.MyVol+mir.StoreVol < mir.D90Vol/3 {
+		result["StoreQty"] = true
+	}
+
+	result["LowestPrice"] = false
+	if mir.MyPrice > mir.LowestPrice || mir.MyPrice == 0 {
+		result["LowestPrice"] = true
+	}
+
+	for i, l := range mir.Locations {
+		if l.Expiration != "" && utils.DbStrToMinut(l.Expiration) > -7*24*60 {
+			mir.Locations[i].OrderExpired = true
+		}
+	}
+
+	mir.Warnings = result
 }
 
 var marketVolumesSql = `           
@@ -411,6 +442,7 @@ func loadLocations(r models.MarketItem) []models.MiLocation {
 				Type:          l.LocationType,
 				Name:          LocationName(l.LocationID, l.LocationType),
 				CharacterName: l.Character.Name,
+				Expiration:    l.Expiration,
 			},
 		)
 	}

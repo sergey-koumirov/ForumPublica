@@ -57,7 +57,10 @@
           <template v-for="location in record.Locations">
             <img class="icon-suggestion" width="16" height="16" :src="'/assets/images/'+location.Type+'.png'" />
             <span class="gray">{{location.CharacterName}}</span>
-            <span class="shortened">{{location.Name}}</span>
+            <span class="shortened">
+              <span class="oi oi-warning" v-if="location.OrderExpired"></span>
+              {{location.Name}}
+            </span>
             <span class="oi oi-delete pointer" @click="DeleteMarketLocation(record.TypeID, location.ID)"></span>
           </template>
         </div>
@@ -76,7 +79,7 @@
       </td>
 
       <td class="text-right">
-        <div :class="{ 'orange-square': record.LowestPrice < record.MyPrice || record.MyPrice==0, 'green-square': record.LowestPrice >= record.MyPrice && record.MyPrice>0 }">
+        <div :class="{ 'orange-square': record.Warnings.LowestPrice, 'green-square': !record.Warnings.LowestPrice }">
           <span v-if="record.MyPrice>0">{{record.MyPrice | float}}</span>
         </div>
         <div class="gray-square">
@@ -92,10 +95,10 @@
       </td>
 
       <td class="text-right">
-        <div :class="{ 'orange-square': record.MyVol == 0, 'green-square': record.MyVol > 0 }">
+        <div :class="{ 'orange-square': record.Warnings.MarketQty, 'green-square': !record.Warnings.MarketQty }">
           <span v-if="record.MyVol>0">{{record.MyVol | number}}</span>
         </div>
-        <div class="gray-square">
+        <div :class="{ 'orange-square': record.Warnings.StoreQty, 'green-square': !record.Warnings.StoreQty }">
           <span v-if="record.StoreVol>0">{{record.StoreVol | number}}</span>
         </div>
         <div class="gray-square gray-gray-square">
