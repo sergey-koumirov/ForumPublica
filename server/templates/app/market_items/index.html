@@ -30,7 +30,7 @@
       </th>
       <th></th>
     </tr>
-    <tr v-for="record in data.Records">
+    <tr v-for="record in data.Records" :key="record.ModelID">
       <td>
         <img align="left" width="48" height="48" :src="'https://images.evetech.net/types/'+record.TypeID+'/icon?size=64'">
       </td>
@@ -111,7 +111,7 @@
       </td>
 
       <td>
-        <chart-volume :data="record.VolumeHist"></chart-volume>
+        <chart-volume :data="record.VolumeHist" v-on:redraw="draw()"></chart-volume>
       </td>
 
       <td class="text-right">

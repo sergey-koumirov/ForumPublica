@@ -13,8 +13,8 @@ function patch(vm, url, payload, ignore){
   });
 }
 
-function post(vm, url, payload, ignore){
-  vm.isLoading = true,
+function post(vm, url, payload, ignore, callback){
+  vm.isLoading = true;
   axios.post(
       url,
       payload
@@ -22,6 +22,9 @@ function post(vm, url, payload, ignore){
       if(!ignore){
           vm.data = response.data;
           console.log(response.data);
+      }
+      if(callback){
+          callback();
       }
       vm.isLoading = false;
   }).catch(function(error){
@@ -126,11 +129,12 @@ var marketItems = new Vue({
       },
 
       TypeSelected: function(typeID){
-        this.addModal.selectedTypeId = typeID;
-        if(!!typeID){
-          post(this, '/app/market_items?page='+this.data.Page, {TypeID: typeID});
-          this.showAddModal = false;
-        }        
+          var self = this;
+          self.addModal.selectedTypeId = typeID;
+          if(!!typeID){
+              post(this, '/app/market_items?page='+this.data.Page, {TypeID: typeID}, false, ()=>{ self.$emit('redraw') });
+              this.showAddModal = false;
+          }
       },
 
       LocationSelected: function(id,text,type){
