@@ -31,12 +31,17 @@ func TransactionsList(userID int64, page int64) models.TrList {
 			}
 		}
 
+		characterName := "N/A"
+		if r.Character != nil {
+			characterName = r.Character.Name
+		}
+
 		temp := models.TrRecord{
 			ModelID:       r.ID,
 			TypeID:        r.TypeID,
 			TypeName:      static.Types[r.TypeID].Name,
 			Dt:            r.Dt,
-			CharacterName: r.Character.Name,
+			CharacterName: characterName,
 			Quantity:      r.Quantity,
 			Price:         r.UnitPrice,
 			IsBuy:         r.IsBuy,
