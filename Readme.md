@@ -16,6 +16,7 @@ set variables in var.json by example
 
 # db & migrations (MySQL)
 
+`gzip -d publica.db.gz`
 
 `sudo mysql -u root`
 

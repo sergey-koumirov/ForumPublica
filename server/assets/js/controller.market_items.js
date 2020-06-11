@@ -82,7 +82,7 @@ var marketItems = new Vue({
 
     beforeMount: function () {
         this.chars = JSON.parse(this.$el.attributes['chars'].value);
-        this.data = JSON.parse(this.$el.attributes['market-items'].value);
+        this.data = INIT;
         this.data.Records.forEach((record)=>{
             record.Locations.forEach((location)=>{
 

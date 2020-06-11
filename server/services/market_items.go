@@ -110,43 +110,38 @@ select d.market_item_id,
     and d.technical=0
 	and d.dt > ?
 	and d.market_item_id in (?)
-  order by d.market_item_id, d.dt, s.price, s.id`
+  order by s.price, s.id`
 
 func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 
-	minus90d := time.Now().AddDate(0, 0, -30).Format("2006-01-02")
+	minus30d := time.Now().AddDate(0, 0, -30).Format("2006-01-02")
 
-	rows, errRaw := db.DB.Raw(marketVolumesSql, minus90d, miIDs).Rows()
+	rows, errRaw := db.DB.Raw(marketVolumesSql, minus30d, miIDs).Rows()
 	defer rows.Close()
 	if errRaw != nil {
 		fmt.Println("loadMarketVolumes", errRaw)
 	}
 
 	//load from DB
-	records := make(map[int64][]models.MiVolume)
+	start := time.Now()
+
+	byDate := make(map[int64]map[string][]models.MiVolume, len(miIDs))
 	for rows.Next() {
 		temp := models.MiVolume{}
 		db.DB.ScanRows(rows, &temp)
-		records[temp.MarketItemID] = append(records[temp.MarketItemID], temp)
+		_, ex := byDate[temp.MarketItemID]
+		if !ex {
+			byDate[temp.MarketItemID] = make(map[string][]models.MiVolume, 32)
+		}
+		values := byDate[temp.MarketItemID][temp.Dt]
+		byDate[temp.MarketItemID][temp.Dt] = append(values, temp)
 	}
 
-	//group by MarketItemID and make array of arrays by Dt
-	by_date := make(map[int64][][]models.MiVolume)
-	for k, vv := range records {
-		index := 0
-		for i := 1; i < len(vv); i++ {
-			if vv[i-1].Dt != vv[i].Dt {
-				by_date[k] = append(by_date[k], vv[index:i])
-				index = i
-			} else if i == len(vv)-1 {
-				by_date[k] = append(by_date[k], vv[index:i+1])
-			}
-		}
-	}
+	fmt.Println("load:", time.Since(start))
 
 	//compact arrays into "my"/"not my" ranges
 	compacted := make(map[int64][][]models.MiVolume)
-	for k, valuesForMI := range by_date {
+	for miID, valuesForMI := range byDate {
 		for _, vd := range valuesForMI {
 			temp := make([]models.MiVolume, 0)
 			tempVol := int64(0)
@@ -154,7 +149,7 @@ func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 				tempVol = tempVol + vd[i-1].Vol
 				if vd[i-1].IsMy != vd[i].IsMy {
 					tempCompact := models.MiVolume{
-						MarketItemID: k,
+						MarketItemID: miID,
 						Dt:           vd[i-1].Dt,
 						Vol:          tempVol,
 						IsMy:         vd[i-1].IsMy,
@@ -165,7 +160,7 @@ func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 
 				if i == len(vd)-1 {
 					tempCompact := models.MiVolume{
-						MarketItemID: k,
+						MarketItemID: miID,
 						Dt:           vd[i].Dt,
 						Vol:          tempVol + vd[i].Vol,
 						IsMy:         vd[i].IsMy,
@@ -176,7 +171,7 @@ func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 
 			if len(vd) == 1 {
 				tempCompact := models.MiVolume{
-					MarketItemID: k,
+					MarketItemID: miID,
 					Dt:           vd[0].Dt,
 					Vol:          tempVol + vd[0].Vol,
 					IsMy:         vd[0].IsMy,
@@ -184,8 +179,15 @@ func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 				temp = append(temp, tempCompact)
 			}
 
-			compacted[k] = append(compacted[k], temp)
+			compacted[miID] = append(compacted[miID], temp)
 		}
+
+		sort.SliceStable(
+			compacted[miID],
+			func(i, j int) bool {
+				return compacted[miID][i][0].Dt < compacted[miID][j][0].Dt
+			},
+		)
 	}
 
 	//align compacted arrays
@@ -354,6 +356,7 @@ select x.*
     select d.*, ROW_NUMBER() OVER w AS 'row_number' 
       from fp_market_data d 
       where d.market_item_id in (?)
+        and d.dt > '%s'
       window w as (partition by d.market_item_id order by dt desc)
   ) x 
   where x.row_number=1`
@@ -365,6 +368,7 @@ select mi.id, d.dt, d.sell_lowest_price as price
   where mi.id = d.market_item_id
     and d.sell_lowest_price>0
     and mi.id in (?)
+    and d.dt > '%s'
   order by mi.id, mi.type_id, d.dt, d.sell_lowest_price`
 
 func loadMarketData(miIDs []int64) (map[int64]models.MarketData, map[int64][]models.MiHist) {
@@ -372,7 +376,10 @@ func loadMarketData(miIDs []int64) (map[int64]models.MarketData, map[int64][]mod
 	hist := make(map[int64][]models.MiHist)
 
 	if len(miIDs) > 0 {
-		rows, errRaw := db.DB.Raw(sqlMdLast, miIDs).Rows()
+		minus90dFull := time.Now().AddDate(0, 0, -90).Format("2006-01-02 15:04:05")
+
+		rawSqlLast := fmt.Sprintf(sqlMdLast, minus90dFull)
+		rows, errRaw := db.DB.Raw(rawSqlLast, miIDs).Rows()
 		defer rows.Close()
 		if errRaw != nil {
 			fmt.Println("loadMarketData:", errRaw)
@@ -389,7 +396,8 @@ func loadMarketData(miIDs []int64) (map[int64]models.MarketData, map[int64][]mod
 			result[record.MarketItemID] = record
 		}
 
-		rows, errHist := db.DB.Raw(sqlMdHist, miIDs).Rows()
+		rawSqlHist := fmt.Sprintf(sqlMdHist, minus90dFull)
+		rows, errHist := db.DB.Raw(rawSqlHist, miIDs).Rows()
 		defer rows.Close()
 		if errHist != nil {
 			fmt.Println("loadMarketData.errHist:", errHist)
