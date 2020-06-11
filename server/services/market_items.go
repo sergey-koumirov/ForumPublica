@@ -99,33 +99,22 @@ func warningsForMarketItem(mir *models.MiRecord) {
 	mir.Warnings = result
 }
 
-var marketVolumesSql = `           
-select d.market_item_id,
- 	   d.dt,
-	   s.vol,
-	   s.is_my
-  from fp_market_data d,
-       fp_market_screenshots s
-  where d.id = s.market_data_id
-    and d.technical=0
-	and d.dt > ?
-	and d.market_item_id in (?)
-  order by s.price, s.id`
+var marketVolumesSql = `
+select market_item_id, dt, vol, is_my 
+  from vol30d 
+  where market_item_id in (?)
+  order by group_num`
 
 func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 
-	minus30d := time.Now().AddDate(0, 0, -30).Format("2006-01-02")
-
-	rows, errRaw := db.DB.Raw(marketVolumesSql, minus30d, miIDs).Rows()
+	start := time.Now()
+	byDate := make(map[int64]map[string][]models.MiVolume, len(miIDs))
+	rows, errRaw := db.DB.Raw(marketVolumesSql, miIDs).Rows()
 	defer rows.Close()
 	if errRaw != nil {
 		fmt.Println("loadMarketVolumes", errRaw)
 	}
 
-	//load from DB
-	start := time.Now()
-
-	byDate := make(map[int64]map[string][]models.MiVolume, len(miIDs))
 	for rows.Next() {
 		temp := models.MiVolume{}
 		db.DB.ScanRows(rows, &temp)
@@ -137,51 +126,13 @@ func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 		byDate[temp.MarketItemID][temp.Dt] = append(values, temp)
 	}
 
-	fmt.Println("load:", time.Since(start))
-
-	//compact arrays into "my"/"not my" ranges
 	compacted := make(map[int64][][]models.MiVolume)
-	for miID, valuesForMI := range byDate {
-		for _, vd := range valuesForMI {
-			temp := make([]models.MiVolume, 0)
-			tempVol := int64(0)
-			for i := 1; i < len(vd); i++ {
-				tempVol = tempVol + vd[i-1].Vol
-				if vd[i-1].IsMy != vd[i].IsMy {
-					tempCompact := models.MiVolume{
-						MarketItemID: miID,
-						Dt:           vd[i-1].Dt,
-						Vol:          tempVol,
-						IsMy:         vd[i-1].IsMy,
-					}
-					temp = append(temp, tempCompact)
-					tempVol = 0
-				}
 
-				if i == len(vd)-1 {
-					tempCompact := models.MiVolume{
-						MarketItemID: miID,
-						Dt:           vd[i].Dt,
-						Vol:          tempVol + vd[i].Vol,
-						IsMy:         vd[i].IsMy,
-					}
-					temp = append(temp, tempCompact)
-				}
-			}
-
-			if len(vd) == 1 {
-				tempCompact := models.MiVolume{
-					MarketItemID: miID,
-					Dt:           vd[0].Dt,
-					Vol:          tempVol + vd[0].Vol,
-					IsMy:         vd[0].IsMy,
-				}
-				temp = append(temp, tempCompact)
-			}
-
-			compacted[miID] = append(compacted[miID], temp)
+	for miID, dates := range byDate {
+		compacted[miID] = make([][]models.MiVolume, 0)
+		for _, volumes := range dates {
+			compacted[miID] = append(compacted[miID], volumes)
 		}
-
 		sort.SliceStable(
 			compacted[miID],
 			func(i, j int) bool {
@@ -189,6 +140,7 @@ func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 			},
 		)
 	}
+	fmt.Println("load:", time.Since(start))
 
 	//align compacted arrays
 	for k, vv := range compacted {
