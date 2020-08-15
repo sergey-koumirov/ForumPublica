@@ -30,6 +30,10 @@ set variables in var.json by example
 
 `mysql -upublica -ppublica publica < publica.dump`
 
+`cp file1 file1.gz`
+`rm file1`
+`gzip -d file1.gz`
+
 # thanks
 
 to JetBrains for IDE

@@ -100,16 +100,19 @@ func warningsForMarketItem(mir *models.MiRecord) {
 }
 
 var marketVolumesSql = `
-select market_item_id, dt, vol, is_my 
+select market_item_id, dt, vol, is_my as m
   from vol30d 
   where market_item_id in (?)
+    and dt > ?
   order by group_num`
 
 func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 
-	start := time.Now()
+	start := time.Now().UTC()
+	minus30d := start.AddDate(0, 0, -30).Format("2006-01-02")
+
 	byDate := make(map[int64]map[string][]models.MiVolume, len(miIDs))
-	rows, errRaw := db.DB.Raw(marketVolumesSql, miIDs).Rows()
+	rows, errRaw := db.DB.Raw(marketVolumesSql, miIDs, minus30d).Rows()
 	defer rows.Close()
 	if errRaw != nil {
 		fmt.Println("loadMarketVolumes", errRaw)
@@ -140,25 +143,25 @@ func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 			},
 		)
 	}
-	fmt.Println("load:", time.Since(start))
+	//fmt.Println("load:", time.Since(start))
 
 	//align compacted arrays
 	for k, vv := range compacted {
 		firstSame := true
 		for i := 1; i < len(vv); i++ {
-			if len(vv[i-1]) > 0 && len(vv[i]) > 0 && vv[i-1][0].IsMy != vv[i][0].IsMy {
+			if len(vv[i-1]) > 0 && len(vv[i]) > 0 && vv[i-1][0].M != vv[i][0].M {
 				firstSame = false
 			}
 		}
 		if !firstSame {
 			for i := 0; i < len(vv); i++ {
-				if len(vv[i]) > 0 && !vv[i][0].IsMy {
+				if len(vv[i]) > 0 && vv[i][0].M == 0 {
 					compacted[k][i] = append(
 						[]models.MiVolume{models.MiVolume{
 							MarketItemID: k,
 							Dt:           vv[i][0].Dt,
 							Vol:          0,
-							IsMy:         true,
+							M:            1,
 						}},
 						compacted[k][i]...,
 					)
@@ -183,7 +186,7 @@ func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 		for _, v := range vv {
 			if len(v) < maxLen {
 				for i := len(v); i < maxLen; i++ {
-					v = append(v, models.MiVolume{Vol: 0, IsMy: vv[maxIndex][i].IsMy})
+					v = append(v, models.MiVolume{Vol: 0, M: vv[maxIndex][i].M})
 				}
 			}
 			temp = append(temp, models.MiVolumes{
@@ -314,7 +317,7 @@ select x.*
   where x.row_number=1`
 
 var sqlMdHist = `
-select mi.id, d.dt, d.sell_lowest_price as price
+select mi.id, d.dt as d, d.sell_lowest_price as p
   from fp_market_data d,
        fp_market_items mi
   where mi.id = d.market_item_id
@@ -348,7 +351,8 @@ func loadMarketData(miIDs []int64) (map[int64]models.MarketData, map[int64][]mod
 			result[record.MarketItemID] = record
 		}
 
-		rawSqlHist := fmt.Sprintf(sqlMdHist, minus90dFull)
+		minus30d := time.Now().AddDate(0, 0, -30).Format("2006-01-02")
+		rawSqlHist := fmt.Sprintf(sqlMdHist, minus30d)
 		rows, errHist := db.DB.Raw(rawSqlHist, miIDs).Rows()
 		defer rows.Close()
 		if errHist != nil {

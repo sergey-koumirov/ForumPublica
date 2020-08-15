@@ -11,14 +11,14 @@ type MiVolume struct {
 	MarketItemID int64  `json:"-"`
 	Dt           string `json:"-"`
 	Vol          int64
-	IsMy         bool
+	M            int64
 }
 
 //MiHist model
 type MiHist struct {
-	ID    int64 `json:"-"`
-	Dt    string
-	Price float64
+	ID int64 `json:"-"`
+	D  string
+	P  float64
 }
 
 //MiLocation model

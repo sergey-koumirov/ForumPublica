@@ -302,7 +302,21 @@ func loadOrdersFromRegions(locations *[]models.MarketLocation, result map[int64]
 	for rid, tids := range tir {
 		for _, tid := range tids {
 			api := esi.ESI{}
+			time.Sleep(100 * time.Millisecond)
 			orders, err := api.MarketsOrdersAll(rid, tid, "all")
+
+			if err != nil {
+				time.Sleep(5000 * time.Millisecond)
+				fmt.Println("loadOrdersFromRegions [1]: ", err)
+				orders, err = api.MarketsOrdersAll(rid, tid, "all")
+			}
+
+			if err != nil {
+				time.Sleep(10000 * time.Millisecond)
+				fmt.Println("loadOrdersFromRegions [2]: ", err)
+				orders, err = api.MarketsOrdersAll(rid, tid, "all")
+			}
+
 			if err != nil {
 				fmt.Println("loadOrdersFromRegions: ", err)
 			} else {
