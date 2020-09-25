@@ -7,6 +7,7 @@ import (
 	"ForumPublica/server/services"
 	"ForumPublica/server/utils"
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -21,8 +22,9 @@ func TaskCheckT2() error {
 		product := static.ProductByBpoID(b.BlueprintTypeID)
 
 		if static.IsT2BPO(b.BlueprintTypeID) &&
-			static.Types[b.BlueprintTypeID].Published &&
-			utils.FindInt32([]int32{1707, 1708, 973}, t.GroupID) == -1 &&
+			t.Published &&
+			!strings.HasPrefix(t.Name, "Standup ") &&
+			utils.FindInt32([]int32{1707, 1708, 973, 1992}, t.GroupID) == -1 &&
 			utils.FindInt32([]int32{}, product.GroupID) == -1 {
 
 			uPrice := services.UnitPrice(b)
