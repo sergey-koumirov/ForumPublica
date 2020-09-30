@@ -15,6 +15,7 @@ import (
 func LoadMarketData() error {
 	fmt.Println("LoadMarketData started", time.Now().Format("2006-01-02 15:04:05"))
 	loadMarketData(0, false)
+	recalcVol30d()
 	fmt.Println("LoadMarketData finished", time.Now().Format("2006-01-02 15:04:05"))
 
 	return nil
@@ -25,6 +26,36 @@ func LoadMarketDataForUser(userID int64) {
 }
 
 // ########################################################################################################################
+
+var sqlVol30d = `
+insert into vol30d(market_item_id, dt, is_my, group_num, vol)
+select y.market_item_id, 
+       y.dt, 
+       y.is_my, 
+       y.group_num, 
+       sum(y.vol) as vol
+  from (select x.*,
+               sum(x.w2) over (partition by x.market_item_id, x.dt order by x.price, x.id) as group_num
+          from (select d.market_item_id,
+                       d.dt,
+                       s.vol,
+                       s.is_my,
+                       s.price,
+                       s.id,
+                       abs(s.is_my - lag(s.is_my, 1, 0) over (partition by d.market_item_id, d.dt order by s.price, s.id)) as w2
+                  from fp_market_data d,
+                       fp_market_screenshots s
+                  where d.id = s.market_data_id
+                    and d.technical = 0
+                    and d.dt > date_format(date_sub(now(), interval 1 month ), '%Y-%m-%d %H:%i:%s')
+               ) x
+       ) y
+  group by y.market_item_id, y.dt, y.is_my, y.group_num`
+
+func recalcVol30d() {
+	db.DB.Exec("delete from vol30d")
+	db.DB.Exec(sqlVol30d)
+}
 
 func loadMarketData(userID int64, technical bool) {
 	mrkLocs := make([]models.MarketLocation, 0)
@@ -271,7 +302,21 @@ func loadOrdersFromRegions(locations *[]models.MarketLocation, result map[int64]
 	for rid, tids := range tir {
 		for _, tid := range tids {
 			api := esi.ESI{}
+			time.Sleep(100 * time.Millisecond)
 			orders, err := api.MarketsOrdersAll(rid, tid, "all")
+
+			if err != nil {
+				time.Sleep(5000 * time.Millisecond)
+				fmt.Println("loadOrdersFromRegions [1]: ", err)
+				orders, err = api.MarketsOrdersAll(rid, tid, "all")
+			}
+
+			if err != nil {
+				time.Sleep(10000 * time.Millisecond)
+				fmt.Println("loadOrdersFromRegions [2]: ", err)
+				orders, err = api.MarketsOrdersAll(rid, tid, "all")
+			}
+
 			if err != nil {
 				fmt.Println("loadOrdersFromRegions: ", err)
 			} else {

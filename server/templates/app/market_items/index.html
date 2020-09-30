@@ -1,6 +1,11 @@
 <% define "app/market_items/index.html" %>
 <% template "base_head" .%>
-<div id="market-items" class="market-items" market-items="<% .MarketItems | Marshal %>" chars="<% .chars | Marshal %>" v-cloak>
+
+<script>
+  INIT = <% .MarketItems | Marshal %>;
+</script>
+
+<div id="market-items" class="market-items" chars="<% .chars | Marshal %>" v-cloak>
 
   <h5>
     Market
@@ -26,7 +31,7 @@
       </th>
       <th class="text-center">Sold last 90d</th>
       <th class="text-center">
-        Market volume 90d: <span class="my">My</span> / <span class="not-my">Not My</span>
+        Market volume 30d: <span class="my">My</span> / <span class="not-my">Not My</span>
       </th>
       <th></th>
     </tr>

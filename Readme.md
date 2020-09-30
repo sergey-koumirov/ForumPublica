@@ -20,6 +20,7 @@ set variables in var.json by example
 
 # db & migrations (MySQL)
 
+`gzip -d publica.db.gz`
 
 `sudo mysql -u root`
 
@@ -32,6 +33,10 @@ set variables in var.json by example
 `./migrate -source=file://server/migrations -database=mysql://$(cat server/vars.json | jq '.DBC' -r) up`
 
 `mysql -upublica -ppublica publica < publica.dump`
+
+`cp file1 file1.gz`
+`rm file1`
+`gzip -d file1.gz`
 
 # thanks
 

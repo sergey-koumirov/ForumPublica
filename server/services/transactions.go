@@ -31,6 +31,11 @@ func TransactionsList(userID int64, page int64) models.TrList {
 			}
 		}
 
+		clientName := "N/A"
+		if r.ClientName != nil {
+			clientName = r.ClientName.Name
+		}
+
 		temp := models.TrRecord{
 			ModelID:       r.ID,
 			TypeID:        r.TypeID,
@@ -40,7 +45,7 @@ func TransactionsList(userID int64, page int64) models.TrList {
 			Quantity:      r.Quantity,
 			Price:         r.UnitPrice,
 			IsBuy:         r.IsBuy,
-			ClientName:    r.ClientName.Name,
+			ClientName:    clientName,
 			LocationName:  r.Location.Name,
 			ImageURL:      ImageUrl(r.TypeID),
 			InSummary:     false,

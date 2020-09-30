@@ -46,7 +46,7 @@ Vue.component('chart-volume', {
                 }
             }
 
-            let colors = this.data[0].VV.map( (el)=>{ return el.IsMy ? '#28a745' : '#f7a588'; } );
+            let colors = this.data[0].VV.map( (el)=>{ return el.M==1 ? '#28a745' : '#f7a588'; } );
 
             var svg = d3.select(this.$el)
                 .append("svg")
