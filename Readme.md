@@ -5,11 +5,15 @@
 
 # run dev
 server
+
 `go run ./server/app.go`
+
 `go build -o publica ./server/app.go`
 
 run import & reset cache
-`curl https://cdn1.eveonline.com/data/sde/tranquility/sde-20190529-TRANQUILITY.zip --output sde.zip`
+
+`curl https://eve-static-data-export.s3-eu-west-1.amazonaws.com/tranquility/sde.zip --output sde.zip`
+
 `go run ./sde/app.go --file sde.zip`
 
 set variables in var.json by example
