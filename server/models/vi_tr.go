@@ -35,6 +35,7 @@ type Tr90d struct {
 	D  string `gorm:"column:d"`
 	Q  int64  `gorm:"column:q"`
 }
+type Tr90dArr []interface{}
 
 //TrRecord transaction info for index page
 type TrRecord struct {

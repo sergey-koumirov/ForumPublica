@@ -46,6 +46,11 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 			bottomPrice = getBottomPrice(bpoID)
 		}
 
+		d90Data := make([]models.Tr90dArr, 0)
+		for _, t := range d90[r.ID].R {
+			d90Data = append(d90Data, models.Tr90dArr{t.Q})
+		}
+
 		temp := models.MiRecord{
 			ModelID:     r.ID,
 			TypeID:      r.TypeID,
@@ -54,7 +59,7 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 			MyVol:       md.MyVol,
 			StoreVol:    storeVol,
 			D90Vol:      d90[r.ID].Total,
-			D90Data:     d90[r.ID].R,
+			D90Data:     d90Data,
 			LowestPrice: md.SellLowestPrice,
 			LowestHist:  mdHist[r.ID],
 			UnitPrice:   unitPrice,

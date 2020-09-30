@@ -12,7 +12,7 @@ Vue.component('chart-sold', {
         var height = 60,
             width = 180,
             marginLeft = 30,
-            maxQ = d3.max(this.data, function(d){return d.Q});
+            maxQ = d3.max(this.data, function(d){return d[0]});
 
         if(maxQ==0){
             return;
@@ -27,7 +27,7 @@ Vue.component('chart-sold', {
 
         var x = d3.scaleBand()
                   .range([0, width])
-                  .domain(this.data.map(function(d) { return d.D; }))
+                  .domain(this.data.map(function(d,i) { return i; }))
                   .padding(0.2);
 
         var xAxis = d3.axisBottom(x)
@@ -53,10 +53,10 @@ Vue.component('chart-sold', {
             .data(this.data)
             .enter()
             .append("rect")
-              .attr("x", function(d) { return x(d.D); })
-              .attr("y", function(d) { return y(d.Q); })
+              .attr("x", function(d,i) { return x(i); })
+              .attr("y", function(d) { return y(d[0]); })
               .attr("width", function(d) { return x.bandwidth() })
-              .attr("height", function(d) { return height - y(d.Q); })
+              .attr("height", function(d) { return height - y(d[0]); })
               .style("fill", "#69b3a2")
     },
 
