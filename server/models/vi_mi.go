@@ -50,9 +50,9 @@ type MiRecord struct {
 	MyVol       int64
 	StoreVol    int64
 	D90Vol      int64
-	D90Data     []Tr90dArr
+	D90Data     []AnyArr
 	LowestPrice float64
-	LowestHist  []MiHist
+	LowestHist  []AnyArr
 	UnitPrice   float64
 	BottomPrice float64
 	Locations   []MiLocation

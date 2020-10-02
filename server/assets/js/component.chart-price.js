@@ -16,7 +16,7 @@ Vue.component('chart-price', {
         var height = 60,
             width = 180,
             marginLeft = 60,
-            maxPrice = d3.max(this.data, function(d){return d.P}),
+            maxPrice = d3.max(this.data, function(d){return d[1]}),
             today = new Date(),
             ago90 = new Date();
 
@@ -61,8 +61,8 @@ Vue.component('chart-price', {
             .call(yAxis);
 
         var valueline = d3.line()
-            .x(function(d) { return x( new Date(d.D) ); })
-            .y(function(d) { return y( d.P ); });
+            .x(function(d) { return x( new Date(d[0]) ); })
+            .y(function(d) { return y( d[1] ); });
 
         svg.append("path")
             .data([this.data])
@@ -73,7 +73,7 @@ Vue.component('chart-price', {
 
         if(!!this.bottom && this.bottom>0){
             svg.append("path")
-                .datum([{D: ago90, P: this.bottom},{D: today, P: this.bottom}])
+                .datum([[ago90, this.bottom],[today, this.bottom]])
                 .attr("class", "line")
                 .attr("d", valueline)
                 .style("fill", "none")
@@ -83,7 +83,7 @@ Vue.component('chart-price', {
 
         if(!!this.unit && this.unit>0){
             svg.append("path")
-                .datum([{D: ago90, P: this.unit},{D: today, P: this.unit}])
+                .datum([[ago90, this.unit],[today, this.unit]])
                 .attr("class", "line")
                 .attr("d", valueline)
                 .style("fill", "none")

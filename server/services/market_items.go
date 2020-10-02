@@ -46,9 +46,9 @@ func MarketItemsList(userID int64, page int64) models.MiList {
 			bottomPrice = getBottomPrice(bpoID)
 		}
 
-		d90Data := make([]models.Tr90dArr, 0)
+		d90Data := make([]models.AnyArr, 0)
 		for _, t := range d90[r.ID].R {
-			d90Data = append(d90Data, models.Tr90dArr{t.Q})
+			d90Data = append(d90Data, models.AnyArr{t.Q})
 		}
 
 		temp := models.MiRecord{
@@ -331,9 +331,9 @@ select mi.id, d.dt as d, d.sell_lowest_price as p
     and d.dt > '%s'
   order by mi.id, mi.type_id, d.dt, d.sell_lowest_price`
 
-func loadMarketData(miIDs []int64) (map[int64]models.MarketData, map[int64][]models.MiHist) {
+func loadMarketData(miIDs []int64) (map[int64]models.MarketData, map[int64][]models.AnyArr) {
 	result := make(map[int64]models.MarketData)
-	hist := make(map[int64][]models.MiHist)
+	hist := make(map[int64][]models.AnyArr)
 
 	if len(miIDs) > 0 {
 		minus90dFull := time.Now().AddDate(0, 0, -90).Format("2006-01-02 15:04:05")
@@ -372,7 +372,8 @@ func loadMarketData(miIDs []int64) (map[int64]models.MarketData, map[int64][]mod
 		}
 
 		for _, record := range recordsHist {
-			hist[record.ID] = append(hist[record.ID], record)
+			//hist[record.ID] = append(hist[record.ID], record)
+			hist[record.ID] = append(hist[record.ID], models.AnyArr{record.D, record.P})
 		}
 
 	}
