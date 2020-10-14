@@ -111,7 +111,7 @@ select market_item_id, dt, vol, is_my as m
     and dt > ?
   order by group_num`
 
-func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
+func loadMarketVolumes(miIDs []int64) map[int64]models.AnyArr {
 
 	start := time.Now().UTC()
 	minus30d := start.AddDate(0, 0, -30).Format("2006-01-02")
@@ -175,7 +175,7 @@ func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 		}
 	}
 
-	result := make(map[int64][]models.MiVolumes)
+	result := make(map[int64]models.AnyArr)
 	for k, vv := range compacted {
 
 		maxLen := 0
@@ -187,17 +187,20 @@ func loadMarketVolumes(miIDs []int64) map[int64][]models.MiVolumes {
 			}
 		}
 
-		temp := make([]models.MiVolumes, 0)
-		for _, v := range vv {
-			if len(v) < maxLen {
-				for i := len(v); i < maxLen; i++ {
-					v = append(v, models.MiVolume{Vol: 0, M: vv[maxIndex][i].M})
+		temp := make(models.AnyArr, 0)
+		for _, values := range vv {
+
+			flattened := make([]models.AnyArr, len(values))
+			for i, el := range values {
+				flattened[i] = models.AnyArr{el.Vol, el.M}
+			}
+
+			if len(values) < maxLen {
+				for i := len(values); i < maxLen; i++ {
+					flattened = append(flattened, models.AnyArr{0, vv[maxIndex][i].M})
 				}
 			}
-			temp = append(temp, models.MiVolumes{
-				Dt: v[0].Dt,
-				VV: v,
-			})
+			temp = append(temp, models.AnyArr{values[0].Dt, flattened})
 		}
 
 		result[k] = temp

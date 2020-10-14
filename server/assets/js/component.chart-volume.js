@@ -34,19 +34,19 @@ Vue.component('chart-volume', {
             ago90.setSeconds(0);
 
             var series = d3.stack()
-                    .keys( Array.from(Array( this.data[0].VV.length ).keys()) )
-                    .value( (d,key)=>{return d.VV[key].Vol} )(this.data),
+                    .keys( Array.from(Array( this.data[0][1].length ).keys()) )
+                    .value( (d,key)=>{return d[1][key][0]} )(this.data),
                 last = series[series.length-1],
                 maxVol = d3.max(last, (el)=>{ return el[1]});
 
             for(var i=0; i<series.length; i++){
                 var l = series[i].length;
                 for(var j=0; j<l; j++){
-                    series[i][j].push( new Date(this.data[j].Dt) );
+                    series[i][j].push( new Date(this.data[j][0]) );
                 }
             }
 
-            let colors = this.data[0].VV.map( (el)=>{ return el.M==1 ? '#28a745' : '#f7a588'; } );
+            let colors = this.data[0][1].map( (el)=>{ return el[1]==1 ? '#28a745' : '#f7a588'; } );
 
             var svg = d3.select(this.$el)
                 .append("svg")

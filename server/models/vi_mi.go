@@ -57,7 +57,7 @@ type MiRecord struct {
 	BottomPrice float64
 	Locations   []MiLocation
 	Stores      []MiStore
-	VolumeHist  []MiVolumes
+	VolumeHist  AnyArr
 	Warnings    map[string]bool
 }
 
