@@ -14,11 +14,11 @@ func DeviationsList() ([]models.DvRecord, []models.DvRecord) {
 	resultOver := make([]models.DvRecord, 0)
 	resultUnder := make([]models.DvRecord, 0)
 	for _, r := range records {
-		t := static.Types[r.ID]
+		//t := static.Types[r.ID]
 		p := static.ProductByBpoID(r.ID)
 		g := static.Groups[p.GroupID]
 		temp := models.DvRecord{
-			Description: fmt.Sprintf("%10d | %-38s | %-60s | %6.2f", r.ID, g.Name, t.Name, r.K),
+			Description: fmt.Sprintf("%10d | %-38s | %-60s | %6.2f", p.ID, g.Name, p.Name, r.K),
 			K:           r.K,
 		}
 		if r.K < 1 {
