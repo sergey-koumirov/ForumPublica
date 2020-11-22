@@ -25,7 +25,7 @@ func TaskCheckT2() error {
 			t.Published &&
 			!strings.HasPrefix(t.Name, "Standup ") &&
 			utils.FindInt32([]int32{1707, 1708, 973, 1992}, t.GroupID) == -1 &&
-			utils.FindInt32([]int32{}, product.GroupID) == -1 {
+			utils.FindInt32([]int32{4067, 4065, 4060, 4061}, product.GroupID) == -1 {
 
 			uPrice := services.UnitPrice(b)
 			jPrice := services.GetDefaultPrice(static.ProductIDByBpoID(b.BlueprintTypeID))

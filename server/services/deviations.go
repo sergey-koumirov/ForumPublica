@@ -8,10 +8,11 @@ import (
 )
 
 //ConstructionsList list
-func DeviationsList() []models.DvRecord {
+func DeviationsList() ([]models.DvRecord, []models.DvRecord) {
 	records := make([]models.Deviation, 0)
 	db.DB.Where("k>0").Order("k desc").Find(&records)
-	result := make([]models.DvRecord, 0)
+	resultOver := make([]models.DvRecord, 0)
+	resultUnder := make([]models.DvRecord, 0)
 	for _, r := range records {
 		t := static.Types[r.ID]
 		p := static.ProductByBpoID(r.ID)
@@ -20,7 +21,12 @@ func DeviationsList() []models.DvRecord {
 			Description: fmt.Sprintf("%10d | %-38s | %-60s | %6.2f", r.ID, g.Name, t.Name, r.K),
 			K:           r.K,
 		}
-		result = append(result, temp)
+		if r.K < 1 {
+			resultUnder = append(resultUnder, temp)
+		} else {
+			resultOver = append(resultOver, temp)
+		}
+
 	}
-	return result
+	return resultOver, resultUnder
 }
