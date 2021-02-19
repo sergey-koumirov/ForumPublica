@@ -27,8 +27,6 @@ set variables in var.json by example
 
 # db & migrations (MySQL)
 
-`gzip -d publica.db.gz`
-
 `sudo mysql -u root`
 
 `create database publica;`
@@ -46,6 +44,23 @@ set variables in var.json by example
 `rm file1`
 
 `gzip -d file1.gz`
+
+# systemd
+
+`sudo nano /etc/systemd/system/publica.service`
+
+```
+[Unit]
+Description=Publica(EVE) server service
+[Service]
+Type=simple
+WorkingDirectory=/home/user/eve/ForumPublica/
+ExecStart=/home/user/eve/ForumPublica/publica
+```
+
+`systemctl start publica`
+
+`systemctl status publica`
 
 # thanks
 
