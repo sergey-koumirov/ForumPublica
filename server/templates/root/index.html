@@ -10,10 +10,10 @@
   <div class="row">
     <div class="col-6 offset-md-3 text-center">
 
-      <h6>Deviations table</h6>
+      <h6>Jita overprice</h6>
 
       <table class="table table-striped table-sm">
-        <% range $index, $e := .Deviations %>
+        <% range $index, $e := .DeviationsOver %>
         <tr>
           <td class="text-left">
             <pre><%$e.Description%></pre>
@@ -21,6 +21,20 @@
         </tr>
         <% end %>
       </table>
+
+      <h6>Jita underprice</h6>
+
+      <table class="table table-striped table-sm">
+        <% range $index, $e := .DeviationsUnder %>
+        <tr>
+          <td class="text-left">
+            <pre><%$e.Description%></pre>
+          </td>
+        </tr>
+        <% end %>
+      </table>
+
+
       <sub>Deviation = Jita sell price / (manufacturing+invent cost); Deviation>3 or Deviation<0.75</sub>
 
       <hr/>

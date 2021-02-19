@@ -9,7 +9,7 @@ import (
 
 //RootIndex index
 func RootIndex(c *gin.Context) {
-	c.Keys["Deviations"] = services.DeviationsList()
+	c.Keys["DeviationsOver"], c.Keys["DeviationsUnder"] = services.DeviationsList()
 	c.Keys["Title"] = "Publica"
 	c.HTML(http.StatusOK, "root/index.html", c.Keys)
 }
