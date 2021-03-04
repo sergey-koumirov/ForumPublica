@@ -35,15 +35,17 @@ func TaskLoadTransactions() error {
 			)
 			for cnt > 0 && float64(created)/float64(cnt) > 0.5 && errReq == nil {
 				r, errReq = api.CharactersWalletTransactions(char.ID, from_id)
-				created = processBatch(r, char, api)
-				fmt.Printf("  from_id: %d added %d\n", from_id, created)
-				cnt = len(r.R)
-				if cnt > 0 {
-					from_id = r.R[cnt-1].TransactionId
+
+				if errReq != nil {
+					fmt.Println("TaskLoadTransactions.req:", errReq)
+				} else {
+					created = processBatch(r, char, api)
+					fmt.Printf("  from_id: %d added %d\n", from_id, created)
+					cnt = len(r.R)
+					if cnt > 0 {
+						from_id = r.R[cnt-1].TransactionId
+					}
 				}
-			}
-			if errReq != nil {
-				fmt.Println("TaskLoadTransactions.req:", errReq)
 			}
 		}
 	}
