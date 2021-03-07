@@ -35,6 +35,8 @@ set variables in var.json by example
 
 `grant all privileges on publica.* to 'publica'@'localhost';`
 
+`GRANT PROCESS ON *.* TO 'publica'@'localhost';`
+
 `./migrate -source=file://server/migrations -database=mysql://$(cat server/vars.json | jq '.DBC' -r) up`
 
 `mysql -upublica -ppublica publica < publica.dump`
@@ -56,6 +58,8 @@ Description=Publica(EVE) server service
 Type=simple
 WorkingDirectory=/home/user/eve/ForumPublica/
 ExecStart=/home/user/eve/ForumPublica/publica
+Restart=on-failure
+RestartSec=5s
 ```
 
 `systemctl start publica`
