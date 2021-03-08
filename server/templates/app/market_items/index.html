@@ -37,7 +37,10 @@
     </tr>
     <tr v-for="record in data.Records" :key="record.ModelID">
       <td>
-        <img align="left" width="48" height="48" :src="'https://images.evetech.net/types/'+record.TypeID+'/icon?size=64'">
+        <img class="pointer copy-item"
+             align="left" width="48" height="48" 
+             :src="'https://images.evetech.net/types/'+record.TypeID+'/icon?size=64'"
+             :data-clipboard-text="record.TypeName">
       </td>
       <td>
         <div class="item-name-grid">

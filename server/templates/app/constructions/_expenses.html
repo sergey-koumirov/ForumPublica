@@ -4,10 +4,11 @@
 </h5>
 <table class="table table-sm" v-for="bpo in construction.Blueprints">
     <tr>
-        <td colspan="2">
+        <td>
             <b>{{bpo.Model.TypeName}}</b>
             <span class="oi oi-plus pointer" v-on:click="OpenExpenseModal(bpo)"></span>
         </td>
+        <td><span class="pointer blue" v-on:click="Add10Percent(bpo)">+10%</span></td>
     </tr>
     <tr v-for="item in bpo.Expenses" >
         <td>

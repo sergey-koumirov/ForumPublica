@@ -283,6 +283,14 @@ var constructions = new Vue({
             );
             this.showExpenseModal = false;
         },
+
+        Add10Percent: function(bpo){
+          this.ask.exValue = Math.round(this.TotalExpenses(bpo) / 10);
+          this.ask.description = "Tax & Job Cost 10%";
+          this.ask.bpId = bpo.Model.ID;
+          this.SaveExpense();
+        },
+
         DeleteExpense: function(id){
             del(
               this, 

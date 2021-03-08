@@ -62,6 +62,10 @@ img.w24.a3, img.w24.a4, img.w24.a5, img.w24.a8{
   background: #4080dc;
 }
 
+.table{
+  max-width: 1640px;
+}
+
 .table.table-sm td{
   padding-top: 0;
   padding-bottom: 0;

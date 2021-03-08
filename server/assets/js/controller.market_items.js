@@ -77,7 +77,7 @@ var marketItems = new Vue({
     },
 
     created: function () {
-      // new Clipboard('.copy-item');
+      new Clipboard('.copy-item');
     },
 
     beforeMount: function () {
