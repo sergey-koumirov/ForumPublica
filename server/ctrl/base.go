@@ -18,5 +18,10 @@ func page(c *gin.Context) int64 {
 
 func user(c *gin.Context) models.User {
 	raw, _ := c.Get(middleware.USER)
+
+	if raw == nil {
+		return models.User{}
+	}
+
 	return raw.(models.User)
 }

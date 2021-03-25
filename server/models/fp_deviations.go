@@ -2,8 +2,10 @@ package models
 
 //DvRecord model
 type DvRecord struct {
-	Description string
-	K           float64
+	Description   string
+	TypeName      string
+	K             float64
+	HasMarketItem bool
 }
 
 //Deviation skill model

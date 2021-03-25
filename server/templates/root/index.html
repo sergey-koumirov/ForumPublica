@@ -15,9 +15,15 @@
       <table class="table table-striped table-sm">
         <% range $index, $e := .DeviationsOver %>
         <tr>
-          <td class="text-left">
-            <pre><%$e.Description%></pre>
+          <td>
+            <% if $e.HasMarketItem %>
+            <span class="oi oi-bar-chart pointer"></span>
+            <% end %>
           </td>
+          <td class="text-left">
+            <pre><% $e.Description %></pre>
+          </td>
+          <td><span data-clipboard-text="<% $e.TypeName %>" class="oi oi-share-boxed pointer copy-item"></span></td>
         </tr>
         <% end %>
       </table>
@@ -27,8 +33,13 @@
       <table class="table table-striped table-sm">
         <% range $index, $e := .DeviationsUnder %>
         <tr>
+          <td>
+            <% if $e.HasMarketItem %>
+            <span class="oi oi-bar-chart pointer"></span>
+            <% end %>
+          </td>
           <td class="text-left">
-            <pre><%$e.Description%></pre>
+            <pre><% $e.Description %></pre>
           </td>
         </tr>
         <% end %>
@@ -48,6 +59,10 @@
     </div>
   </div>
 </div>
+
+<script>
+  new Clipboard('.copy-item');
+</script>
 
 <% template "base_foot" %>
 <% end %>
