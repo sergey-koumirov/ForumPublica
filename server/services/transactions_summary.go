@@ -43,10 +43,11 @@ func TransactionsSummary(userID int64) models.TrSummary {
 	minus1d := time.Now().AddDate(0, 0, -1).Format("2006-01-02 15:04:05")
 
 	rowsByType1d, errByType1d := db.DB.Raw(sqlByType, minus1d, userID).Rows()
-	defer rowsByType1d.Close()
 	if errByType1d != nil {
 		fmt.Println("loadMarketData.errByType1d:", errByType1d)
+		return models.TrSummary{}
 	}
+	defer rowsByType1d.Close()
 
 	recordsByType1d := make([]models.TrByType, 0)
 	total1d := float64(0)
@@ -59,10 +60,11 @@ func TransactionsSummary(userID int64) models.TrSummary {
 	}
 
 	rowsByType, errByType := db.DB.Raw(sqlByType, minus30d, userID).Rows()
-	defer rowsByType.Close()
 	if errByType != nil {
 		fmt.Println("loadMarketData.errByType:", errByType)
+		return models.TrSummary{}
 	}
+	defer rowsByType.Close()
 
 	recordsByType := make([]models.TrByType, 0)
 	total := float64(0)
@@ -75,10 +77,11 @@ func TransactionsSummary(userID int64) models.TrSummary {
 	}
 
 	rowsByDate, errByDate := db.DB.Raw(sqlByDate, userID, minus30d).Rows()
-	defer rowsByDate.Close()
 	if errByDate != nil {
 		fmt.Println("loadMarketData.errByDate:", errByDate)
+		defer rowsByType.Close()
 	}
+	defer rowsByDate.Close()
 
 	recordsByDate := make([]models.TrByDate, 0)
 	for rowsByDate.Next() {

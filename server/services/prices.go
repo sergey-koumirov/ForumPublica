@@ -17,7 +17,7 @@ var (
 //InitPrices init prices
 func InitPrices() {
 	Prices = map[string]map[int32]models.Price{
-		"appraisal": map[int32]models.Price{},
+		"appraisal": {},
 	}
 	LoadPricesFromDB("appraisal")
 }

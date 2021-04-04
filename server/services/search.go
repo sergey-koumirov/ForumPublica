@@ -42,8 +42,7 @@ func SearchItemType(term string, filter string) SearchResult {
 
 	result := SearchSorter{Term: strings.ToLower(term), Array: make(SearchResult, 0)}
 
-	var hasTerm *regexp.Regexp
-	hasTerm = regexp.MustCompile("(?i)" + term)
+	hasTerm := regexp.MustCompile("(?i)" + term)
 
 	for _, v := range static.Types {
 
